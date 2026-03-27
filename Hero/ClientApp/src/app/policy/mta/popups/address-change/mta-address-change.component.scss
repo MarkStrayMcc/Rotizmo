@@ -1,0 +1,60 @@
+@import "utils/variables";
+
+.mat-spinner {
+    float: left;
+    width: 2px;
+    height: 2px;
+    margin: 0px 5px 0px 0px;
+    color: #ffffff;
+    stroke: #ffffff;
+}
+
+h1 {
+    font-size: 24px;
+    font-weight: 300;
+}
+
+%label-shared {
+    font-family: $font-family;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    color: $cfc-font-black;
+}
+
+:host ::ng-deep .fieldname {
+    @extend %label-shared;
+    font-size: $font-size-h5;
+    font-weight: 600;
+    text-align: right;
+}
+
+:host ::ng-deep .readonly-fieldvalue {
+    @extend %label-shared;
+    font-size: $font-size-h5;
+    font-weight: normal;
+}
+
+@media only screen and (max-width: $tablet-width) {
+    :host ::ng-deep .text-right {
+        text-align: left;
+    }
+
+    :host ::ng-deep .fieldname {
+        @extend %label-shared;
+        font-size: $font-size-h5;
+        font-weight: 600;
+        text-align: left;
+    }
+
+    :host ::ng-deep .readonly-fieldvalue {
+        @extend %label-shared;
+        font-size: $font-size-h5;
+        font-weight: normal;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+}

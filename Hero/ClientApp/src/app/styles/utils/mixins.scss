@@ -1,0 +1,12 @@
+@import "variables.scss";
+body {
+}
+
+@mixin borders {
+    background-color: #ffffff;
+    border: solid 0.5px $grey;
+}
+
+@mixin fonttypeSize ($type, $size) {
+    font: normal $size $type
+}

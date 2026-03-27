@@ -1,0 +1,30 @@
+<div [formGroup]="form" *ngIf="form" class="form-group hide-invalid" >
+    <div *ngFor="let riskQuestion of riskQuestions">
+        <div class="form-group row" [hidden]="!riskQuestion.isVisible">
+            <label [for]="riskQuestion.tag" class="col-md-7 col-form-label fieldname">{{ riskQuestion.label }}</label>
+            <a *ngIf="riskQuestion.tooltipText" data-toggle="tooltip" data-placement="top" [title]="riskQuestion.tooltipText" class="tooltipicon tooltipfield">?</a>
+
+            <div class="col-md-5" [ngSwitch]="riskQuestion.type">
+                <div class="riskquestion">
+                    <warning [hasWarning]="displayWarningForRiskQuestion(riskQuestion)" warningText="Requires approval">
+                        <free-text *ngSwitchCase="type.freeText" [formControlName]="riskQuestion.tag" [riskQuestion]="riskQuestion"></free-text>
+                        <text-area *ngSwitchCase="type.textArea" [formControlName]="riskQuestion.tag" [riskQuestion]="riskQuestion"></text-area>
+                        <integer-field *ngSwitchCase="type.integer" [formControlName]="riskQuestion.tag" [riskQuestion]="riskQuestion"></integer-field>
+                        <risk-currency *ngSwitchCase="type.currency" [formControlName]="riskQuestion.tag" [riskQuestion]="riskQuestion" [currency]="quote.currency"></risk-currency>
+                        <retrodate *ngSwitchCase="type.retroDate" [formControlName]="riskQuestion.tag" [riskQuestion]="riskQuestion"></retrodate>
+                        <percentage-field *ngSwitchCase="type.percentage" [formControlName]="riskQuestion.tag" [riskQuestion]="riskQuestion" class="percentage-question"></percentage-field>
+                        <datequestion *ngSwitchCase="type.date" [formControlName]="riskQuestion.tag" [riskQuestion]="riskQuestion"></datequestion>
+                        <searchable-dropdown *ngSwitchCase="type.autoCompleteList" [formControlName]="riskQuestion.tag" [riskQuestion]="riskQuestion"></searchable-dropdown>
+                        <drop-down *ngSwitchCase="type.dropDownList" [formControlName]="riskQuestion.tag" [riskQuestion]="riskQuestion"></drop-down>
+                        <drop-down-with-validation *ngSwitchCase="type.clientLocationDropDown" [formControlName]="riskQuestion.tag" [riskQuestion]="riskQuestion"></drop-down-with-validation>
+                        <radiobutton *ngSwitchCase="type.radioButton" [formControlName]="riskQuestion.tag" [riskQuestion]="riskQuestion"></radiobutton>
+                        <check-boxes *ngSwitchCase="type.checkBoxArray" [formControlName]="riskQuestion.tag" [riskQuestion]="riskQuestion"></check-boxes>
+                        <div *ngIf="displayValidationForRiskQuestion(riskQuestion.tag)" class="help-block with-errors">
+                            {{ getValidationMessagesForQuestion(riskQuestion.tag) }}
+                        </div>
+                    </warning>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

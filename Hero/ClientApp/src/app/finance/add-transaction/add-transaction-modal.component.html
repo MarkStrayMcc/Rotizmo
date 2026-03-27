@@ -1,0 +1,192 @@
+<form #addFinancialTransactionForm [formGroup]="addTransForm" (ngSubmit)="onSubmit()">
+    <div mat-dialog-title>
+        <h1>Add New Transaction</h1>
+        <div class="close" aria-label="Close" mat-dialog-close>&times;</div>
+    </div>
+
+    <mat-dialog-content>
+        <div class="row" *ngIf="displayErrorMessage">
+            <div class="form-group col-md-12">
+                <message></message>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-4">
+                <label for="bankAccount">Bank Account</label>
+                <error [errorText]="{ required: 'Required' }"
+                        [formCtrl]="addTransForm.controls.cfcBankAccountId">
+                    <select class="form-control" id="bankAccount" formControlName="cfcBankAccountId"
+                            name="bankAccount" #bankAccount>
+                        <option *ngFor="let cfcBankAccount of cfcBankAccounts | async" [value]="cfcBankAccount.cfcBankAccountId">
+                            {{ cfcBankAccount.bankAccountName }}
+                        </option>
+                    </select>
+                </error>
+            </div>
+
+            <div class="form-group col-md-3">
+                <label for="paidDate">Paid Date</label>
+                <error *ngIf="addTransForm.controls.paidDate"
+                        [errorText]="{ invalidDate: 'Invalid Date', required: 'Required' }"
+                        [formCtrl]="addTransForm.controls.paidDate">
+                    <datepicker *ngIf="addTransForm" #paidDate formControlName="paidDate"></datepicker>
+                </error>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-4">
+                <label for="transactionType">Type</label>
+                <error [errorText]="{ required: 'Required' }"
+                        [formCtrl]="addTransForm.controls.transactionType">
+                    <select id="transactionType" class="form-control" formControlName="transactionType" name="transactionType"
+                            #transactionType>
+                        <option *ngFor="let tType of supportedTransactionTypes" [value]="tType.id">
+                            {{tType.name}}
+                        </option>
+                    </select>
+                </error>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="ledgerReference">Ledger Reference</label>
+                <error [errorText]="{ invalidOption: 'Invalid Option', required: 'Required' }"
+                        [formCtrl]="addTransForm.controls.financialLedgerId">
+                    <autocomplete-dropdown id="ledgerReference"
+                                            formControlName="financialLedgerId"
+                                            #ledgerReference
+                                            *ngIf="addTransForm"
+                                            [customDisplayMethod]="ledgerReferenceDisplay"
+                                            [myControl]="addTransForm.get('financialLedgerId')"
+                                            [dataSource]="ledgerReferences">
+                    </autocomplete-dropdown>
+                </error>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-4">
+                <label for="cfcBankAccountCurrency">Currency</label>
+                <error [errorText]="{ required: 'Required' }"
+                        [formCtrl]="addTransForm.controls.bankAccountCurrencyId">
+                    <select class="form-control" id="cfcBankAccountCurrency" formControlName="bankAccountCurrencyId"
+                            name="bankAccountCurrencyId" required #bankAccountCurrencyId>
+                        <option *ngFor="let currencyCode of supportedCurrencyCodes" [value]="[currencyCode.id]">
+                            {{ currencyCode.isoCode }}
+                        </option>
+                    </select>
+                </error>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="bankAccountAmount">Amount</label>
+                <error [errorText]="{ required: 'Required' }"
+                        [formCtrl]="addTransForm.controls.bankAccountAmount">
+                    <currency formControlName="bankAccountAmount" id="bankAccountAmount" [decimals]="true" [negatives]="true" [currency]="accountCurrency"></currency>
+                </error>
+            </div>
+            <div class="form-group col-md-2">
+                <label for="entryType">Credit/Debit</label>
+                <select class="form-control" id="entryType" formControlName="entryType"
+                        name="entryType" #entryType>
+                    <option value="CR">CR</option>
+                    <option value="DB">DB</option>
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-4">
+                <label for="originalAmountCurrencyId">Original Currency</label>
+                <error [errorText]="{ invalidOption: 'Invalid Option', required: 'Required' }"
+                        [formCtrl]="addTransForm.controls.originalAmountCurrencyId">
+                    <autocomplete-dropdown id="originalAmountCurrencyId"
+                                            formControlName="originalAmountCurrencyId"
+                                            #originalAmountCurrencyId
+                                            *ngIf="addTransForm"
+                                            [myControl]="addTransForm.get('originalAmountCurrencyId')"
+                                            [dataSource]="currencyObservable">
+                    </autocomplete-dropdown>
+                </error>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="originalAmount">Original Amount</label>
+                <error [errorText]="{ required: 'Required' }"
+                        [formCtrl]="addTransForm.controls.originalAmount">
+                    <currency formControlName="originalAmount" id="originalAmount"
+                                [decimals]="true"
+                                [negatives]="true"
+                                [currency]="originalCurrency"></currency>
+                </error>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-6">
+                <label for="binderDescription">Binder Name</label>
+                <input type="text" formControlName="binderDescription" class="form-control" id="binderDescription" name="binderDescription">
+            </div>
+            <div class="form-group col-md-2">
+                <label for="binderYear">Binder Year</label>
+                <input type="text" formControlName="binderYear" class="form-control" id="binderYear" name="binderYear">
+            </div>
+            <div class="form-group col-md-2">
+                <label for="sectionShortCode">Section Code</label>
+                <error [errorText]="{ pattern: 'Section Code should be alphanumeric and should not exceed 2 characters in length' }"
+                        [formCtrl]="addTransForm.controls.sectionShortCode">
+                    <input type="text" formControlName="sectionShortCode" class="form-control" id="sectionShortCode" name="sectionShortCode"
+                            maxlength="2" #sectionShortCode>
+                </error>
+            </div>
+            <div class="form-group col-md-2">
+                <label for="lloydsRiskCode">Risk Code</label>
+                <error [errorText]="{ pattern: 'Risk Code should be alphanumeric and should not exceed 2 characters in length' }"
+                        [formCtrl]="addTransForm.controls.lloydsRiskCode">
+                    <input type="text" formControlName="lloydsRiskCode" class="form-control" id="lloydsRiskCode"
+                            name="lloydsRiskCode" maxlength="2" #lloydsRiskCode>
+                </error>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-8">
+                <label for="transactionReference">Transaction Reference</label>
+                <error [errorText]="{ required: 'Required' }"
+                        [formCtrl]="addTransForm.controls.transactionReference">
+                    <input type="text" formControlName="transactionReference" class="form-control" id="transactionReference"
+                            name="transactionReference" #transactionReference maxlength="50">
+                </error>
+            </div>
+            <div class="form-group col-md-4">
+                <label for="financialTransactionTags">Tags</label>
+                <tag-input formControlName="tags" name="financialTransactionTags" allCaps="true" smallWidth="true" placeholder="CLF, or OLF, or MMMYY"
+                            [multiRegex]="multiTagRegex" [singleRegex]="singleTagRegex"></tag-input>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-8">
+                <label for="carrier">Carrier</label>
+                <mat-progress-spinner mode="indeterminate" *ngIf="isLoadingCarriers"
+                    diameter="14" style="display: inline-block; margin-left: 8px">
+                </mat-progress-spinner>
+                <error [errorText]="{ required: 'Required' }"
+                    [formCtrl]="addTransForm.controls.carrier">
+                    <select class="form-control" id="carrier" formControlName="carrier"
+                            name="carrier">
+                        <option [value]="">
+                            N/A
+                        </option>
+                        <option *ngFor="let carrier of carriers" [value]="carrier.carrierName">
+                            {{ carrier.carrierName }}
+                        </option>
+                    </select>
+                </error>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-12">
+                <label for="financialTransactionNotes">Notes</label>
+                <textarea class="form-control" formControlName="notes" id="financialTransactionNotes" rows="2" name="notes">
+                </textarea>
+            </div>
+        </div>
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+        <button type="button" class="btn btn-link" (click)="onCloseModal()">Cancel</button>
+        <button type="submit" class="btn btn-primary" [disabled]="!addTransForm.valid || queryInProgress">Add</button>
+    </mat-dialog-actions>
+</form>

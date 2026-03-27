@@ -1,0 +1,47 @@
+﻿<div role="dialog">
+    <div role="document">
+        <div mat-dialog-title>
+            <h1>Addresses</h1>
+            <div class="close" aria-label="Close" (click)="onCloseModal()">&times;</div>
+        </div>
+
+        <div mat-dialog-content *ngIf='isLoaded; else loadingScreen;'>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="addressBox addAddressBox" (click)="onAddLocation()" [ngClass]="{'disabled': readOnly}">
+                        <p class="addAddressTitle">Add address </p>
+                    </div>
+                </div>
+
+                <div class="col-md-4" *ngFor="let location of locations; let rowcount = index">
+                    <div [ngClass]="(dialogModel.client.primaryLocation && location.clientLocationId === dialogModel.client.primaryLocation.clientLocationId)?'addressBox addressSelected':'addressBox'"
+                        data-addressid="1" (click)="setSelectedOption(rowcount)">
+                        <p class="addressLine" data-automation-id="addressBoxAddressLine1">{{ location.address1 }}</p>
+                        <p class="addressLine" data-automation-id="addressBoxAddressLine2">{{ location.address2 }}</p>
+                        <p class="addressLine" data-automation-id="addressBoxCity">{{ location.address3 }} {{ location.city }}</p>
+                        <p class="addressLine" *ngIf="location.stateProvinceCode && location.stateProvinceCode !== '' && location.stateProvinceCode !== '0' " data-automation-id="addressBoxState">{{ location.stateProvinceCode }}</p>
+                        <p class="addressLine addressPostCode" data-automation-id="addressBoxPostCode">{{ location.postcode }}</p>
+                        <p class="addressLine" *ngIf="location.country" data-automation-id="addressBoxCountry">{{ location.country.name }}</p>
+                        <p class="addressControls">
+                            <a class="btnEditAddress" data-addressid="1" 
+                                (click)="onEditLocation(rowcount)"
+                                [ngClass]="{'disabled': readOnly}">Edit</a> |
+                            <a class="btnViewonMapAddress" (click)="onViewMap(location.clientLocationId, $event)">View on map</a> |
+                            <a [ngClass]="locations.length > 1 && !readOnly ? 'btnRemoveAddress':'btnRemoveAddress disabled'"
+                                data-addressid="1" 
+                                (click)="onRemoveLocation(rowcount, $event)">Remove</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <ng-template #loadingScreen>
+            <div role="alert">
+                <mat-progress-spinner mode="indeterminate">
+                </mat-progress-spinner>
+                loading...
+            </div>
+        </ng-template>
+    </div>
+</div>

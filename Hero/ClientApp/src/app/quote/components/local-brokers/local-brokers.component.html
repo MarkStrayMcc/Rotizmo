@@ -1,0 +1,13 @@
+﻿<autocomplete-dropdown class="hide-invalid"
+    [formControl]="formControl"
+    [customDisplayMethod]="getName"
+    [myControl]="formControl" 
+    [dataSource]="localBrokers$">
+</autocomplete-dropdown>
+
+<div *ngIf="formControl.errors && formControl.touched" class="help-block with-errors">
+    <ul class="list-unstyled">
+        <li *ngIf="formControl.errors?.invalidOption">Please select a valid broker</li>
+        <li *ngIf="formControl.errors?.required">Required</li>
+    </ul>
+</div>

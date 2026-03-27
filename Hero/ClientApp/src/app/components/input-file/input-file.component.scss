@@ -1,0 +1,27 @@
+:host:not(.file-input-disabled) {
+    cursor: pointer;
+}
+
+input {
+    width: 0px;
+    height: 0px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+}
+
+.filename {
+    display: inline-block;
+    color: #AAA;
+}
+
+.folder-icon {
+    right: 0.1em;
+    position: absolute;
+    top: 6px;
+}
+
+.input-padding {
+    min-height: 3em;
+}

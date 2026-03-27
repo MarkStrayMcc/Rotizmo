@@ -1,0 +1,37 @@
+﻿export interface IFinancialTransactionDetails {
+    Description: string;
+    FinancialTransactionId: number;
+    CfcBankAccountId: number;
+    EntryType: string;
+    EntryDate: string;
+    TransactionType: string;
+    FinancialLedgerId: number;
+    BinderId: number;
+    BinderYear: number;
+    SectionId: number;
+    LloydsRiskCode: string;
+    ClaimId: string;
+    Reference: string;
+    AccountAmount: number;
+    OrigAmountCurrencyId: number;
+    OrigAmount: number;
+    PaidDate: string;
+    Tags: string;
+    Notes: string;
+    ReverseFinancialTransactionId: number;
+    AddedOn: string;
+    AddedByContactId: number;
+    LedgerReference: string;
+    BinderReference: null;
+    BinderDescription: null;
+    SectionDescription: null;
+    BinderYearNo: null;
+    BankAccount: string;
+    AcctType: string;
+    AccCurrencyId: number;
+    AccCurrencyName: string;
+    ClaimReference: string;
+    PolicyId: string;
+    InsuredCompanyName: string;
+    OrigCurrencyName: string;
+}

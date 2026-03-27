@@ -1,0 +1,38 @@
+<section [formGroup]="coverageForm" novalidate>
+    <div class="accordion-panel">
+        <div class="accordion-title">
+            <div class="col-md-10">
+                <a class="accordion-header" (click)="toggleExpansion()">
+                    <span class="accordion-control" [innerText]="controlSymbol"></span>
+                    <h3 [innerText]="coverage.coverageType.name"></h3>
+                </a>
+            </div>
+            <div class="col-md-2">
+                <div class="styledCheckbox" (click)="!readonly && toggleSelection()">
+                    <input class="input-checkbox" type="checkbox" [id]="'checkbox' + coverage.coverageType.id"
+                        name="checkbox" [checked]="isSelected" [disabled]="readonly" />
+                    <label class="label-checkbox" [for]="'checkbox' + coverage.coverageType.id"
+                        (click)="$event.preventDefault()"></label>
+                </div>
+            </div>
+        </div>
+        <div [hidden]="!isExpanded" class="col-md-12">
+            <div>
+                <limit #coverageLimit *ngFor="let limit of coverage.limits" [limit]="limit" [currency]="currency"
+                    [isSelected]="isSelected" [readonly]="readonly"
+                    (setForm)="addSubFormGroup('limit'+limit.limitTypeCode, $event)">
+                </limit>
+                <excess #excess *ngFor="let xs of coverage.excesses" [excess]="xs" [currency]="currency"
+                    [isSelected]="isSelected" [readonly]="readonly"
+                    (setForm)="addSubFormGroup('excess'+xs.excessTypeCode, $event)">
+                </excess>
+            </div>
+            <coverage-option *ngFor="let coverageOptionItem of coverageOptionItems" #coverageOption
+                [option]="coverageOptionItem" [isSelected]="coverageOptionItem.isSelected" [currency]="currency"
+                (onSelection)="onOptionSelection($event)" (onDeselection)="onOptionDeselection($event)"
+                [readonly]="readonly" [showHeader]="!hasSingleChildVisible"
+                (setForm)="addSubFormGroup('coverageOptionItem'+coverageOptionItem.coverage.coverageType.id, $event)">
+            </coverage-option>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,71 @@
+<form [formGroup]="financeTransactionsForm">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="col-md-9">
+                    <h1>Financial transactions</h1>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group col-md-2">
+                    <label for="bankAccount">Bank Account</label>
+                    <div [class.ng-invalid]="!financeTransactionsForm.controls.cfcBankAccountName.valid && financeTransactionsForm.controls.cfcBankAccountName.touched">
+                        <select class="form-control" id="bankAccount" formControlName="cfcBankAccountName">
+                            <option value=""></option>
+                            <option *ngFor="let cfcBankAccount of cfcBankAccounts | async" [value]="cfcBankAccount.bankAccountName">
+                                {{ cfcBankAccount.bankAccountName }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group col-md-2">
+                    <label for="transactionsCurrencyId">Currency</label>
+                    <select class="form-control" id="transactionsCurrencyId" formControlName="transactionsCurrencyId">
+                        <option value=""></option>
+                        <option *ngFor="let currencyCode of supportedCurrencyCodes" [value]="[currencyCode.id]">{{ currencyCode.isoCode }}</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-2">
+                    <label for="ledgerReference">Ledger Reference</label>
+                    <error [errorText]="{ invalidOption: 'Invalid Option' }" [formCtrl]="financeTransactionsForm.controls.financialLedgerId">
+                        <autocomplete-dropdown id="ledgerReference"
+                                               formControlName="financialLedgerId"
+                                               *ngIf="financeTransactionsForm"
+                                               [customDisplayMethod]="ledgerReferenceDisplay"
+                                               [myControl]="financeTransactionsForm.get('financialLedgerId')"
+                                               [dataSource]="ledgerReferences"
+                                               class="hide-invalid">
+                        </autocomplete-dropdown>
+                    </error>
+                </div>
+                <div class="col-md-2 height-57px">
+                    <button type="button" class="btn btn-primary" style ="position: absolute; bottom: 0;" (click)="openAddTransactionDialog()" id="addTransactionBtn">Add Transaction</button>
+                </div>
+                <div class="col-md-4 height-57px">
+                    <button type="button" class="btn btn-primary" style ="position: absolute; bottom: 0; right: 0;" (click)="clearFilters()">Reset Grid Filters</button>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div *ngIf="displayInformationalMessageForInputFields" class="alert alert-info">Please choose a Bank Account Name or a combination of Currency and Ledger Reference</div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div>
+                    <ag-grid-angular #agGrid style="width: 100%; height: 700px;" [rowData]="transactions" [columnDefs]="financialGridColumns"
+                                     [defaultColDef]="defaultColumnDef" headerHeight="66" (gridReady)="onGridReady($event)"
+                                     [context]="gridCellContext" [getRowNodeId]="getRowNodeId" [getBusinessKeyForNode]="getBusinessKeyForNode"
+                                     (rowDataChanged)="onRowDataChanged($event, scrollToDetails)" rowClass="ag-row-align" rowHeight="48" rowMultiSelectWithClick="true"
+                                     [enableSorting]="true" [enableFilter]="true" [enableColResize]="true" [getRowStyle]="getRowStyle" rowSelection="multiple" [suppressRowClickSelection]="true"
+                                     [frameworkComponents]="frameworkComponents" [pinnedBottomRowData]="pinnedBottomRowData" (selectionChanged)="setPinnedBottomRowData()"
+                                     (filterChanged)="setPinnedBottomRowData()">
+                    </ag-grid-angular>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

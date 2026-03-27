@@ -1,0 +1,14 @@
+<ng-container [formGroup]="formGroup">
+  <error [errorText]="{ required: 'Required' }" [formCtrl]="formGroup.get(config.property)">    
+    <div class="{{config?.cssClass}}" >
+      <autocomplete-multiselect 
+        [formCtrl]="formGroup.get(config.property)" 
+        [formControlName]="config.property" 
+        autoShowOnFocus="false"
+        [options]="contactOptions"
+        [displayName]="displayName"
+        [dropDownDisplay]="dropDownDisplay">
+      </autocomplete-multiselect>
+    </div>
+  </error>
+</ng-container>

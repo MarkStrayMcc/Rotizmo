@@ -1,0 +1,81 @@
+﻿<form #addEcfReconciliationForm [formGroup]="addReconciliationForm" (ngSubmit)="onSubmit()">
+    <div mat-dialog-title>
+        <h1>{{ isEditMode ? "Amend" : "Add"}} ECF Reconciliation</h1>
+        <div class="close" aria-label="Close" mat-dialog-close>&times;</div>
+    </div>
+
+    <mat-dialog-content>
+        <div class="row" *ngIf="displayErrorMessage">
+            <div class="form-group col-md-12">
+                <message></message>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-12">
+                <label for="ucr">UCR</label>
+                <error [errorText]="{ invalidOption: 'Invalid Option', required: 'Required' }"
+                        [formCtrl]="addReconciliationForm.controls.ucr">
+                    <autocomplete-dropdown id="ucr"
+                            formControlName="ucr"
+                            [customDisplayMethod]="ucrDisplay"
+                            [myControl]="addReconciliationForm.get('ucr')"
+                            [dataSource]="ucrLookups$"
+                            class="hide-invalid"
+                            >
+                        </autocomplete-dropdown>
+                </error>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-7">
+                <label for="currency">Currency</label>
+                <error [errorText]="{ invalidOption: 'Invalid Option', required: 'Required' }"
+                        [formCtrl]="addReconciliationForm.controls.currencyId">
+                    <autocomplete-dropdown id="currency"
+                                            formControlName="currencyId"
+                                            *ngIf="addReconciliationForm"
+                                            class="hide-invalid"
+                                            [myControl]="addReconciliationForm.get('currencyId')"
+                                            [dataSource]="currencyObservable">
+                    </autocomplete-dropdown>
+                </error>
+            </div>
+            <div class="form-group col-md-5">
+                <label for="sequenceNo">Sequence No</label>
+                <error [errorText]="{ required: 'Required', pattern: 'Only values in range between 001 and 999 are supported' }"
+                        [formCtrl]="addReconciliationForm.controls.sequenceNo">
+                    <input type="text" formControlName="sequenceNo" class="form-control"
+                            numberMask="000" number-only maxlength="3"
+                            id="sequenceNo" name="sequenceNo">
+                </error>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-6">
+                <label for="amount">ECF Amount</label>
+                <error [errorText]="{ required: 'Required' }"
+                        [formCtrl]="addReconciliationForm.controls.amount">
+                    <currency formControlName="amount" id="amount"
+                                [decimals]="true"
+                                [negatives]="true"
+                                [currency]="amountCurrency"></currency>
+                </error>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="completedDate">Completed Date</label>
+                <error *ngIf="addReconciliationForm.controls.completedDate"
+                        [errorText]="{ invalidDate: 'Invalid Date', required: 'Required' }"
+                        [formCtrl]="addReconciliationForm.controls.completedDate">
+                    <datepicker *ngIf="addReconciliationForm" formControlName="completedDate"></datepicker>
+                </error>
+            </div>
+        </div>
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+        <button type="button" class="btn btn-link" mat-dialog-close>Cancel</button>
+        <button type="button" class="btn btn-primary" (click)="onDelete()" *ngIf="isDeleteVisible">Delete</button>
+        <button type="submit" class="btn btn-primary" 
+            [disabled]="!addReconciliationForm.valid || !isSubmitEnabled" >{{ isEditMode ? "Amend" : "Add"}}</button>
+    </mat-dialog-actions>
+</form>

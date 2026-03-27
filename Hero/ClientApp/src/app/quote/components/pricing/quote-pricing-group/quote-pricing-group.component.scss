@@ -1,0 +1,119 @@
+﻿@import "utils/variables";
+@import "base/typography";
+
+.accordion-panel {
+    border: 2px solid #ececec;
+    float: left;
+    width: 95%;
+    margin-bottom: 16px;
+    padding-bottom: 15px;
+    margin-left: 15px;
+}
+
+.accordion-header {
+    cursor: pointer;
+}
+.accordion-title {
+    margin-top:20px;
+}
+
+.accordion-header {
+    padding: 0px 0px 0px 0px;
+    margin: 0px;
+    cursor: pointer;
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none;
+    float: left;
+}
+
+.accordion-header h3 {
+    font-size: 14px;
+    color: #9b9c9d;
+    font-weight: 600;
+    float: left;
+    margin-top: 16px;
+    margin-bottom: 16px;
+}
+
+.accordion-control {
+    width: 24px;
+    display: inline-block;
+    font-size: 33px;
+    height: 24px;
+    font-weight: 700;
+    float: left;
+    color: $cfc-light-blue;
+    margin: 0px 3px 0px -4px;
+    text-align: center;
+    padding-bottom: 15px;
+}
+
+.selectAllPanel {
+    width: 100%;
+    float: left;
+    margin-bottom: 6px;
+    padding-right: 17px;
+}
+
+.selectAllLabel {
+    margin: 0 10px 14px 0;
+    padding-top: 4px;
+    cursor:pointer;
+}
+
+.readonly {
+    color :lightgray;
+}
+
+.styledCheckbox {
+    margin-top: 0;
+}
+
+.label-checkbox {
+    margin-top: 1px;
+    padding-top: 8px;
+}
+
+h6 {
+    margin-top:24px;
+    margin-bottom:0px;
+}
+
+label { // same as h5 styles
+    @include normal-montserrat-font;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.left-10 {
+    left:10px;
+}
+.increasedLimitFactor {
+    width: 100px;
+}
+
+.col-sm-5 {
+    width: 44.666667%;
+}
+.pricingCurve {
+    float: right;
+    padding-top: 8px;
+}
+
+.margin-bump {
+    margin-top: 7px;
+    margin-left: 16px;
+    @include H7
+}
+
+.no-right-pad {
+    padding-right:0px;
+}
+
+.right-pad-12 {
+    padding-right: 12px;
+}

@@ -1,0 +1,18 @@
+<div *ngIf="lastMessage" class="bg-info p-a-1 text-xs-center">
+    <div class="alert"
+         [class.alert-success]="lastMessage.type === messageType.Success"
+         [class.alert-info]="lastMessage.type === messageType.Info"
+         [class.alert-warning]="lastMessage.type === messageType.Warning"
+         [class.alert-danger]="lastMessage.type === messageType.Error">
+        <div>
+            <i class="glyphicon glyphicon-exclamation-sign"></i>
+            <span *ngIf="lastMessage.text" [innerHTML]="lastMessage.text"></span>
+            <ul *ngIf="lastMessage.messageList">
+                <li *ngFor="let msg of lastMessage.messageList">
+                    {{msg}}
+                </li>
+            </ul>
+        </div>
+        <span aria-hidden="true" on-click="closeAlert()" class="close-alert-message" *ngIf="closable">×</span>
+    </div>
+</div>

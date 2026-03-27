@@ -1,0 +1,28 @@
+﻿<mat-form-field appearance="outline">
+  <mat-chip-list #multiselect [formControl]="formCtrl">
+    <mat-chip *ngFor="let selectedOption of selectedOptions"
+              [removable]="true"
+              (remove)="removeOption(selectedOption, $event)">
+      {{ display(selectedOption) }}
+      <mat-icon matChipRemove (click)="removeOption(selectedOption, $event)">cancel</mat-icon>
+    </mat-chip>
+    <input #input
+      (blur)="blurred()"
+      (focus)="onFocus()" 
+      (click)="onClick()"
+      [formControl]="myControl"
+      [placeholder]="placeholder"
+      [matChipInputFor]="multiselect"
+      [matAutocomplete]="auto" />
+    <mat-icon class="search-icon" matSuffix>search</mat-icon>  
+  </mat-chip-list>
+</mat-form-field>
+
+<mat-autocomplete class="mat-elevation-z8" autoActiveFirstOption 
+                  #auto="matAutocomplete">
+  <mat-option *ngFor="let option of filteredOptions | async"
+              [value]="option"
+              (onSelectionChange)="selected(option)">
+    {{ dropdown(option) }}
+  </mat-option>
+</mat-autocomplete>

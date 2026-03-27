@@ -1,0 +1,14 @@
+<div class="text-right" (click)="$event.stopPropagation()">
+    <button #menuToggle="matMenuTrigger" mat-icon-button [matMenuTriggerFor]="menu"
+        [class.active]="menuToggle['menuOpen']" matTooltip="More Options">
+        <mat-icon>more_vert</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu" xPosition="before">
+        <div *ngFor="let menuItem of menuItems">
+            <button mat-menu-item (click)="onClick(menuItem.displayName)">
+                <mat-icon>{{menuItem.iconName}}</mat-icon>
+                {{menuItem.displayName}}
+            </button>
+        </div>
+    </mat-menu>
+</div>

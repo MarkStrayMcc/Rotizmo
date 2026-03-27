@@ -1,0 +1,133 @@
+﻿<div id="modalAddAddress" role="dialog" class="h-100">
+    <form novalidate role="document" (ngSubmit)="onSubmit(addressForm, $event)" [formGroup]="addressForm"
+        class="d-flex flex-column h-100">
+        <div mat-dialog-title>
+            <h1 *ngIf="dialogModel">{{dialogModel.modalTitle}}</h1>
+            <div class="close" aria-label="Close" mat-dialog-close>&times;</div>
+        </div>
+
+        <div mat-dialog-content class="flex-grow-1">
+            <div class="row rowField">
+                <div class="col-md-4">
+                    <label>Search </label>
+                </div>
+                <div class="col-md-8">
+                    <autocomplete-dropdown #ddlPostcode [dataSource]="postcodeLookup"
+                        [placeholder]="'E.g. postcode or street number and street name'"
+                        (change)="postcodeChanged($event)" *ngIf="addressForm"
+                        [myControl]="addressForm.get('postcodeSearch')" (keyup.enter)="$event.stopPropagation()">
+                    </autocomplete-dropdown>
+                </div>
+            </div>
+            <div class="row rowField">
+                <div class="col-md-4">
+                    <label>Address line 1</label>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-8">
+                        <error [errorText]="{ required: 'Required', maxlength: 'Cannot be more than 100 characters long' }"
+                            [formCtrl]="addressForm.controls.address1">
+                            <mat-form-field appearance="outline">
+                                <input matInput formControlName="address1">
+                            </mat-form-field>
+                        </error>
+                    </div>
+                </div>
+            </div>
+            <div class="row rowField">
+                <div class="col-md-4">
+                    <label>Address line 2 </label>
+                </div>
+                <div class="col-md-8">
+                    <error [errorText]="{ maxlength: 'Cannot be more than 100 characters long' }"
+                        [formCtrl]="addressForm.controls.address2">
+                        <mat-form-field appearance="outline">
+                            <input matInput formControlName="address2">
+                        </mat-form-field>
+                    </error>
+                </div>
+            </div>
+            <div class="row rowField">
+                <div class="col-md-4">
+                    <label>Address line 3 </label>
+                </div>
+                <div class="col-md-8">
+                    <error [errorText]="{ maxlength: 'Cannot be more than 100 characters long' }"
+                        [formCtrl]="addressForm.controls.address3">
+                        <mat-form-field appearance="outline">
+                            <input matInput formControlName="address3">
+                        </mat-form-field>
+                    </error>
+                </div>
+            </div>
+            <div class="row rowField">
+                <div class="col-md-4">
+                    <label>City</label>
+                </div>
+                <div class="col-md-8">
+                    <error [errorText]="{ required: 'Required' }"
+                        [formCtrl]="addressForm.controls.city">
+                        <mat-form-field appearance="outline">
+                            <input matInput formControlName="city">
+                        </mat-form-field>
+                    </error>
+                </div>
+            </div>
+            <div class="row rowField">
+                <div class="col-md-4">
+                    <label>County</label>
+                </div>
+                <div class="col-md-8">
+                    <mat-form-field appearance="outline">
+                        <input matInput formControlName="county">
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row rowField" [hidden]="!showState">
+                <div class="col-md-4">
+                    <label>State</label>
+                </div>
+                <div class="col-md-8">
+                    <error [errorText]="{ required: 'Required', invalidOption: 'Please enter a valid state'}"
+                        [formCtrl]="addressForm.controls.stateProvinceCode">
+                        <autocomplete-dropdown #ddlStateProvinceCode [dataSource]="countryStates" *ngIf="addressForm"
+                            [myControl]="addressForm.get('stateProvinceCode')">
+                        </autocomplete-dropdown>
+                    </error>
+                </div>
+            </div>
+            <div class="row rowField">
+                <div class="col-md-4">
+                    <label>Postcode/Zip code </label>
+                </div>
+                <div class="col-md-8">
+                    <error [errorText]="{ required: 'Required' }"
+                        [formCtrl]="addressForm.controls.postcode">
+                        <mat-form-field appearance="outline">
+                            <input matInput formControlName="postcode">
+                        </mat-form-field>
+                    </error>
+                </div>
+            </div>
+            <div class="row rowField">
+                <div class="col-md-4">
+                    <label>Country </label>
+                </div>
+                <div class="col-md-8">
+                    <error [errorText]="{ required: 'Required',
+                         invalidOption: 'Please enter a valid country'}"
+                         [formCtrl]="addressForm.controls.country">
+                        <autocomplete-dropdown #ddlCountries [dataSource]="countries" (change)="countryChanged($event)"
+                            *ngIf="addressForm" [myControl]="addressForm.get('country')">
+                        </autocomplete-dropdown>
+                    </error>
+                </div>
+            </div>
+        </div>
+
+        <div mat-dialog-actions align="end">
+            <button type="button" class="btn-link" mat-dialog-close>Cancel</button>
+            <button type="submit" class="btn-primary btnSaveAddress">{{dialogModel.modalBtnTitle}}</button>
+        </div>
+    </form>
+</div>

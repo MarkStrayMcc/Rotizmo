@@ -1,0 +1,51 @@
+﻿<div role="dialog">
+    <div mat-dialog-title>
+        <h1>{{modalTitle}}</h1>
+        <div class="close" aria-label="Close" mat-dialog-close>&times;</div>
+    </div>
+
+    <form *ngIf="brokerSelectionForm" (ngSubmit)="onSaveBroker()" [formGroup]="brokerSelectionForm">
+        <div mat-dialog-content>
+            <ng-container *ngIf="brokersList?.length > 0">
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="broker-selector"></th>
+                            <th class="broker"> Broker </th>
+                            <th class="enquiry-received"> Enquiry Received </th>
+                            <th class="assigned-underwriter"> Assigned Underwriter </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let broker of brokersList" class="policy-panel">
+                            <td class="broker-selector" data-th="Broker Selector">
+                                <input type="radio" name="broker" formControlName="broker" [value]="broker" required>
+                            </td>
+                            <td class="broker" data-th="Broker">
+                                {{broker.brokerCompanyName}}
+                            </td>
+                            <td class="enquiry-received" data-th="Enquiry Received">
+                                {{broker.enquiryReceivedDate | date:'dd/MM/y'}}
+                            </td>
+                            <td class="assigned-underwriter" data-th="Assigned Underwriter">
+                                {{broker.assignedUnderwriterInitials}}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </ng-container>
+
+            <div *ngIf="isLoadingBrokerList" class="md-mb1 md-mt1">
+                <mat-spinner strokeWidth="3" [diameter]="20"></mat-spinner>
+            </div>
+
+            <ng-container *ngIf="brokersList?.length <= 0 && !isLoadingBrokerList">
+                <p>No open enquiries found</p>
+            </ng-container>
+        </div>
+
+        <div mat-dialog-actions align="end" class="confirm-button">
+            <button class="btn-primary" [disabled]="!isValidForm()" type="submit">Save</button>
+        </div>
+    </form>
+</div>

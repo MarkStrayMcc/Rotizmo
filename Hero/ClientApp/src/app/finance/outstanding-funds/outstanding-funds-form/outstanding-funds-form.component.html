@@ -1,0 +1,46 @@
+<form novalidate [formGroup]="outstandingFundsGridFiltersForm">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group col-md-2">
+                <ng-container *ngIf="cfcBankAccounts$ | async as cfcBankAccounts">
+                    <label for="cfcBankAccount">Bank Account</label>
+                    <select class="form-control" id="cfcBankAccount" formControlName="cfcBankAccount">
+                        <option [ngValue]=""></option>
+                        <option *ngFor="let cfcBankAccount of cfcBankAccounts" [ngValue]="cfcBankAccount">
+                            {{ cfcBankAccount }}
+                        </option>
+                    </select>
+                </ng-container>
+            </div>
+            <div class="form-group col-md-2">
+                <ng-container *ngIf="ledgerCurrencyIsoCodes$ | async as supportedCurrencyIsoCodes">
+                    <label for="ledgerCurrencyIsoCode">Currency</label>
+                    <select class="form-control" id="ledgerCurrencyIsoCode" formControlName="ledgerCurrencyIsoCode">
+                        <option [ngValue]=""></option>
+                        <option *ngFor="let currencyIsoCode of supportedCurrencyIsoCodes" [ngValue]="currencyIsoCode">
+                            {{ currencyIsoCode }}
+                        </option>
+                    </select>
+                </ng-container>
+            </div>
+            <div class="form-group col-md-2">
+                <ng-container *ngIf="ledgerReferences$ | async as ledgerReferences">
+                    <label for="ledgerReference">Ledger Reference</label>
+                    <error [errorText]="{ invalidOption: 'Invalid Option' }"
+                        [formCtrl]="outstandingFundsGridFiltersForm.controls.ledgerReference">
+                        <autocomplete-dropdown id="ledgerReference"
+                            formControlName="ledgerReference"
+                            [myControl]="outstandingFundsGridFiltersForm.get('ledgerReference')"
+                            [dataSource]="ledgerReferences$"
+                            [customDisplayMethod]="ledgerReferenceDisplay"
+                            class="hide-invalid">
+                        </autocomplete-dropdown>
+                    </error>
+                </ng-container>
+            </div>
+            <div class="col-md-6">
+                <button type="button" class="btn btn-primary btn-reset-grid-filters" (click)="clearFilters()">Reset Grid Filters</button>
+            </div>
+        </div>
+    </div>
+</form>

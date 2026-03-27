@@ -1,0 +1,49 @@
+﻿@import "../../styles/utils/variables.scss";
+
+.ecf-reconciliation-tab-group {
+    font-family: inherit;
+    margin-bottom: 10px;
+}
+
+.ecf-reconciliation-tab-group .mat-ink-bar {
+    display: none;
+}
+
+.ecf-reconciliation-tab-group .mat-tab-header,
+.ecf-reconciliation-tab-group .mat-tab-nav-bar,
+.ecf-reconciliation-tab-group.mat-tab-header,
+.ecf-reconciliation-tab-group.mat-tab-nav-bar {
+    border-bottom: 0;
+}
+
+.ecf-reconciliation-tab-group .mat-tab-label,
+.ecf-reconciliation-tab-group .mat-tab-link {
+    margin-right: 4px;
+    opacity: 1;
+    height: 40px;
+    padding: 0 20px;
+    text-decoration: none;
+}
+
+.ecf-reconciliation-tab-group .mat-tab-label {
+    margin: 0px 1px;
+}
+
+.ecf-reconciliation-tab-group.mat-primary .mat-tab-label,
+.ecf-reconciliation-tab-group.mat-primary .mat-tab-label:focus,
+.ecf-reconciliation-tab-group.mat-primary .mat-tab-link,
+.ecf-reconciliation-tab-group.mat-primary .mat-tab-link:focus {
+    background-color: $grey-200;
+}
+
+.ecf-reconciliation-tab-group.mat-primary .mat-tab-label-active,
+.ecf-reconciliation-tab-group.mat-primary .mat-tab-label-active:focus,
+.ecf-reconciliation-tab-group.mat-primary .mat-tab-link.active,
+.ecf-reconciliation-tab-group.mat-primary .mat-tab-link.active:focus {
+    background-color: $cfc-navy-blue;
+}
+
+.ecf-reconciliation-tab-group.mat-primary .mat-tab-label-active h5,
+.ecf-reconciliation-tab-group.mat-primary .mat-tab-link.active h5 {
+    color: white;
+}

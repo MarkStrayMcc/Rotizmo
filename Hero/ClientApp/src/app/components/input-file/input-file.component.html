@@ -1,0 +1,16 @@
+<div class="input-padding">
+    <mat-chip-list #chipList [formControl]="formCtrl">
+        <mat-chip *ngFor="let defaultFile of defaultAttachments; index as i" [removable]="true">
+            {{fileNameFromPath(defaultFile.fileName)}}
+            <mat-icon matChipRemove (click)="removeDefault(i, $event)">cancel</mat-icon>
+        </mat-chip>
+        <mat-chip *ngFor="let fileName of files; index as i" [removable]="true">
+            {{fileName}}
+            <mat-icon matChipRemove (click)="fileRemove(i, $event)">cancel</mat-icon>
+        </mat-chip>
+        <mat-icon matSuffix class="folder-icon">folder</mat-icon>
+    </mat-chip-list>
+    <input #input id="md-input-file" type="file" [matChipInputFor]="chipList" [attr.accept]="fileTypes ? fileTypes : null" [attr.disabled]="disabled ? true : null" [attr.multiple]="multiple ? '' : null">
+    <span *ngIf="empty" class="filename">{{valuePlaceholder}}</span>
+    
+</div>

@@ -1,0 +1,14 @@
+<div class="container">
+    <div class="row">
+        <div class="form-group row">
+            <div class="col-md-4  text-right"><label  class="fieldname">Subjectivities</label></div>
+            <div class="col-md-6">
+                <div class="container table-striped containerSubjectivities">
+                    <div *ngFor="let quoteSubjectivity of quoteSubjectivities | async; let i = index" class="row rowSubjectivity">
+                        <quote-subjectivity [quoteSubjectivity]="quoteSubjectivity" (deleteQuoteSubjectivity)="removeQuoteSubjectivityFromList(i)"></quote-subjectivity>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

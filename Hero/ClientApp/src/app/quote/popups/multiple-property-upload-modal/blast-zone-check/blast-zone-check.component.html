@@ -1,0 +1,64 @@
+<div class="tw-my-6 tw-" *ngIf="invalidBlastZoneChecks || validBlastZoneCheckResultCount >0">
+    <div *ngIf="validBlastZoneCheckResultCount > 0">
+        <hr class="tw-h-px tw-my-6 tw-bg-gray-200 tw-border-0">
+        <div class="tw-flex tw-gap-3 tw-items-center">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd"
+                    d="M12 3.75C7.44365 3.75 3.75 7.44365 3.75 12C3.75 16.5563 7.44365 20.25 12 20.25C16.5563 20.25 20.25 16.5563 20.25 12C20.25 7.44365 16.5563 3.75 12 3.75ZM2.25 12C2.25 6.61522 6.61522 2.25 12 2.25C17.3848 2.25 21.75 6.61522 21.75 12C21.75 17.3848 17.3848 21.75 12 21.75C6.61522 21.75 2.25 17.3848 2.25 12ZM16.5087 8.4489C16.8131 8.72985 16.8321 9.20434 16.5511 9.50871L11.0126 15.5087C10.8707 15.6625 10.6709 15.75 10.4615 15.75C10.2522 15.75 10.0524 15.6625 9.91044 15.5087L7.4489 12.842C7.16794 12.5377 7.18692 12.0632 7.49129 11.7822C7.79566 11.5013 8.27015 11.5203 8.5511 11.8246L10.4615 13.8943L15.4489 8.49129C15.7298 8.18692 16.2043 8.16794 16.5087 8.4489Z"
+                    fill="#7BC20D" />
+            </svg>
+            <span id="matched-addresses" class="tw-font-bold tw-text-font-size-large">{{validBlastZoneCheckResultCount}}
+                valid address{{validBlastZoneCheckResultCount > 1 ? 'es' :''}}</span>
+        </div>
+    </div>
+    <hr class="tw-h-px tw-my-6 tw-bg-gray-200 tw-border-0">
+    <mat-accordion *ngIf="invalidBlastZoneChecks?.length > 0" id="accordion">
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <span id="matched-exceeding-addresses"
+                        class="tw-font-bold tw-text-2xl tw-text-cfc-validation-error-red tw-text-font-size-large">
+                        {{invalidBlastZoneChecks?.length}} address{{invalidBlastZoneChecks.length > 1 ? 'es' :''}}
+                        exceeding blast zone
+                    </span>
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div *ngFor="let invalidBlastZone of invalidBlastZoneChecks">
+                <div class="tw-flex tw-justify-between tw-items-center">
+                    <span class="tw-font-semibold tw-truncate tw-text-cfc-grey">
+                        {{invalidBlastZone.blastZoneCheckResult.formattedAddress}}
+                    </span>
+                    <span id="available-capacity"
+                        class="tw-font-semibold tw-truncate tw-text-cfc-validation-error-red">
+                        Available Capacity £{{ invalidBlastZone.blastZoneCheckResult.blastZoneCapacityResult.availableLimit | thousandSuffixes}}
+                    </span>
+                </div>
+                <div class="tw-flex tw-justify-between tw-mb-4">
+                    <button id="hide-show-limits" (click)="invalidBlastZone.isPropertyLimitVisible = !invalidBlastZone.isPropertyLimitVisible"
+                        class="tw-p-0 tw-border-0 tw-bg-white tw-justify-between tw-flex tw-items-center">
+                        <span class="tw-text-cfc-primary-blue tw-font-bold">
+                            {{ invalidBlastZone.isPropertyLimitVisible ? 'Hide Limits' : 'Show Limits' }}
+                        </span>
+                        <svg *ngIf="invalidBlastZone.isPropertyLimitVisible" width="24" height="24" viewBox="0 0 24 24"
+                            fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" clip-rule="evenodd"
+                                d="M5.25 12C5.25 11.5858 5.58579 11.25 6 11.25L18 11.25C18.4142 11.25 18.75 11.5858 18.75 12C18.75 12.4142 18.4142 12.75 18 12.75L6 12.75C5.58579 12.75 5.25 12.4142 5.25 12Z"
+                                fill="#0083BD" />
+                        </svg>
+                        <svg *ngIf="!invalidBlastZone.isPropertyLimitVisible" width="24" height="24" viewBox="0 0 24 24"
+                            fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" clip-rule="evenodd"
+                                d="M12 5.25C12.4142 5.25 12.75 5.58579 12.75 6V11.25H18C18.4142 11.25 18.75 11.5858 18.75 12C18.75 12.4142 18.4142 12.75 18 12.75H12.75V18C12.75 18.4142 12.4142 18.75 12 18.75C11.5858 18.75 11.25 18.4142 11.25 18V12.75H6C5.58579 12.75 5.25 12.4142 5.25 12C5.25 11.5858 5.58579 11.25 6 11.25H11.25V6C11.25 5.58579 11.5858 5.25 12 5.25Z"
+                                fill="#0083BD" />
+                        </svg>
+                    </button>
+                </div>
+                <div id="property-limit-values" *ngIf="invalidBlastZone.isPropertyLimitVisible"
+                    class="tw-border tw-border-solid tw-border-gray-200 tw-py-2 tw-px-6 tw-mb-7">
+                    <app-property-limit-values [propertyLimit]="invalidBlastZone.blastZoneCheckResult.propertyLimit">
+                    </app-property-limit-values>
+                </div>
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+</div>

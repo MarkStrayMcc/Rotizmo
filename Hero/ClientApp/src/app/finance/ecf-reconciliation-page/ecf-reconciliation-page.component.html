@@ -1,0 +1,28 @@
+﻿<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>ECF Reconciliation</h1>
+        </div>
+    </div>
+    <nav mat-tab-nav-bar class="ecf-reconciliation-tab-group">
+        <a mat-tab-link
+           [routerLink]="['/finance/ecf-reconciliation']"
+           [routerLinkActiveOptions]="{exact:true}"
+           routerLinkActive="active">
+            <h5>Summary</h5>
+        </a>
+        <a mat-tab-link
+           [routerLink]="['/finance/ecf-reconciliation/financial-transactions']"
+           routerLinkActive="active">
+            <h5>Financial Transactions</h5>
+        </a>
+        <a mat-tab-link
+           [routerLink]="['/finance/ecf-reconciliation/claim-financial-items']"
+           routerLinkActive="active">
+            <h5>Claim Financial Items</h5>
+        </a>
+    </nav>
+
+    <router-outlet></router-outlet>
+</div>
+

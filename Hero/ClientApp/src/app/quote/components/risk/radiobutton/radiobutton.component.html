@@ -1,0 +1,19 @@
+<div class="risk-radiobutton-wrapper">
+    <div class="col-md-5 list-radio" *ngFor="let option of riskQuestion.options">
+        <div class="ul-checkbox float-left">
+            <div>
+                <input class="input-radio"
+                        type="radio"
+                        value="{{option.uid}}"
+                        [formControl]="formControl"
+                        (blur)="onTouchEvent()"
+                        name="radioBtnGrp_{{riskQuestion.tag}}"
+                        id="radioBtn_{{option.uid}}"
+                        [required]="riskQuestion.isMandatory">
+                <label class="label-radio" for="radioBtn_{{option.uid}}" [ngClass]="{'radio-active': formControl.value === option.uid }"></label>
+                <label class="chkRadio" for="radioBtn_{{option.uid}}" [ngClass]="{'radio-label-active': formControl.value === option.uid }">{{option.text}}</label>
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+</div>

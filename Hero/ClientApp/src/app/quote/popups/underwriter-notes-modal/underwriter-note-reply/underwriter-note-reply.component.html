@@ -1,0 +1,16 @@
+<div>
+  <a class="btn-primary float-right md-ml3"
+     [class.disabled]="!replyText"
+     (click)="reply()">Reply</a>
+  <div style="overflow: hidden;">
+    <mat-form-field appearance="outline">
+      <textarea matInput
+                type="text"
+                class="full-width reply-textarea" 
+                rows="2" 
+                placeholder="Reply to note"
+                [(ngModel)]="replyText">
+      </textarea>
+    </mat-form-field>
+  </div>
+</div>

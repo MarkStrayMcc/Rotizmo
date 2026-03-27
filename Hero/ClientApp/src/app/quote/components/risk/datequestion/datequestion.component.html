@@ -1,0 +1,14 @@
+﻿<div class="maxWidth174px input-group date datepicker hide-invalid"
+    [class.disabled-picker]="formControl.disabled">
+    <input type="text"
+        class="form-control hide-invalid"
+        [formControl]="formControl"
+        [matDatepicker]="picker"
+        (blur)="dateBlurHandler()"/>
+
+    <span class="input-group-addon input-group-addon-calendar">
+        <i class="material-icons ico-cal" (click)="picker.open()">date_range</i>
+    </span>
+
+    <mat-datepicker #picker [calendarHeaderComponent]="datepickerHeader"></mat-datepicker>
+</div>

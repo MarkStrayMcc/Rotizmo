@@ -1,0 +1,40 @@
+<basic-information-view #step
+  [viewModel]="basicInformationFormValues$ | async"
+  [formCurrency$]="basicInformationFormCurrency$"
+  [formLocalBroker$]="basicInformationFormLocalBroker$"
+  [formSurplusLinesBroker$]="basicInformationFormSurplusLinesBroker$"
+
+  [readonly]="readonly$ | async"
+  [showLocalBroker]="showLocalBroker$ | async"
+  [showSurplusLinesBroker]="showSurplusLinesBroker$ | async"
+  [isAuthorisedLocation]="isAuthorisedLocation$ | async"
+
+  [insuranceTypes] = "insuranceTypes$ | async"
+  [quoteTypes] = "quoteTypes$ | async"
+  [languages] = "languages$ | async"
+  [currencies] = "currencies$"
+  [countries] = "countries$"
+  [cfccontacts] = "cfcContacts$"
+  [localBrokers] = "localBrokers$"
+
+  [wordingversions]="wordings$"
+
+  (onValid)="sendValid($event)"
+  (onInitialise)="sendInitialised()"
+
+  (valueChanged)="onValueChange($event)"
+  (surplusLinesBrokerChanged)="onSurplusLinesBrokerChange($event)"
+  (localBrokerChanged)="onLocalBrokerChange($event)"
+  (quoteTypeChanged)="onQuoteTypeChange($event)"
+  (insuranceTypeChanged)="onInsuranceTypeChange($event)"
+  (productChanged)="onProductChange($event)"
+  (assignedChanged)="onAssignedChange($event)"
+  (addressChanged)="onAddressChanged($event)"
+  (currencyChanged)="onCurrencyChange($event)"
+  (targetInceptionChanged)="onTargetInceptionChange($event)"
+  (policyPeriodChanged)="onPolicyPeriodChanged($event)"
+  (policyLanguageChanged)="onPolicyLanguageChange($event)"
+  (wordingVersionChanged)="onWordingVersionChange($event)"
+  (euSubsidiaryQuestionChanged)="onEuSubsidiaryQuestionChange($event)"
+  (expiringPolicyNumberChanged)="expiringPolicyNumberChange($event)">
+</basic-information-view>

@@ -1,0 +1,15 @@
+<form id="modalConfirmation" role="dialog">
+    <div role="document">
+        <div>
+            <div class="close" aria-label="Close" [mat-dialog-close]="false">&times;</div>
+            <h1>Reminder</h1>
+            <h2>Prior to executing a name change, kindly ensure all associated folders and files are closed.</h2>
+            <h2>Would you like to continue?</h2>
+            <mat-dialog-actions align="end">
+                <button id="confirmation-save" type="button" (click)="confirm()" class="btn-primary d-flex">
+                    Yes
+                </button>
+            </mat-dialog-actions>
+        </div>
+    </div>
+</form>

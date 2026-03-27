@@ -1,0 +1,41 @@
+<form [formGroup]="form">
+    <div class="excess row md-mb2" [hidden]="excess.excessType.isHidden">
+
+        <div class="col-xs-12 col-md-2 text-right">
+            <label class="excessLabel right">{{ excess.excessType.description }}</label>
+        </div>
+        <div class="col-xs-12 col-md-10">
+            <div class="row">
+                <div class="col-xs-4">
+                    <currency #excessvalue
+                              formControlName="excessValue"
+                              [(ngModel)]="excess.excess"
+                              [isRequired]="isSelected"
+                              [currency]="currency"
+                              [decimals]="false"
+                              [readonly]="readonly">
+                    </currency>
+                </div>
+                <div class="col-xs-4 md-pr0 md-pl0">
+                    <select #excessBasis
+                            formControlName="excessBasis"
+                            [(ngModel)]="excess.excessBasisId"
+                            [required]="isSelected"
+                            [ngClass]="{ 'disabled': readonly, 'ng-invalid': excessBasisError() }">
+                        <option *ngIf="!form.value.excessBasis"
+                                [value]="null"
+                                [ngClass]="{ 'hidden' : !!form.value.excessBasis }"
+                                selected
+                                hidden>
+                        </option>
+                        <option *ngFor="let key of basisKeys" [value]="key">{{ this.excess.excessType.availableExcessBasis[key] }}</option>
+                    </select>
+                    <div class="help-block with-errors" *ngIf="excessBasisError()">
+                        Required
+                    </div>
+                </div>
+                <div class="col-xs-4"></div>
+            </div>
+        </div>
+    </div>
+</form>

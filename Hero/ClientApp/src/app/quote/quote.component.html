@@ -1,0 +1,261 @@
+<div id="center-aligned-content">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h1 (dblclick)="showRediskey()">
+                    <span *ngIf="vm?.policyNumber" id="titlePolicy">{{ vm?.client?.companyName }} - Policy Number: {{
+                        vm?.policyNumber }}</span>
+                    <span *ngIf="!vm?.policyNumber && (!vm?.quoteReference || vm?.quoteReference === 0) && enquiry"
+                        id="titleEnquiry">New quote - {{ vm?.client?.companyName }} - ENQUIRY REFERENCE: {{
+                        enquiry?.enquiryReference }}</span>
+                    <span *ngIf="!vm?.policyNumber && vm?.quoteReference && vm?.quoteReference > 0" id="titleQuote">{{
+                        vm?.client?.companyName }} - Quote Ref: {{ vm?.quoteReference }}</span>
+                </h1>
+            </div>
+        </div>
+    </div>
+
+    <nav class="secondary-menu-container">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <ul class="secondary-menu">
+                        <li [ngClass]="(currentStep === stepBasicInfo)?'active':'inactive'">
+                            <a [attr.tabindex]="stepBasicInfo" [attr.data-panel]="stepBasicInfo - 1"
+                                data-section="section-basic-info" data-focus="txtReference" class="submenulink"
+                                (click)="setStep(stepBasicInfo)" [ngClass]="{'active': currentStep === stepBasicInfo}">
+                                <span class="sub-menu-step sub-menu-step1">{{ stepBasicInfo }}</span>
+                                <span class="sub-menu-title">Basic</span>
+                                <span class="sub-menu-desc">Company info</span>
+                                <mat-icon *ngIf="getStepWarnings(stepBasicInfo)" class="warning-spacing warning-colour"
+                                    matSuffix>warning</mat-icon>
+                            </a>
+                        </li>
+                        <li [ngClass]="(currentStep === stepCoverages)?'active':'inactive'">
+                            <a [attr.tabindex]="stepCoverages" [attr.data-panel]="stepCoverages - 1"
+                                data-section="section-coverage" data-focus="none" class="submenulink"
+                                (click)="setStep(stepCoverages)"
+                                [ngClass]="{'active': currentStep === stepCoverages, 'inactive': !disabled(stepCoverages)}">
+                                <span class="sub-menu-step">{{ stepCoverages }}</span>
+                                <span class="sub-menu-title">Coverage</span>
+                                <span class="sub-menu-desc">Cover options</span>
+                                <mat-icon *ngIf="getStepWarnings(stepCoverages)" class="warning-spacing warning-colour"
+                                    matSuffix>warning</mat-icon>
+                            </a>
+                        </li>
+                        <li [ngClass]="(currentStep === stepActivities)?'active':'inactive'">
+                            <a [attr.tabindex]="stepActivities" [attr.data-panel]="stepActivities - 1"
+                                data-section="section-activities" class="submenulink" (click)="setStep(stepActivities)"
+                                [ngClass]="{'active': currentStep === stepActivities, 'inactive': !disabled(stepActivities)}">
+                                <span class="sub-menu-step">{{ stepActivities }}</span>
+                                <span class="sub-menu-title">Activities</span>
+                                <span class="sub-menu-desc">Business activities</span>
+                                <mat-icon *ngIf="getStepWarnings(stepActivities)" class="warning-spacing warning-colour"
+                                    matSuffix>warning</mat-icon>
+                            </a>
+                        </li>
+                        <li [ngClass]="(currentStep === stepRisk)?'active':'inactive'">
+                            <a [attr.tabindex]="stepRisk" [attr.data-panel]="stepRisk - 1" data-section="section-risk"
+                                data-focus="txtLastYearRevenue" class="submenulink" (click)="setStep(stepRisk)"
+                                [ngClass]="{'active': currentStep === stepRisk, 'inactive': !disabled(stepRisk)}">
+                                <span class="sub-menu-step">{{ stepRisk }}</span>
+                                <span class="sub-menu-title">Risk</span>
+                                <span class="sub-menu-desc">Risk questions</span>
+                                <mat-icon *ngIf="getStepWarnings(stepRisk)" class="warning-spacing warning-colour"
+                                    matSuffix>warning</mat-icon>
+                            </a>
+                        </li>
+                        <li [ngClass]="(currentStep === stepSubjectivities)?'active':'inactive'">
+                            <a [attr.tabindex]="stepSubjectivities" [attr.data-panel]="stepSubjectivities - 1"
+                                data-section="section-subjectivities" data-focus="none" class="submenulink"
+                                (click)="setStep(stepSubjectivities)"
+                                [ngClass]="{'active': currentStep === stepSubjectivities, 'inactive': !disabled(stepSubjectivities)}">
+                                <span class="sub-menu-step">{{ stepSubjectivities }}</span>
+                                <span class="sub-menu-title">Subjectivities</span>
+                                <span class="sub-menu-desc">Subjectivity details</span>
+                                <mat-icon *ngIf="getStepWarnings(stepSubjectivities)"
+                                    class="warning-spacing warning-colour" matSuffix>warning</mat-icon>
+                            </a>
+                        </li>
+                        <li [ngClass]="(currentStep === stepEndorsements)?'active':'inactive'">
+                            <a [attr.tabindex]="stepEndorsements" [attr.data-panel]="stepEndorsements - 1"
+                                data-section="section-endorsements" data-focus="none" class="submenulink"
+                                (click)="setStep(stepEndorsements)"
+                                [ngClass]="{'active': currentStep === stepEndorsements, 'inactive': !disabled(stepEndorsements)}">
+                                <span class="sub-menu-step">{{ stepEndorsements }}</span>
+                                <span class="sub-menu-title">Clauses</span>
+                                <span class="sub-menu-desc">Clause details</span>
+                                <mat-icon *ngIf="getStepWarnings(stepEndorsements)"
+                                    class="warning-spacing warning-colour" matSuffix>warning</mat-icon>
+                            </a>
+                        </li>
+                        <li [ngClass]="(currentStep === stepPricing)?'active':'inactive'">
+                            <a [attr.tabindex]="stepPricing" [attr.data-panel]="stepPricing - 1"
+                                data-section="section-pricing" data-focus="none" class="submenulink"
+                                (click)="setStep(stepPricing)"
+                                [ngClass]="{'active': currentStep === stepPricing, 'inactive': !disabled(stepPricing)}">
+                                <span class="sub-menu-step">{{ stepPricing }}</span>
+                                <span class="sub-menu-title">Pricing</span>
+                                <span class="sub-menu-desc">Quote overview</span>
+                                <mat-icon *ngIf="stepWarnings[stepPricing]" class="warning-spacing warning-colour"
+                                    matSuffix>warning</mat-icon>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container container-main" *ngIf="vm; else loadingBlock">
+        <div class="row md-mb4">
+            <form novalidate>
+                <div class="col-md-12 md-mp4">
+                    <message></message>
+                    <message [category]="3"></message>
+                    <message [category]="4"></message>
+                    <message [category]="5"></message>
+                    <message [category]="6"></message>
+                    <message [category]="7"></message>
+                    <message [category]="9"></message>
+                    <client-sanctions-check></client-sanctions-check>
+                    <message *ngIf="isAgentic === true" [category]="11"></message>
+                </div>
+                <div class="col-md-8 md-mb4">
+                    <app-loading *ngIf="isLoading"></app-loading>
+                    <div [ngSwitch]="currentStep" [hidden]="isLoading">
+
+                        <ng-container *ngIf="!isStateFeatureEnabled">
+                            <basic-information-step *ngSwitchCase="stepBasicInfo" [vm]="vm"
+                                (onValid)="setVisitable(stepCoverages, $event)"
+                                (onChange)="handleStepDataChange(stepBasicInfo, $event)"
+                                (onInitialise)="setInitialised(stepBasicInfo)" (onAddressChanged)="addressChanged()"
+                                (onExpiringPolicyNumberChanged)="checkForManualMtas()"
+                                (onQuoteTypeChanged)="checkForManualMtas()"
+                                (onWarningChange)="onWarningChange(stepBasicInfo, $event)" [stepNr]="stepBasicInfo"
+                                [readonly]="readOnly">
+                            </basic-information-step>
+                        </ng-container>
+
+                        <ng-container *ngIf="isStateFeatureEnabled">
+                            <div style="position: fixed;
+                                     top: 240px;
+                                     left: 0;
+                                     background: #149bd7;
+                                     padding: 16px 12px;
+                                     color: white;
+                                     font-family: Montserrat,sans-serif;
+                                     font-size: 12px;
+                                     font-weight: bold;
+                                     text-transform: uppercase;
+                                     writing-mode: vertical-rl;
+                                     text-orientation: upright;">
+                                <span>Experimental</span>
+                            </div>
+                            <app-basic-information-wrapper *ngSwitchCase="stepBasicInfo" [vm]="vm"
+                                (onValid)="setVisitable(stepCoverages, $event)"
+                                (onChange)="handleStepDataChange(stepBasicInfo, $event)"
+                                (onInitialise)="setInitialised(stepBasicInfo)" (onAddressChanged)="addressChanged()"
+                                (onWarningChange)="onWarningChange(stepBasicInfo, $event)" [stepNr]="stepBasicInfo"
+                                [readonly]="readOnly">
+                            </app-basic-information-wrapper>
+                        </ng-container>
+
+                        <coverages-step *ngSwitchCase="stepCoverages" [vm]="vm"
+                            (onValid)="setVisitable(stepActivities, $event)"
+                            (onChange)="handleStepDataChange(stepCoverages, $event)"
+                            (onInitialise)="setInitialised(stepCoverages)"
+                            (onWarningChange)="onWarningChange(stepCoverages, $event)" [stepNr]="stepCoverages"
+                            [readonly]="readOnly"
+                            (firstLossLimit)="handleFirstLossData($event)">
+                        </coverages-step>
+
+                        <activities-step *ngSwitchCase="stepActivities" [vm]="vm"
+                            (onValid)="setVisitable(stepRisk, $event)"
+                            (onChange)="handleStepDataChange(stepActivities, $event)"
+                            (onInitialise)="setInitialised(stepActivities)"
+                            (onWarningChange)="onWarningChange(stepActivities, $event)" [stepNr]="stepActivities"
+                            [readonly]="readOnly">
+                        </activities-step>
+
+                        <risk-step *ngSwitchCase="stepRisk" [vm]="vm"
+                            (onValid)="setVisitable(stepSubjectivities, $event)"
+                            (onChange)="handleStepDataChange(stepRisk, $event)"
+                            (onInitialise)="setInitialised(stepRisk)"
+                            (onWarningChange)="onWarningChange(stepRisk, $event)" [stepNr]="stepRisk"
+                            [readonly]="readOnly">
+                        </risk-step>
+
+                        <div *ngSwitchCase="stepSubjectivities">
+                            <subjectivities-step *ngIf="!isSubjectivityConfigurationFeatureEnabled" [vm]="vm"
+                                [hasBeenInitialised]="hasBeenInitialised(stepSubjectivities)"
+                                (onValid)="setVisitable(stepEndorsements, $event)"
+                                (onChange)="handleStepDataChange(stepSubjectivities, $event)"
+                                (onInitialise)="setInitialised(stepSubjectivities)"
+                                (onWarningChange)="onWarningChange(stepSubjectivities, $event)"
+                                [stepNr]="stepSubjectivities" [readonly]="readOnly">
+                            </subjectivities-step>
+
+                            <subjectivity-configuration-step *ngIf="isSubjectivityConfigurationFeatureEnabled" [vm]="vm"
+                                [hasBeenInitialised]="hasBeenInitialised(stepSubjectivities)"
+                                (onValid)="setVisitable(stepEndorsements, $event)"
+                                (onChange)="handleStepDataChange(stepSubjectivities, $event)"
+                                (onInitialise)="setInitialised(stepSubjectivities)"
+                                (onWarningChange)="onWarningChange(stepSubjectivities, $event)"
+                                [stepNr]="stepSubjectivities" [readonly]="readOnly">
+                            </subjectivity-configuration-step>
+                        </div>
+                        <endorsements-step *ngSwitchCase="stepEndorsements" [vm]="vm"
+                            (onValid)="setVisitable(stepPricing, $event)"
+                            (onChange)="handleStepDataChange(stepEndorsements, $event)"
+                            (onInitialise)="setInitialised(stepEndorsements)"
+                            (onWarningChange)="onWarningChange(stepEndorsements, $event)" [stepNr]="stepEndorsements"
+                            [readonly]="readOnly">
+                        </endorsements-step>
+
+                        <pricing-step *ngSwitchCase="stepPricing" [vm]="vm" [originalQuote]="originalQuote"
+                            (onValid)="setVisitable(stepSaveQuote, $event)"
+                            (onChange)="handleStepDataChange(stepPricing, $event)"
+                            (onInitialise)="setInitialised(stepPricing)"
+                            (onWarningChange)="onWarningChange(stepPricing, $event)"
+                            (onActualGrossCommissionChange)="enableRecalculation($event)"
+                            (onFirstLoadChanged)="isPricingStepFirstLoad=false" [stepNr]="stepPricing"
+                            [readonly]="readOnly" [isFirstLoad]="isPricingStepFirstLoad">
+                        </pricing-step>
+                    </div>
+                </div>
+
+                <div class="col-md-4 md-pr0">
+                    <div class="float-left full-width">
+                        <quote-summary-panel (sendQuote)="sendQuote()" (sendPolicy)="sendPolicy()" (saveQuote)="insert()"
+                            (bind)="bindQuote()" (recalculate)="recalculate()" (unreserveCapacity)="unreserveCapacity()"
+                            (allowUpdate)="allowUpdate()" [vm]="vm" [enableSave]="enableSave" [inserted]="isInserted" [isSaving]="isSaving"
+                            [isCalculating]="isCalculating" [showRecalculate]="showRecalculate"
+                            [canRecalculatePricing]="vm.needsPricingRecalculation" [currentStep]="currentStep"
+                            [isPublishableQuote]="isPublishableQuote" [isPublishableWordingVersion]="isPublishableWordingVersion">
+                        </quote-summary-panel>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <ng-template #loadingBlock>
+        <app-loading></app-loading>
+    </ng-template>
+
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <skip-to tabindex="18" [isPrevious]="true" [isDisabled]="this.isFirstStep()"
+                        (onSkipToClick)="previousStep()"></skip-to>
+                </div>
+                <div class="col-md-6">
+                    <skip-to tabindex="19" [isDisabled]="this.isCurrentStepLoading() || this.isLastStep()"
+                        (onSkipToClick)="nextStep()"></skip-to>
+                </div>
+            </div>
+        </div>
+        <toastr *ngIf="showToast$ | async"></toastr>
+    </footer>
+</div>

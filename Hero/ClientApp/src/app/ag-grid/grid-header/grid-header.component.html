@@ -1,0 +1,13 @@
+﻿<div class="header-wrap">
+    <h5 class="headerLabel" (click)="onSortRequested(sorted, $event)">{{params.displayName}}</h5>
+    <div class="icon-wrap">
+        <div [hidden]="!params.enableMenu"
+             class="filter-wrap"
+             (click)="onMenuClick()">
+            <mat-icon [class.filter-active]="filterActive">filter_list</mat-icon>
+        </div>
+        <div class="sort-wrap" [hidden]="!params.enableSorting">
+            <mat-icon (click)="onSortRequested(sorted, $event)">{{getSortMatIcon(sorted)}}</mat-icon>
+        </div>
+    </div>
+</div>

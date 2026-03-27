@@ -1,0 +1,23 @@
+﻿<mat-form-field appearance="outline" [ngClass]="disabled ? 'disabled-look' : null">
+    <mat-chip-list #tag [selectable]="!disabled">
+        <mat-chip *ngFor="let tag of tagValues"
+                  [removable]="!disabled"
+                  (removed)="remove(tag)" [attr.disabled]="disabled ? '' : null">
+            {{ tag }}
+            <mat-icon matChipRemove>cancel</mat-icon>
+        </mat-chip>
+
+        <input class="hide-invalid"
+               [class.small]="smallWidth"
+               [class.upperCase]="allCaps"
+               #input
+               matInput
+               (blur)="blurred()"
+               [matChipInputFor]="tag"
+               [matChipInputAddOnBlur]="addOnBlur"
+               [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+               (matChipInputTokenEnd)="add($event)"
+               [readonly]="disabled" />
+        <mat-hint align="start">{{placeholder}}</mat-hint>
+    </mat-chip-list>
+</mat-form-field>

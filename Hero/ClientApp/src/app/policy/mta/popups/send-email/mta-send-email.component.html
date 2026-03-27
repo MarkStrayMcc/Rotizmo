@@ -1,0 +1,13 @@
+<div id="modalSendMtaEmail" role="dialog">
+    <div role="document">
+        <div mat-dialog-title>
+            <h1>Send MTA</h1>
+            <div class="close" aria-label="Close" mat-dialog-close>&times;</div>
+        </div>
+
+        <shared-form-creator
+            [config]="formModalConfig"
+            (validForm)="sendEmail($event)">
+        </shared-form-creator>
+    </div>
+</div>

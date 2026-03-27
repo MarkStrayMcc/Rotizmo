@@ -1,0 +1,58 @@
+<div class="row">
+  <div class="form-group col-md-6 hide-invalid" *ngIf="paidFormGroup" [formGroup]="paidFormGroup">
+    <label for="paidDate">Paid Date</label>
+    <error *ngIf="paidFormGroup.controls.paidDate" [errorText]="{ invalidDate: 'Invalid Date', required: 'Required' }"
+      [formCtrl]="paidFormGroup.controls.paidDate">
+      <datepicker *ngIf="paidFormGroup" #paidDate formControlName="paidDate"></datepicker>
+    </error>
+  </div>
+</div>
+<div class="hide-invalid" [formGroup]="paidFormGroup">
+  <div class="row">
+    <div class="form-group col-md-12">
+      <label for="bankAccount">Bank Account</label>
+      <error [errorText]="{ required: 'Required' }" [formCtrl]="paidFormGroup.controls.cfcBankAccountId">
+        <select class="form-control" id="bankAccount" formControlName="cfcBankAccountId" name="bankAccount"
+          #bankAccount>
+          <option *ngFor="let cfcBankAccount of cfcBankAccounts | async" [value]="cfcBankAccount.cfcBankAccountId">
+              {{ cfcBankAccount.bankAccountName + " (" + cfcBankAccount.bankAccountType + ")" }}
+          </option>
+        </select>
+      </error>
+    </div>
+  </div>
+  <div class="row">
+    <div class="form-group col-md-6">
+      <label for="originalCurrencyCode">Original Currency</label>
+      <input type="text" formControlName="originalCurrencyCode" id="originalCurrencyCode" name="originalCurrencyCode"
+        #originalCurrencyCode />
+    </div>
+    <div class="form-group col-md-6">
+      <label for="totalOriginalAmount">Total Original Amount</label>
+      <error [errorText]="{ required: 'Required' }" [formCtrl]="paidFormGroup.controls.totalOriginalAmount">
+        <currency #originalAmount formControlName="totalOriginalAmount" id="totalOriginalAmount" [decimals]="true"
+          [negatives]="true" [currency]="pendingPaymentRequestCurrency"></currency>
+      </error>
+    </div>
+  </div>
+  <div class="row">
+    <div class="form-group col-md-6">
+      <label for="cfcBankAccountCurrency">Account Currency</label>
+      <error [errorText]="{ required: 'Required' }" [formCtrl]="paidFormGroup.controls.bankAccountCurrencyId">
+        <select class="form-control" id="cfcBankAccountCurrency" formControlName="bankAccountCurrencyId"
+          name="bankAccountCurrencyId" #bankAccountCurrencyId>
+          <option *ngFor="let currencyCode of supportedCurrencyCodes" [value]="[currencyCode.id]">
+            {{ currencyCode.isoCode }}
+          </option>
+        </select>
+      </error>
+    </div>
+    <div class="form-group col-md-6">
+      <label for="accountAmount">Account Amount</label>
+      <error [errorText]="{ required: 'Required' }" [formCtrl]="paidFormGroup.controls.accountAmount">
+        <currency #accountAmount formControlName="accountAmount" id="accountAmount" [decimals]="true"
+          [negatives]="true" [currency]="selectedCurrency"></currency>
+      </error>
+    </div>
+  </div>
+</div>

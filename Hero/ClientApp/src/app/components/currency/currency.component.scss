@@ -1,0 +1,5 @@
+form warning .input-group {
+  /*
+  TODO: this is a nasty hack to alleviate sub-pixel width rendering issues when rendering parts of the element as display: table */
+  width: 100.35%;
+}

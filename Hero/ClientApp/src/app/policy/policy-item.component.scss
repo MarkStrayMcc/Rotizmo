@@ -1,0 +1,140 @@
+@import "utils/variables";
+
+.policy-item-value {
+    line-height: 1.1;
+    font-size: 14px;
+    color: #9b9c9d;
+    float: left;
+    margin-top: 16px;
+    margin-bottom: 16px;
+}
+
+.policy-number .policy-item-value,
+.client-name .policy-item-value {
+    font-weight: 600;
+}
+
+.policy-panel {
+    border: 1px solid #b3b3b1;
+    float: left;
+    width: 100%;
+    margin-bottom: 6px;
+    &.expired-policy {
+        background-color: #f5f5f5;
+        color: #b0b0b0;
+    }
+}
+
+.policy-panel td[class*="col-"] {
+    float: left;
+}
+
+.policy-panel:hover {
+    background-color: #e9f7fb;
+}
+
+.policy-number {
+    width: 16.59999999%;
+}
+
+.client-name > .policy-item-value,
+.broker-name > .policy-item-value {
+    width: 100%;
+    text-overflow: ellipsis;
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.client-name,
+.broker-name {
+    width: 19.36666667%;
+}
+
+.product-name,
+.type {
+    width: 7%;
+}
+
+.actions-menu {
+    width: 14%;
+    padding-right: 5px;
+    text-align: right;
+}
+
+.mat-icon {
+    color: #149bd7;
+    margin-right: 4px;
+    height: 40px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    margin-top: 2px;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.mat-icon:hover {
+    color: #149bd7;
+}
+
+.policy-mta-type-menu {
+    padding-left: 0px;
+    float: right;
+}
+
+
+@media only screen and (max-width: $tablet-width) {
+    .policy-panel {
+        padding: 10px 5px;
+    }
+
+    .policy-panel td[class*="col-"] {
+        display: block;
+        float: none;
+        width: 98%;
+        padding: 0 1%;
+    }
+
+    td[data-th]:before {
+        content: attr(data-th);
+        font-size: 14px;
+        color: #9b9c9d;
+        font-weight: 500;
+        display: inline-block;
+        margin-top: 0px;
+        margin-bottom: 8px;
+        width: 23%;
+    }
+
+    td .policy-item-value {
+        font-size: 14px;
+        color: #9b9c9d;
+        font-weight: 600;
+        float: none;
+        margin-top: 0px;
+        margin-bottom: 8px;
+        clear: right;
+        width: 75%;
+        display: inline-block;
+    }
+
+    .client-name > .policy-item-value,
+
+    .policy-panel td[class*="col-"] {
+        float: none;
+        display: block;
+    }
+
+    #previewPolicy,
+    #downloadPolicy,
+    .policy-mta-type-menu {
+        float: none;
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    .actions-menu {
+        text-align: right;
+    }
+}
+

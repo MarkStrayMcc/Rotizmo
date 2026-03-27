@@ -1,0 +1,85 @@
+<div *ngIf="totalPercentage < 100">
+    <ng-container *ngIf="((isProductSearchable$ | async) || isSearchEnabledForAllProducts); else activitySelector">
+        <activity-search *ngFor="let activity of activities" [thisActivity]="activity"></activity-search>
+    </ng-container>
+    <ng-template #activitySelector>
+        <activity-selector *ngFor="let activity of activities" [thisActivity]="activity"></activity-selector>
+    </ng-template>
+</div>
+<div class="form-group row hide-invalid" *ngIf="showAddBtn" [formGroup]="activityAddForm">
+    <div class="col-md-4  text-right"><label>Percentage</label></div>
+    <div class="col-md-7 md-mb2">
+        <warning [hasWarning]="hasUnderwriterWarning" warningText="Selected activity requires approval">
+            <percentage-input formControlName="percentageInput" [defaultValue]="maxPercentage"
+                (valueChange)="percentage = $event" [isRequired]="true" [minValue]="1" [maxValue]="maxPercentage">
+            </percentage-input>
+        </warning>
+    </div>
+    <div class="col-md-1" *ngIf="{value: isProductSearchable$ | async} as isProductSearchable">
+        <button class="btn btn-secondary btnActivityAdd md-mb1" (click)="confirmActivity(isProductSearchable.value)"
+            [class.disabled]="!valid" [disabled]="!valid">Add</button>
+    </div>
+</div>
+<div class="form-group row">
+    <div class="col-md-4">
+    </div>
+    <div class="col-md-7">
+        <table class="table table-striped containerActivities md-mb0">
+            <tbody>
+                <tr class="rowActivities">
+                    <td class="width50">
+                        <span class="txtRowActivity"></span>
+                    </td>
+                    <td class="width25 text-right">
+                        <span class="txtRowPercentage"></span>
+                    </td>
+                    <td class="width25 text-right">
+                        <a class="tableaction btnRemoveActivity">Remove</a>
+                    </td>
+                </tr>
+                <ng-template ngFor let-activity [ngForOf]="vm.activities" let-i="index">
+                    <tr [ngStyle]="{'height.em':activity.activityMaps.length + 3}" class="rowActivities"
+                        [class.warning-border]="hasWarningForGivenActivity(activity)">
+                        <td class="width80">
+                            <div>
+                                <div class="overflow-hidden" title="{{map.description}}"
+                                    *ngFor="let map of activity.activityMaps">{{map.description}}<br /></div>
+                            </div>
+                        </td>
+                        <td class="width10 text-right vertical-align">
+                            <span class="txtRowPercentage">{{activity.percent}}%</span>
+                        </td>
+                        <td class="width10 icon-padding text-right vertical-align">
+                            <a class="tableaction btnRemoveActivity" (click)="!readonly && removeActivity(i)"
+                                [ngClass]="{'disabled': readonly}">
+                                <i class="material-icons">delete</i>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr *ngIf="hasWarningForGivenActivity(activity)">
+                        <td class="help-block with-warnings">
+                            Selected activity requires approval
+                        </td>
+                    </tr>
+                </ng-template>
+                <tr class="totals-row" *ngIf="totalPercentage!=0">
+                    <td class="totals-row width80">
+                        Total
+                    </td>
+                    <td class="totals-row width10 text-right vertical-align">
+                        <span class="txtRowPercentage">{{totalPercentage}}%</span>
+                    </td>
+                    <td class="totals-row width10"></td>
+                </tr>
+                <tr *ngIf="totalPercentage != 0 || validatePercentage" class="backgroundWhite">
+                    <td class="width100 help-block with-errors"
+                        *ngIf="totalPercentage!=100 && totalPercentage != 0 && validatePercentage">
+                        Total must be 100%
+                    </td>
+                    <td class="width100 help-block with-errors" *ngIf="totalPercentage == 0 && validatePercentage">
+                        Activity breakdown is required
+                    </td>
+                </tr>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,278 @@
+<section class="section-content" id="section-basic-info" data-content="0" [formGroup]="stepForm">
+    <div class="row rowField">
+        <div class="col-md-4">
+            <h5>Client</h5>
+        </div>
+        <div class="col-md-8">
+            <h6 *ngIf="viewModel.client && viewModel.client.companyName" id="client">
+              {{ viewModel.client.companyName }}
+            </h6>
+        </div>
+    </div>
+    <div class="row rowField">
+        <div class="col-md-4">
+            <h5>Broker</h5>
+        </div>
+        <div class="col-md-8">
+            <h6 *ngIf="viewModel.brokerTeam" id="broker">
+              {{ brokerTeamName }}
+            </h6>
+        </div>
+    </div>
+    <div class="row rowField">
+        <div class="col-md-4">
+            <h5>Broker contact</h5>
+        </div>
+        <div class="col-md-8">
+            <h6 *ngIf="viewModel.brokerTeam" id="brokerContact">
+                {{ viewModel.brokerContact?.firstName + ' ' + viewModel.brokerContact?.lastName }}
+            </h6>
+        </div>
+    </div>
+    <div class="row rowField" *ngIf="showSurplusLinesBroker">
+        <div class="col-md-4">
+            <h5>Surplus lines broker</h5>
+        </div>
+        <div class="col-md-6">
+            <surplus-line-selector
+                [formControl]="stepForm.controls.surplusLinesBroker"
+                [state]="viewModel.address.stateProvinceCode"
+                [brokerTeamId]="viewModel.brokerTeam.id"
+                [enableNewSurplusLines]="true">
+            </surplus-line-selector>
+        </div>
+
+    </div>
+    <div class="row rowField" *ngIf="showLocalBroker">
+        <div class="col-md-4">
+            <h5>Canadian Broker</h5>
+        </div>
+        <div class="col-md-5">
+            <autocomplete-dropdown
+                id="localBrokerAutocomplete"
+                *ngIf="stepForm"
+                formControlName="localBroker"
+                [customDisplayMethod]="getBrokerTeamName"
+                [myControl]="stepForm.controls.localBroker"
+                [dataSource]="localBrokers"
+                class="hide-invalid">
+            </autocomplete-dropdown>
+            <div *ngIf="stepForm.controls?.localBroker?.errors?.invalidOption" class="help-block with-errors">
+                <ul class="list-unstyled">
+                    <li>{{ validationMessages.localBroker.invalidOption }}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="row rowField">
+        <div class="col-md-4">
+            <h5>Quote type</h5>
+        </div>
+        <div class="col-md-5">
+            <error [errorText]="{ required: 'Required' }"
+                   [formCtrl]="stepForm.controls.quoteType">
+                <select placeholder="Quote Type"
+                        *ngIf="stepForm"
+                        formControlName="quoteType"
+                        class="hide-invalid">
+                    <option *ngFor="let type of quoteTypes" [value]="type.value">{{ type.text }}</option>
+                </select>
+            </error>
+        </div>
+    </div>
+    <div class="row rowField"
+        *ngIf="stepForm && displayExpiringPolicyNumber()">
+        <div class="col-md-4">
+            <h5>
+                Expiring policy number
+            </h5>
+        </div>
+        <div class="col-md-5">
+            <error [errorText]="{ required: 'Required' }"
+                   [formCtrl]="stepForm.controls.expiringPolicyNumber">
+                <input type="text" placeholder="Expiring Policy Number"
+                       formControlName="expiringPolicyNumber"
+                       class="hide-invalid" />
+            </error>
+        </div>
+    </div>
+    <div class="row rowField"
+        *ngIf="stepForm">
+        <div class="col-md-4">
+            <h5>Insurance type</h5>
+        </div>
+        <div class="col-md-5">
+          <error [errorText]="{ required: 'Required' }"
+                 [formCtrl]="stepForm.controls.insuranceType">
+              <select placeholder="Insurance Type"
+                      *ngIf="stepForm"
+                      formControlName="insuranceType"
+                      class="hide-invalid">
+                  <option *ngFor="let type of insuranceTypes" [value]="type.value">{{ type.text }}</option>
+              </select>
+          </error>
+      </div>
+    </div>
+    <div class="row rowField">
+        <div class="col-md-4">
+            <h5 id="lblProduct">Product</h5>
+        </div>
+        <div class="col-md-8">
+            <label class="lblProduct">{{ this.selectedProduct ? this.selectedProduct.productDisplay : "unassigned" }}</label>
+            <a class="btnChangeProduct md-ml2" (click)="openProductSelectorDialog()" [ngClass]="{'disabled': readonly}">Change</a>
+        </div>
+    </div>
+    <div class="row rowField">
+        <div class="col-md-4">
+            <h5>Assigned</h5>
+        </div>
+        <div class="col-md-5">
+            <autocomplete-dropdown id="assignedContactAutocomplete"
+                                   (onFocusEvent)="currentFocus = 'Assigned'"
+                                   (onFocusOutEvent)="currentFocus = ''"
+                                   [dataSource]="cfccontacts"
+                                   [(selectedValue)]="stepForm.assignedContact"
+                                   *ngIf="stepForm"
+                                   [myControl]="stepForm.get('assignedContact')">
+            </autocomplete-dropdown>
+            <div *ngIf="formErrors.assignedContact.length > 0 && currentFocus!=='Assigned'" class="help-block with-errors">
+                <ul class="list-unstyled">
+                    <li *ngFor="let error of formErrors.assignedContact">{{ error }}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="row rowField">
+        <div class="col-md-4">
+            <h5>Address</h5>
+        </div>
+        <app-address-edit formControlName="address"
+                          [primaryLocation]="viewModel.address"
+                          [insuredLocation]="viewModel.address"
+                          [client]="viewModel.client"
+                          [addressClientModalModel]="addressClientModalModel"
+                          [isAuthorisedLocation]="isAuthorisedLocation"
+                          [readonly]="readonly">
+        </app-address-edit>
+    </div>
+    <div class="row rowField">
+        <div class="col-md-4">
+            <h5>Currency</h5>
+        </div>
+        <div class="col-md-5">
+            <autocomplete-dropdown id="currencyAutocomplete"
+                                   (onFocusEvent)="currentFocus = 'Currency'"
+                                   (onFocusOutEvent)="currentFocus = ''"
+                                   *ngIf="stepForm"
+                                   [myControl]="stepForm.get('currency')"
+                                   [dataSource]="currencies">
+            </autocomplete-dropdown>
+            <div *ngIf="formErrors.currency.length > 0 && currentFocus !== 'Currency'" class="help-block with-errors">
+                <ul class="list-unstyled">
+                    <li *ngFor="let error of formErrors.currency">{{ error }}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="row rowField" *ngIf="viewModel.address.country.isoCode === 'GB'">
+        <div class="col-md-4">
+            <label for="EUcheckbox">Does the client have any named EU subsidiaries?</label>
+        </div>
+        <div class="col-md-1">
+            <div class="styledCheckbox">
+                <input id="EUcheckbox"
+                  class="input-checkbox"
+                  type="checkbox"
+                  formControlName="euSubsidiaryQuestion">
+                <label class="label-checkbox" for="EUcheckbox"></label>
+            </div>
+        </div>
+    </div>
+    <div class="row rowField">
+        <div class="col-md-4">
+            <h5>Target inception</h5>
+        </div>
+        <div class="col-md-2point5 md-pr0"
+             [class.disabled-picker]="readonly">
+            <div [class.ng-invalid]="stepForm.controls.inceptionDate.invalid && (stepForm.controls.inceptionDate.touched || stepForm.controls.inceptionDate.dirty)">
+                <datepicker class="maxWidth174px"
+                            *ngIf="stepForm"
+                            [formControl]="stepForm.get('inceptionDate')"
+                            [readonly]="readonly"></datepicker>
+                <div *ngIf="formErrors.inceptionDate.length > 0 && !isInceptionDateInFocus" class="help-block with-errors adjust-right no-margin">
+                    <ul class="list-unstyled">
+                        <li *ngFor="let error of formErrors.inceptionDate">{{ error }}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row rowField">
+        <div class="col-md-4">
+            <h5>Policy period</h5>
+        </div>
+        <div class="col-md-2point5 md-pr0">
+            <div class="input-group" [class.ng-invalid]="formErrors.policyPeriod.length > 0">
+                <input id="policyPeriodInput"
+                       type="text"
+                       class="hide-invalid"
+                       number-only
+                       tabindex="15"
+                       *ngIf="stepForm"
+                       [formControl]="stepForm.get('policyPeriod')" />
+                <span class="input-group-addon">months</span>
+            </div>
+            <div *ngIf="formErrors.policyPeriod.length > 0" class="help-block with-errors adjust-right">
+                <ul class="list-unstyled">
+                    <li *ngFor="let error of formErrors.policyPeriod">{{ error }}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="row rowField">
+        <div class="col-md-4">
+            <h5>Expiry date</h5>
+        </div>
+        <div class="col-md-5">
+            <h6 *ngIf="viewModel.expiryDate" id="expiryDate">
+              {{ viewModel.expiryDate | date:'dd/MM/y' }}
+            </h6>
+        </div>
+    </div>
+    <div class="row rowField">
+        <div class="col-md-4">
+            <h5>Policy language</h5>
+        </div>
+        <div class="col-md-5">
+            <select placeholder="Language"
+                    formControlName="language"
+                    *ngIf="stepForm"
+                    id="policyLanguage">
+                <option *ngFor="let lang of languages" [ngValue]="lang.value">{{ lang.text }}</option>
+            </select>
+            <div *ngIf="formErrors.languages.length > 0" class="help-block with-errors">
+                <ul class="list-unstyled">
+                    <li *ngFor="let error of formErrors.languages">{{ error }}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="row rowField">
+        <div class="col-md-4">
+            <h5>Wording version</h5>
+        </div>
+        <div class="col-md-5">
+            <select placeholder="Wording Version"
+                    formControlName="wordingVersion"
+                    *ngIf="stepForm"
+                    [ngClass]="{'disabled': readonly}">
+                <option *ngFor="let version of wordingversions$ | async" [ngValue]="version.value">{{ version.text }}</option>
+            </select>
+            <div *ngIf="formErrors.wordingVersion.length > 0" class="help-block with-errors">
+                <ul class="list-unstyled">
+                    <li *ngFor="let error of formErrors.wordingVersion">{{ error }}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+  </section>

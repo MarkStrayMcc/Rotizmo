@@ -1,0 +1,60 @@
+<ng-container *ngIf="config.isTextBox() && config.isVisible" [formGroup]="formGroup">
+  <error [errorText]="errorText" [formCtrl]="formGroup.get(config.property)">
+    <input class="form-control {{config?.cssClass}}" [formControlName]="config.property" [(ngModel)]="item[config.property]" />
+  </error>
+</ng-container>
+
+<app-integer-field *ngIf="config.isInteger()" 
+  [config]="config" 
+  [formGroup]="formGroup" 
+  [item]="item">
+</app-integer-field>
+
+<app-currency-field *ngIf="config.isCurrency()" 
+  [config]="config" 
+  [formGroup]="formGroup" 
+  [item]="item">
+</app-currency-field>
+
+<app-date-field *ngIf="config.isDate()" 
+  [config]="config" 
+  [formGroup]="formGroup" 
+  [item]="item">
+</app-date-field>
+
+<app-textarea *ngIf="config.isTextArea()" 
+  [config]="config" 
+  [formGroup]="formGroup" 
+  [item]="item">
+</app-textarea>
+
+<app-contact-field *ngIf="config.isContact()" 
+  [config]="config" 
+  [formGroup]="formGroup" >
+</app-contact-field>
+
+<app-subject-field *ngIf="config.isSubject()" 
+  [config]="config" 
+  [formGroup]="formGroup" >
+</app-subject-field>
+
+<app-attachment-field *ngIf="config.isAttachment()" 
+  [config]="config" 
+  [formGroup]="formGroup" >
+</app-attachment-field>
+
+<app-checkbox-field *ngIf="config.isCheckBox()" 
+  [config]="config" 
+  [formGroup]="formGroup" >
+</app-checkbox-field>
+
+<app-dropdown-field *ngIf="config.isDropDown()" 
+  [config]="config" 
+  [formGroup]="formGroup"
+  [item]="item" >
+</app-dropdown-field>
+
+<app-readonly-field *ngIf="config.isReadOnly()" 
+  [config]="config" 
+  [formGroup]="formGroup" >
+</app-readonly-field>

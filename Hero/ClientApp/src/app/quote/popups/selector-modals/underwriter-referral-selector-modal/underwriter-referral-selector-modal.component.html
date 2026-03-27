@@ -1,0 +1,28 @@
+<div role="dialog">
+    <div mat-dialog-title>
+        <h1>Who would you like to review your quote?</h1>
+        <div class="close" aria-label="Close" mat-dialog-close>&times;</div>
+    </div>
+
+    <div *ngIf="isLoading">
+        <loading-spinner></loading-spinner>
+    </div>
+    
+    <div *ngIf="!isLoading" mat-dialog-content class="d-flex">
+        <form novalidate [formGroup]="underwriterReferralForm" class="flex-grow-1">
+            <error [errorText]="{ required: 'Required', invalidOption: 'Invalid Option' }"
+                    [formCtrl]="underwriterReferralForm.controls.underwriter">
+                <autocomplete-dropdown formControlName="underwriter"
+                                        [dataSource]="underwriters$"
+                                        [customDisplayMethod]="getUnderwriterNames"
+                                        [myControl]="underwriterReferralForm.get('underwriter')"
+                                        class="hide-invalid">
+                </autocomplete-dropdown>
+            </error>
+        </form>
+
+        <div class="confirm-button">
+            <button class="btn-primary md-ml4" (click)="confirmUnderwriter(underwriterReferralForm)" [disabled]="!underwriterReferralForm.valid">Confirm</button>
+        </div>
+    </div>
+</div>

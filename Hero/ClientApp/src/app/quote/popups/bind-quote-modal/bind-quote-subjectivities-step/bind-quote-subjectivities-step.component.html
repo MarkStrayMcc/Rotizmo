@@ -1,0 +1,46 @@
+<div class="row">
+    <div class="col-md-5">
+        <h3>Prior bind subjectivities</h3>
+    </div>
+    <div class="col-md-7">
+        <div *ngIf="showOnlyPostError" class="help-block subjectivity-error">
+            Only post binding subjectivities allowed
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div *ngIf="priorSubjectivities?.length;else no_prior_subjectivities" class="subjectivity-list">
+            <div *ngFor="let subjectivity of priorSubjectivities" class="subjectivity-row">
+                <div class="col-md-10 subjectivity-title" [innerText]="getSubjectivityDisplayText(subjectivity)"></div>
+                <div class="col-md-2 subjectivity-icons icon-padding">
+                    <a (click)="flipSubjectivity(subjectivity)"><i class="material-icons">swap_vert</i></a>
+                    <a (click)="deleteSubjectivity(subjectivity)"><i class="material-icons">delete</i></a>
+                </div>
+            </div>
+        </div>
+        <ng-template #no_prior_subjectivities>
+            <p>There are no prior binding subjectivities</p>
+        </ng-template>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <h3>Post bind subjectivities</h3>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div *ngIf="postSubjectivities?.length;else no_post_subjectivities" class="subjectivity-list">
+            <div *ngFor="let subjectivity of postSubjectivities" class="subjectivity-row">
+                <div class="col-md-11 subjectivity-title" [innerText]="getSubjectivityDisplayText(subjectivity)"></div>
+                <div class="col-md-1 subjectivity-icons icon-padding">
+                    <a (click)="deleteSubjectivity(subjectivity)"><i class="material-icons">delete</i></a>
+                </div>
+            </div>
+        </div>
+        <ng-template #no_post_subjectivities>
+            <p>There are no post binding subjectivities</p>
+        </ng-template>
+    </div>
+</div>

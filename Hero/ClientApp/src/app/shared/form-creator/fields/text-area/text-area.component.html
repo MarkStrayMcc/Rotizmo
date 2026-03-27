@@ -1,0 +1,13 @@
+<ng-container [formGroup]="formGroup">
+  <error [errorText]="fieldErrors" [formCtrl]="formGroup.get(config.property)">
+    <textarea 
+      class="form-control {{config?.cssClass}}" 
+      [formControlName]="config.property" 
+      [attr.cols]="config.cols" 
+      [attr.rows]="config.rows">
+      {{ item[config.property] }}
+    </textarea>
+  </error>
+</ng-container>
+
+

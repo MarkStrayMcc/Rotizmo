@@ -1,0 +1,13 @@
+<div [formGroup]="form" *ngIf="form" class="row">
+    <div formArrayName="values" *ngFor="let quoteId of form.get('values').controls; let i = index;">
+        <div class="col-md-3" [formGroupName]="i">    
+            <div class="checkBox">
+                <input id="quote-selector-{{i}}"
+                    type="checkbox"
+                    formControlName="selected">
+                <label class="label-checkbox" for="quote-selector-{{i}}"></label>
+            </div>
+            <label for="quote-selector-{{i}}" class="chkLabel chkOption">{{ quoteId.value.quoteId }}</label>  
+        </div>
+    </div>
+</div>

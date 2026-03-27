@@ -1,0 +1,52 @@
+@import "utils/mixins";
+@import "../../../styles/utils/variables.scss";
+
+.panel-quote {
+    border: solid 0.5px #ffffff;
+    padding: 0px;
+    margin-top: 35px;
+    width: 84%;
+    margin-left: 28px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.rowQuote {
+    padding: 0px 25px 0px 25px;
+}
+
+mat-spinner {
+    float: left;
+    width: 2px;
+    height: 2px;
+    margin: 0px 0px 0px 0px;
+    color: #ffffff;
+    stroke: #ffffff;
+}
+
+.material-icons {
+    vertical-align: middle;
+}
+
+.no-underline {
+    text-decoration: none
+}
+
+h1 {
+    color: $cfc-bright-blue;
+    font-family: Montserrat;
+    font-size: 20px;
+    font-weight: 500;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: normal;
+}
+
+h5, h6 {
+    margin-top: 7.5px;
+    margin-bottom: 7.5px;
+}
+
+label {
+    width: 10em;
+}

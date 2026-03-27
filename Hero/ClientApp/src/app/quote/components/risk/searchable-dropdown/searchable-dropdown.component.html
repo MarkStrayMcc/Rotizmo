@@ -1,0 +1,18 @@
+﻿<mat-form-field>
+    <input matInput
+        [id]="riskQuestion.tag"
+        type="text"
+        [formControl]="formControl"
+        [matAutocomplete]="auto"
+        (blur)="onTouchEvent()"
+        class="hide-invalid hide-invalid-focus" />
+    <mat-icon matSuffix>search</mat-icon>
+</mat-form-field>
+
+<mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+    <mat-option *ngFor="let option of filteredOptions | async"
+                [value]="option"
+                [title]="option.text">
+    {{ option.text }}
+    </mat-option>
+</mat-autocomplete>

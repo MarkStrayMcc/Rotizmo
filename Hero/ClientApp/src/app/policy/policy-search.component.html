@@ -1,0 +1,29 @@
+<form [formGroup]="form">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3"><h1>Policy search</h1></div>
+        </div>
+        <div class="row search-bar">
+            <div class="col-md-8">
+                <mat-form-field appearance="outline">
+                    <input formControlName="search" matInput type="text"
+                           class="hide-invalid"
+                           placeholder="Search by policy number or client name" />
+                    <mat-icon matSuffix>search</mat-icon>
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12"></div>
+            <!--Additional Search Options-->
+        </div>
+        <div class="row">
+            <div class="col-md-12"></div>
+            <!--Additional Search Options-->
+        </div>
+        <div class="row md-mt4">
+            <policy-list [policies]="policies"
+                         [mtaSelectionTypes]="mtaSelectionTypes"></policy-list>
+        </div>
+    </div>
+</form>

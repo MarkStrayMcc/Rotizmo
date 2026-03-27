@@ -1,0 +1,7 @@
+<ng-container [formGroup]="formGroup">
+  <ng-container *ngIf="config.isSubject()" [formGroup]="formGroup">
+    <error [errorText]="{ required: 'Required' }" [formCtrl]="formGroup.get(config.property)">
+      <input class="form-control {{config?.cssClass}}" [formControlName]="config.property" />
+    </error>
+  </ng-container>
+</ng-container>

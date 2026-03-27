@@ -1,0 +1,641 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+    <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
+    <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
+    <SpaRoot>ClientApp\</SpaRoot>
+    <DefaultItemExcludes>$(DefaultItemExcludes);$(SpaRoot)node_modules\**</DefaultItemExcludes>
+	<RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+    <!-- Set this to true if you enable server-side prerendering -->
+    <BuildServerSideRenderer>false</BuildServerSideRenderer>
+    <UserSecretsId>5c9385d7-cdbc-4eac-a097-605c3dc951d0</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
+    <InternalsVisibleTo Include="Hero.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspose.Cells" Version="26.2.0" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
+    <PackageReference Include="Azure.Data.AppConfiguration" Version="1.3.0" />
+    <PackageReference Include="Azure.Data.Tables" Version="12.8.3" />
+    <PackageReference Include="Azure.Identity" Version="1.12.0" />
+    <PackageReference Include="Azure.Storage.Blobs" Version="12.19.1" />
+    <PackageReference Include="Cfc.ActiveDirectory" Version="1.1.8477.33208" />
+    <PackageReference Include="FluentValidation" Version="11.9.2" />
+    <PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.2.7" />
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.15.0" />
+    <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="6.0.10" />
+    <PackageReference Include="Microsoft.Azure.AppConfiguration.AspNetCore" Version="7.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Redis" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.AzureAppConfiguration" Version="7.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Http.Polly" Version="2.2.0" />
+    <PackageReference Include="Microsoft.FeatureManagement" Version="3.2.0" />
+    <PackageReference Include="Microsoft.FeatureManagement.AspNetCore" Version="3.2.0" />
+    <PackageReference Include="Polly.Contrib.WaitAndRetry" Version="1.1.1" />
+    <PackageReference Include="System.Text.Json" Version="5.0.2" />
+    <PackageReference Include="WebApi.HMAC" Version="1.1.3" />
+    <PackageReference Include="WebApiDto" Version="1.1.9571.27828" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Don't publish the SPA source files, but do show them in the project files list -->
+    <Compile Remove="ClientApp\src\app\finance\add-transaction-outstanding-fund\carrier-contribution\**" />
+    <Compile Remove="Integration\CoreApi\Mapping\**" />
+    <Content Remove="$(SpaRoot)**" />
+    <Content Remove="ClientApp\src\app\finance\add-transaction-outstanding-fund\carrier-contribution\**" />
+    <Content Remove="Integration\CoreApi\Mapping\**" />
+    <EmbeddedResource Remove="ClientApp\src\app\finance\add-transaction-outstanding-fund\carrier-contribution\**" />
+    <EmbeddedResource Remove="Integration\CoreApi\Mapping\**" />
+    <None Remove="$(SpaRoot)**" />
+    <None Remove="ClientApp\src\app\finance\add-transaction-outstanding-fund\carrier-contribution\**" />
+    <None Remove="Integration\CoreApi\Mapping\**" />
+    <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="ClientApp\src\app\enums\MtaChangeType.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="ClientApp\src\app\models\auto-generated\AdditionalInsured.ts" />
+    <None Remove="ClientApp\src\app\models\auto-generated\ClientSearchResult.ts" />
+    <None Remove="ClientApp\src\app\models\auto-generated\LossPayee.ts" />
+    <None Remove="ClientApp\src\app\quote\models\BrokerCompany.ts" />
+    <None Remove="ClientApp\src\app\quote\models\BrokerContact.ts" />
+    <None Remove="ClientApp\src\app\quote\models\BrokerGroup.ts" />
+    <None Remove="ClientApp\src\app\quote\models\Brokers\BrokerContact.js" />
+    <None Remove="ClientApp\src\app\quote\models\Brokers\BrokerContact.js.map" />
+    <None Remove="ClientApp\src\app\quote\models\Brokers\BrokerGroup.js" />
+    <None Remove="ClientApp\src\app\quote\models\Brokers\BrokerGroup.js.map" />
+    <None Remove="ClientApp\src\app\quote\models\Brokers\BrokerInformationResponse.ts" />
+    <None Remove="ClientApp\src\app\quote\models\BrokerTeam.js" />
+    <None Remove="ClientApp\src\app\quote\models\BrokerTeam.js.map" />
+    <None Remove="ClientApp\src\app\quote\models\BrokerTeam.ts" />
+    <None Remove="ClientApp\src\app\quote\models\Country.ts" />
+    <None Remove="ClientApp\src\app\services\email-contact.service.spec.ts" />
+    <None Remove="ClientApp\src\app\services\email-contact.service.ts" />
+    <None Remove="ClientApp\src\app\services\finance\delete-outstanding-fund-modal\delete-outstanding-fund-modal-service.ts" />
+    <None Remove="ClientApp\src\app\services\policy-email-http.service.spec.ts" />
+    <None Remove="ClientApp\src\app\services\policy-email-http.service.ts" />
+    <None Remove="Licences\Aspose.Cells.Product.Family.lic" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TypeScriptCompile Include="ClientApp\src\app\models\auto-generated\LossPayee.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\models\auto-generated\ClientSearchResult.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\quote\models\Brokers\BrokerInformationResponse.ts">
+
+      <SubType>Code</SubType>
+
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="ClientApp\src\app\quote\models\Brokers\BrokerContact.ts">
+
+      <SubType>Code</SubType>
+
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="ClientApp\src\app\quote\models\Brokers\BrokerGroup.ts">
+
+      <SubType>Code</SubType>
+
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="ClientApp\src\app\quote\models\Brokers\BrokerTeam.ts">
+
+      <SubType>Code</SubType>
+
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="ClientApp\src\app\quote\models\Brokers\BrokerCompany.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\quote\models\Country.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\services\email-contact.service.spec.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\services\email-contact.service.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="ClientApp\src\app\services\finance\add-transaction-modal\models\CarrierContribution.ts" />
+    <None Remove="ClientApp\src\app\services\finance\transfer-to-office-modal\transfer-to-office-modal-service.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TypeScriptCompile Include="ClientApp\src\app\services\finance\add-transaction-modal\models\CarrierContribution.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\services\finance\delete-outstanding-fund-modal\delete-outstanding-fund-modal-service.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\services\finance\transfer-to-office-modal\transfer-to-office-modal-service.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="ClientApp\src\app\compliance\compliance-routing.module.ts" />
+    <None Remove="ClientApp\src\app\compliance\compliance.module.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Licences\Aspose.Cells.Product.Family.lic">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <TypeScriptCompile Include="ClientApp\src\app\compliance\compliance-routing.module.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\compliance\compliance.module.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\services\policy-email-http.service.spec.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\services\policy-email-http.service.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TypeScriptCompile Include="ClientApp\src\app\models\auto-generated\AdditionalInsured.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="ClientApp\src\app\models\auto-generated\ActivityDetail.ts">
+      <CustomToolNamespace>Models\ActivityDetail.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\ActivityMap.ts">
+      <CustomToolNamespace>Models\ActivityMap.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\AddressChangeMtaRequest.ts">
+      <CustomToolNamespace>Models\AddressChangeMtaRequest.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\quote\models\endorsements\AutoAttachingEndorsementsRequest.ts">
+      <CustomToolNamespace>Models\AutoAttachingEndorsementsRequest.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\quote\models\endorsements\AvailableEndorsementsRequest.ts">
+      <CustomToolNamespace>Models\AvailableEndorsementsRequest.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\BinderLookup.ts">
+      <CustomToolNamespace>Models\BinderLookup.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\BinderLookups.ts">
+      <CustomToolNamespace>Models\BinderLookups.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\BinderSection.ts">
+      <CustomToolNamespace>Models\BinderSection.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\BinderSectionLookup.ts">
+      <CustomToolNamespace>Models\BinderSectionLookup.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\BinderSectionParticipation.ts">
+      <CustomToolNamespace>Models\BinderSectionParticipation.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\BinderValidationCriteria.ts">
+      <CustomToolNamespace>Models\BinderValidationCriteria.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\Broker.ts">
+      <CustomToolNamespace>Models\Broker.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\BrokerContact.ts">
+      <CustomToolNamespace>Models\BrokerContact.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\BrokerTeam.ts">
+      <CustomToolNamespace>Models\BrokerTeam.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\Carrier.ts">
+      <CustomToolNamespace>Models\Carrier.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\CfcBankAccount.ts">
+      <CustomToolNamespace>Models\CfcBankAccount.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\CfcContact.ts">
+      <CustomToolNamespace>Models\CfcContact.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\CfcContactPersonalMessage.ts">
+      <CustomToolNamespace>Models\CfcContactPersonalMessage.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\CfcContactPersonalMessageChangeRequest.ts">
+      <CustomToolNamespace>Models\CfcContactPersonalMessageChangeRequest.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\ChangeAddressResult.ts">
+      <CustomToolNamespace>Models\ChangeAddressResult.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\ClaimFinancialItemEcfReconciliationRequest.ts">
+      <CustomToolNamespace>Models\ClaimFinancialItemEcfReconciliationRequest.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\ClaimFinancialItemSanctionCheck.ts">
+      <CustomToolNamespace>Models\ClaimFinancialItemSanctionCheck.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\quote\models\Fees\FeeRequest.ts">
+      <CustomToolNamespace>Models\FeeRequest.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\quote\models\Fees\BusinessLinePremium.ts">
+      <CustomToolNamespace>Models\FeeResponse.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\quote\models\Fees\FeeResponse.ts">
+      <CustomToolNamespace>Models\FeeResponse.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\LatestQuoteReferenceRequest.ts">
+
+      <CustomToolNamespace>Models\ClientClearanceRequest.cs</CustomToolNamespace>
+
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\ClientClearanceRequest.ts">
+      <CustomToolNamespace>Models\ClientClearanceRequest.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\LatestQuoteReferenceResponse.ts">
+
+      <CustomToolNamespace>Models\ClientClearanceResult.cs</CustomToolNamespace>
+
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\ClientClearanceResult.ts">
+      <CustomToolNamespace>Models\ClientClearanceResult.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\EnquirySearchResponse.ts">
+
+      <CustomToolNamespace>Models\EnquirySearchResponse.cs</CustomToolNamespace>
+
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\EnquirySearchResult.ts">
+
+      <CustomToolNamespace>Models\EnquirySearchResult.cs</CustomToolNamespace>
+
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\FeatureAccess.ts">
+      <CustomToolNamespace>Models\FeatureAccess.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\FinancialTransactionsResult.ts">
+      <CustomToolNamespace>Models\FinancialTransactionsResult.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\MtaEmailTemplate.ts">
+      <CustomToolNamespace>Models\MtaEmailTemplate.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\MtaType.ts">
+      <CustomToolNamespace>Models\MtaType.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\MultipleOperationsResultProblemDetails.ts">
+      <CustomToolNamespace>Models\MultipleOperationsResultProblemDetails.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\OperationProblemInfo.ts">
+      <CustomToolNamespace>Models\OperationProblemInfo.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\OutstandingFund.ts">
+      <CustomToolNamespace>Models\OutstandingFund.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\OutstandingFundContribution.ts">
+      <CustomToolNamespace>Models\OutstandingFundContribution.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\OutstandingFundContributionsResponse.ts">
+      <CustomToolNamespace>Models\OutstandingFundContributionsResponse.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\OutstandingFundsResponse.ts">
+      <CustomToolNamespace>Models\OutstandingFundsResponse.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\OutstandingFundsTransferRequest.ts">
+      <CustomToolNamespace>Models\OutstandingFundsTransferRequest.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\OutstandingFundsTransferResponse.ts">
+      <CustomToolNamespace>Models\OutstandingFundsTransferResponse.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\Policy.ts">
+      <CustomToolNamespace>Models\Policy.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\PolicySearchResult.ts">
+      <CustomToolNamespace>Models\PolicySearchResult.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\ProblemDetails.ts">
+      <CustomToolNamespace>Models\ProblemDetails.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\QuoteAttachment.ts">
+      <CustomToolNamespace>Models\QuoteAttachment.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\QuoteCreationMessage.ts">
+      <CustomToolNamespace>Models\QuoteCreationMessage.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\QuoteData.ts">
+      <CustomToolNamespace>Models\QuoteData.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\QuoteFeeRequest.ts">
+      <CustomToolNamespace>Models\QuoteFeeRequest.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\RiskQuestionOption.ts">
+      <CustomToolNamespace>Models\RiskQuestionOption.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\SendEuDocumentsRequest.ts">
+      <CustomToolNamespace>Models\SendEuDocumentsRequest.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\SendEuDocumentsResult.ts">
+      <CustomToolNamespace>Models\SendEuDocumentsResult.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\SubjectivityList.ts">
+      <CustomToolNamespace>Models\SubjectivityList.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\Syndicate.ts">
+      <CustomToolNamespace>Models\Syndicate.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\TriaPremiumRequest.ts">
+      <CustomToolNamespace>Models\TriaPremiumRequest.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\TriaPricingInformation.ts">
+      <CustomToolNamespace>Models\TriaPricingInformation.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\ClaimFinancialItemSanctionCheck.ts">
+      <CustomToolNamespace>Models\ClaimFinancialItemSanctionCheck.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\ClaimFinancialItemStatusChangeRequestDetail.ts">
+      <CustomToolNamespace>Models\ClaimFinancialItemStatusChangeRequestDetail.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\ClaimFinancialItemStatusHistoryDetail.ts">
+      <CustomToolNamespace>Models\ClaimFinancialItemStatusHistoryDetail.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\Client.ts">
+      <CustomToolNamespace>Models\Client.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\ClientLocation.ts">
+      <CustomToolNamespace>Models\ClientLocation.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\ClientNote.ts">
+      <CustomToolNamespace>Models\ClientNote.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\CommissionInformation.ts">
+      <CustomToolNamespace>Models\CommissionInformation.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\CommissionRate.ts">
+      <CustomToolNamespace>Models\CommissionRate.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\Country.ts">
+      <CustomToolNamespace>Models\Country.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\Coverage.ts">
+      <CustomToolNamespace>Models\Coverage.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\CoverageExcess.ts">
+      <CustomToolNamespace>Models\CoverageExcess.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\CoverageExcessType.ts">
+      <CustomToolNamespace>Models\CoverageExcessType.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\CoverageLimit.ts">
+      <CustomToolNamespace>Models\CoverageLimit.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\CoverageLimitType.ts">
+      <CustomToolNamespace>Models\CoverageLimitType.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\CoverageRequest.ts">
+      <CustomToolNamespace>Models\CoverageRequest.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\CoverageType.ts">
+      <CustomToolNamespace>Models\CoverageType.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\Currency.ts">
+      <CustomToolNamespace>Models\Currency.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\Document.ts">
+      <CustomToolNamespace>Models\Document.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\DocumentResult.ts">
+      <CustomToolNamespace>Models\DocumentResult.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\EcfReconciliation.ts">
+      <CustomToolNamespace>Models\EcfReconciliation.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\EcfReconciliationClaimFinancialItem.ts">
+      <CustomToolNamespace>Models\EcfReconciliationClaimFinancialItem.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\EcfReconciliationFinancialTransaction.ts">
+      <CustomToolNamespace>Models\EcfReconciliationFinancialTransaction.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\EcfReconciliationGroup.ts">
+      <CustomToolNamespace>Models\EcfReconciliationGroup.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\EcfReconciliationGroupRequest.ts">
+      <CustomToolNamespace>Models\EcfReconciliationGroupRequest.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\EcfReconciliationSummary.ts">
+      <CustomToolNamespace>Models\EcfReconciliationSummary.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\Email.ts">
+      <CustomToolNamespace>Models\Email.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\EmailContact.ts">
+      <CustomToolNamespace>Models\EmailContact.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\EmailTemplate.ts">
+      <CustomToolNamespace>Models\EmailTemplate.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\quote\models\endorsements\EndorsementRequest.ts">
+      <CustomToolNamespace>Models\EndorsementRequest.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\FileData.ts">
+      <CustomToolNamespace>Models\FileData.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\FinanceLossFundSummary.ts">
+      <CustomToolNamespace>Models\FinanceLossFundSummary.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\FinancialLedgerInfo.ts">
+      <CustomToolNamespace>Models\FinancialLedgerInfo.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\FinancialLedgerLookup.ts">
+      <CustomToolNamespace>Models\FinancialLedgerLookup.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\FinancialTransactionDetail.ts">
+      <CustomToolNamespace>Models\FinancialTransactionDetail.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\FinancialTransactionEcfReconciliationRequest.ts">
+      <CustomToolNamespace>Models\FinancialTransactionEcfReconciliationRequest.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\FinancialTransactionsResult.ts">
+      <CustomToolNamespace>Models\FinancialTransactionsResult.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\ItemClassification.ts">
+      <CustomToolNamespace>Models\ItemClassification.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\LossFundSummary.ts">
+      <CustomToolNamespace>Models\LossFundSummary.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\MessageResult.ts">
+      <CustomToolNamespace>Models\MessageResult.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\PaymentRequest.ts">
+      <CustomToolNamespace>Models\PaymentRequest.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\PricingGroup.ts">
+      <CustomToolNamespace>Models\PricingGroup.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\PricingGroupLimitExcessLeader.ts">
+      <CustomToolNamespace>Models\PricingGroupLimitExcessLeader.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\quote\models\pricing\Binder.ts">
+      <CustomToolNamespace>Models\Binder.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\quote\models\pricing\BinderRatingEngineOutput.ts">
+      <CustomToolNamespace>Models\BinderRatingEngineOutput.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\quote\models\pricing\SuggestedDiscountInformation.ts">
+      <CustomToolNamespace>Models\Tag.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\quote\models\pricing\FiledDiscountInformation.ts">
+      <CustomToolNamespace>Models\Tag.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\quote\models\pricing\PricingInformation.ts">
+      <CustomToolNamespace>Models\PricingInformation.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\Product.ts">
+      <CustomToolNamespace>Models\Product.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\PublishQuotePricingGroup.ts">
+      <CustomToolNamespace>Models\PublishQuotePricingGroup.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\Quote.ts">
+      <CustomToolNamespace>Models\Quote.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\QuoteBespokeClause.ts">
+      <CustomToolNamespace>Models\QuoteBespokeClause.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\QuoteBindError.ts">
+      <CustomToolNamespace>Models\QuoteBindError.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\QuoteBindRequest.ts">
+      <CustomToolNamespace>Models\QuoteBindRequest.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\QuoteBindResponse.ts">
+      <CustomToolNamespace>Models\QuoteBindResponse.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\QuoteDocumentRequest.ts">
+      <CustomToolNamespace>Models\QuoteDocumentRequest.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\QuoteFeeRequest.ts">
+      <CustomToolNamespace>Models\QuoteFeeRequest.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\QuotePricingGroupRating.ts">
+      <CustomToolNamespace>Models\QuotePricingGroupRating.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\QuotePublishRequest.ts">
+      <CustomToolNamespace>Models\QuotePublishRequest.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\QuoteSubjectivity.ts">
+      <CustomToolNamespace>Models\QuoteSubjectivity.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\ReferralRequest.ts">
+      <CustomToolNamespace>Models\ReferralRequest.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\RiskQuestion.ts">
+      <CustomToolNamespace>Models\RiskQuestion.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\RiskQuestionAnswer.ts">
+      <CustomToolNamespace>Models\RiskQuestionAnswer.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\RiskQuestionDefaultAnswer.ts">
+      <CustomToolNamespace>Models\RiskQuestionDefaultAnswer.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\RiskQuestionDependency.ts">
+      <CustomToolNamespace>Models\RiskQuestionDependency.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\RiskQuestionDraftRequest.ts">
+      <CustomToolNamespace>Models\RiskQuestionDraftRequest.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\RiskQuestionRequest.ts">
+      <CustomToolNamespace>Models\RiskQuestionRequest.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\SaveQuoteError.ts">
+      <CustomToolNamespace>Models\SaveQuoteError.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\SaveQuoteResponse.ts">
+      <CustomToolNamespace>Models\SaveQuoteResponse.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\ServerSideFileData.ts">
+      <CustomToolNamespace>Models\ServerSideFileData.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\StateProvince.ts">
+      <CustomToolNamespace>Models\StateProvince.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\Subjectivity.ts">
+      <CustomToolNamespace>Models\Subjectivity.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\SubjectivityFilterParameters.ts">
+      <CustomToolNamespace>Models\SubjectivityFilterParameters.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\SurplusLine.ts">
+      <CustomToolNamespace>Models\SurplusLine.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\TaxDetails.ts">
+      <CustomToolNamespace>Models\TaxDetails.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\UcrLookup.ts">
+      <CustomToolNamespace>Models\UcrLookup.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\UnderwriterRole.ts">
+      <CustomToolNamespace>Models\UnderwriterRole.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\UnderwriterRoleActivityValidation.ts">
+      <CustomToolNamespace>Models\UnderwriterRoleActivityValidation.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\UnderwriterRoleLimitValidationRule.ts">
+      <CustomToolNamespace>Models\UnderwriterRoleLimitValidationRule.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\UnderwriterRoleRiskQuestionValidation.ts">
+      <CustomToolNamespace>Models\UnderwriterRoleRiskQuestionValidation.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\UnderwriterRoleSetting.ts">
+      <CustomToolNamespace>Models\UnderwriterRoleSetting.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\WordingVersion.ts">
+      <CustomToolNamespace>Models\WordingVersion.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\models\auto-generated\WordingVersionsRequest.ts">
+      <CustomToolNamespace>Models\WordingVersionsRequest.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\quote\models\pricing\DiscountInformation.ts">
+      <CustomToolNamespace>Models\Tag.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\quote\models\pricing\RateChangeInformation.ts">
+      <CustomToolNamespace>Models\Tag.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\quote\models\pricing\FiledDiscountInformation.ts">
+      <CustomToolNamespace>Models\Tag.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\quote\models\pricing\SuggestedDiscountInformation.ts">
+      <CustomToolNamespace>Models\Tag.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\quote\models\pricing\DiscountInformation.ts">
+      <CustomToolNamespace>Models\Tag.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\quote\models\pricing\RateChangeInformation.ts">
+      <CustomToolNamespace>Models\Tag.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app\quote\models\pricing\Tag.ts">
+      <CustomToolNamespace>Models\Tag.cs</CustomToolNamespace>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ClientApp\e2e\src\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="wwwroot\js\insight-plugin.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Config\CurrencyConversions.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') and '$(NoBuild)' != 'true' ">
+    <!-- Ensure Node.js is installed -->
+    <Exec Command="node --version" ContinueOnError="true">
+      <Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
+    </Exec>
+    <Error Condition="'$(ErrorCode)' != '0'" Text="Node.js is required to build and run this project. To continue, please install Node.js from https://nodejs.org/, and then restart your command prompt or IDE." />
+    <Message Importance="high" Text="Restoring dependencies using 'npm'. This may take several minutes..." />
+    <Exec WorkingDirectory="$(SpaRoot)" Command="npm install" />
+  </Target>
+
+  <Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish" Condition="'$(NoBuild)' != 'true'">
+      <Message Text="Running PublishRunWebpack target yay" Importance="high" />
+	  <!-- As part of publishing, ensure the JS resources are freshly built in production mode -->
+    <Exec Condition="!Exists('$(SpaRoot)node_modules')" WorkingDirectory="$(SpaRoot)" Command="npm install" />
+    <Exec Condition="!Exists('$(SpaRoot)dist')" WorkingDirectory="$(SpaRoot)" Command="npm run buildProd" />
+    <Exec WorkingDirectory="$(SpaRoot)" Command="npm run build:ssr -- --prod" Condition=" '$(BuildServerSideRenderer)' == 'true' " />
+
+    <!-- Include the newly-built files in the publish output -->
+    <ItemGroup>
+      <DistFiles Include="$(SpaRoot)dist\**; $(SpaRoot)dist-server\**" />
+      <DistFiles Include="$(SpaRoot)node_modules\**" Condition="'$(BuildServerSideRenderer)' == 'true'" />
+      <ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
+        <RelativePath>%(DistFiles.Identity)</RelativePath>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </ResolvedFileToPublish>
+    </ItemGroup>
+  </Target>
+
+</Project>

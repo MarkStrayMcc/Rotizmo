@@ -1,0 +1,63 @@
+.checkbox-view-mode {
+    background-color: #eee;
+    border: #eee 2px solid;
+    padding: 10px 10px 10px 10px;
+    overflow-y: scroll;
+    max-height: 100px;
+    color: #00000061;
+    opacity: 1;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.checkbox-additional-selection {
+    font-size: 13px;
+    font-weight: 600;
+}
+
+ul.checkbox-list {
+    list-style-type: square;
+    padding-left: 9px;
+}
+
+::ng-deep {
+
+    .mat-select-panel {
+        max-width: 100px !important;
+        min-width: calc(100% + 21px) !important;
+    }
+
+    .mat-select-panel-wrap {
+        transform: translateX(-9.9px) translateY(25px) !important;
+    }
+
+    .mat-select-panel:not([class*=mat-elevation-z]) {
+        box-shadow: 0 1px 1px -1px #0003, 0 1px 5px #00000024, 0 1px 10px #0000001f !important;
+    }
+
+    .mat-primary .mat-pseudo-checkbox-checked, .mat-primary .mat-pseudo-checkbox-indeterminate {
+        background: #149bd7 !important;
+    }
+
+    .mat-primary .mat-pseudo-checkbox mat-option-pseudo-checkbox {
+        border: #666 2px solid !important;
+    }
+
+    mat-option mat-option-multiple {
+        color: #666 !important;
+    }
+
+    .mat-primary .mat-option.mat-selected:not(.mat-option-disabled) {
+        color: #665 !important;
+    }
+
+    .mat-select-value {
+        color: inherit;
+    }
+
+    .cdk-overlay-pane {
+        transform: none !important;
+    }
+}
+
+

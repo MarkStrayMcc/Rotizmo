@@ -1,0 +1,87 @@
+<header>
+    <div id="header">
+        <div id="middle">
+            <div id="logo">
+                <img src="./img/logo.png" />
+            </div>
+            <div class="menu nav">
+                <ul>
+                    <li>
+                        <a [href]="adminUrl">Admin</a>
+                    </li>
+                    <li>
+                        <a href="#">Contacts</a>
+                        <ul>
+                            <li><a [href]="nerdUrl + '/v2/Contacts'">Search contacts</a></li>
+                            <li><a [href]="nerdUrl + '/v2/Contacts/Add.aspx'">Add contact</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#">Enquiries</a>
+                        <ul>
+                            <li><a [href]="nerdUrl + '/newenquiry.aspx'">Add / edit enquiry</a></li>
+                            <li><a [href]="nerdUrl + '/viewenquiry.aspx'">View enquiries</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#">Quotes</a>
+                        <ul>
+                            <li><a [href]="'/'">New quote</a></li>
+                            <li><a [href]="nerdUrl + '/viewquotes.aspx'">View quotes</a></li>
+                            <li><a routerLink="/bulk-quoting" routerLinkActive="active">Bulk quoting</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#">Orders</a>
+                        <ul>
+                            <li><a [href]="nerdUrl + '/addorder.aspx'">Add / edit order</a></li>
+                            <li><a [href]="nerdUrl + '/vieworder.aspx'">View orders</a></li>
+                            <li><a [href]="nerdUrl + '/MidTermAdjustments.aspx'">MTA - NERD</a></li>
+                            <li><a routerLink="/policy" routerLinkActive="active">MTA - HERO</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#">Reports</a>
+                        <ul>
+                            <li><a [href]="nerdUrl + '/v2/Reports/Dashboard.aspx'">Dashboard</a></li>
+                            <li><a [href]="qlikDashboardUrl" target="_blank">Qlik Dashboard</a></li>
+                            <li><a [href]="nerdUrl + '/v2/CRM/BrokerReporting.aspx'">Broker reports</a></li>
+                            <li><a [href]="nerdUrl + '/MiscReports.aspx'">Miscellaneous</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#">Finance</a>
+                        <ul>
+                            <li><a [href]="nerdUrl + '/closebord.aspx'">Close bordereau</a></li>
+                            <li><a [href]="nerdUrl + '/currency.aspx'">Exchange rates</a></li>
+                            <li><a [href]="nerdUrl + '/BrokasureInterface.aspx'">Brokasure interface</a></li>
+                            <li><a routerLink="/finance/ledger" routerLinkActive="active">Financial transactions</a></li>
+                            <li><a routerLink="/finance/payment-requests" routerLinkActive="active">Payment requests</a></li>
+                            <li><a routerLink="/finance/loss-fund-summary" routerLinkActive="active">Loss fund summary</a></li>
+                            <li><a routerLink="/finance/ecf-reconciliation" routerLinkActive="active">ECF Reconciliation</a></li>
+                            <li><a routerLink="/finance/outstanding-funds" routerLinkActive="active">Outstanding Funds</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#">CRM</a>
+                        <ul>
+                            <li><a [href]="nerdUrl + '/v2/CRM/'">Search</a></li>
+                            <li *ngIf="!isBrmFeatureActive">
+                                <a [href]="nerdUrl + '/v2/CRM/AddMeetingNote.aspx'">Add meeting note</a>
+                            </li>
+                            <li><a [href]="nerdUrl + '/v2/Workflows/?mode=MeetingNote'">Workflow</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#">Claims</a>
+                        <ul>
+                            <li><a [href]="nerdUrl + '/v2/Claims/Search.aspx'">Search</a></li>
+                            <li><a [href]="nerdUrl + '/v2/Claims/Add.aspx'">Add claim</a></li>
+                            <li><a [href]="nerdUrl + '/v2/Workflows/'">Workflow</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</header>

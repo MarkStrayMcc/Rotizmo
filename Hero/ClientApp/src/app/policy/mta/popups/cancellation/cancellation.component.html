@@ -1,0 +1,124 @@
+<form id="modalCancellation" role="dialog" (ngSubmit)="openCancelConfirmationModal()">
+    <div role="document" [formGroup]="formGroup">
+        <div mat-dialog-title>
+            <h1>Cancellation MTA - {{dialogModel.policy.reference}}</h1>
+            <div class="close" aria-label="Close" mat-dialog-close>&times;</div>
+        </div>
+
+        <div class="col-md-12 md-mp4 error-message">
+            <message></message>
+        </div>
+
+        <mat-dialog-content class="flex-grow-1">
+            <div class="form-group row">
+                <div class="col-xs-12 col-md-4 md-mt1 text-right">
+                    <label class="fieldname">Effective date</label>
+                </div>
+
+                <div class="col-xs-12 col-md-8 effective-date">
+                    <error [formCtrl]="formGroup.controls.effectiveDate" [errorText]="{ required: 'Required' }">
+                        <datepicker formControlName="effectiveDate"
+                            [readonly]="(mtaId$ | async) || (isSaving$ | async)"
+                            [matTooltip]="policyPeriodTooltip">
+                        </datepicker>
+                    </error>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-xs-12 col-md-4 md-mt1 text-right">
+                    <label class="fieldname">Cancellation Type</label>
+                </div>
+
+                <div class="col-xs-12 col-md-8 change-type md-mt1">
+                    <label>{{ type$ | async }}</label>
+                </div>
+            </div>
+
+            <hr />
+
+            <div class="form-group row">
+                <div class="col-xs-12 col-md-4 md-mt1 text-right">
+                    <label class="fieldname">Total Return Premium </label>
+                </div>
+
+                <div class="col-xs-12 col-md-8 change-type">
+                    <error [formCtrl]="formGroup.controls.totalReturnPremium" [errorText]="{ required: 'Required' }">
+                        <currency *ngIf="!(isLoading$ | async); else loading" id="cancellation-mta-total-return-premium"
+                            formControlName="totalReturnPremium" [currency]="currency$ | async" decimals="true"
+                            [readonly]="isPremiumReadOnly$ | async">
+                        </currency>
+                    </error>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-xs-12 col-md-4 md-mt1 text-right">
+                    <label class="fieldname">Return Fee</label>
+                </div>
+
+                <div class="col-xs-12 col-md-8 change-type">
+                    <error [formCtrl]="formGroup.controls.returnFee" [errorText]="{ required: 'Required' }">
+                        <currency *ngIf="!(isLoading$ | async); else loading" id="cancellation-mta-return-fee"
+                            formControlName="returnFee" [currency]="currency$ | async" decimals="true"
+                            [readonly]="isPremiumReadOnly$ | async">
+                        </currency>
+                    </error>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-xs-12 col-md-4 md-mt1 text-right">
+                    <label class="fieldname">Return Tax</label>
+                </div>
+                <div class="col-xs-12 col-md-8 change-type">
+                    <currency *ngIf="!(isLoading$ | async); else loading" id="cancellation-mta-return-tax"
+                        [value]="returnTax$ | async" [currency]="currency$ | async" decimals="true" readonly="true">
+                    </currency>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-xs-12 col-md-4 md-mt1 text-right">
+                    <label class="fieldname">Reason</label>
+                </div>
+
+                <div class="col-xs-12 col-md-8 change-type">
+                    <error [formCtrl]="formGroup.controls.cancellationReason" [errorText]="{ required: 'Required' }">
+                        <select formControlName="cancellationReason" class="form-control cancellation-mta-reason"
+                            [attr.disabled]="(mtaId$ | async) || (isSaving$ | async) ? true : null">
+                            <option value="1"> Product unsuitable / misunderstood</option>
+                            <option value="2"> Product too expensive</option>
+                            <option value="3"> Alternative product purchased</option>
+                            <option value="4"> Cover overlapped with pre-existing cover</option>
+                            <option value="5"> Product cancelled within cooling off period</option>
+                            <option value="6"> Product cancelled by underwriter</option>
+                            <option value="7"> Poor service/complaint</option>
+                            <option value="8"> Cover no longer required</option>
+                            <option value="9"> Other (administrative reason)</option>
+                            <option value="10"> Not known</option>
+                        </select>
+                    </error>
+                </div>
+            </div>
+        </mat-dialog-content>
+
+        <mat-dialog-actions align="end">
+            <button id="cancellation-save" type="submit" class="btn-primary d-flex cancellation-submit"
+                [disabled]="isSaveButtonDisabled$ | async">
+                <mat-spinner *ngIf="isSaving$ | async" strokeWidth="3" [diameter]="20" class="md-mr1"></mat-spinner>
+                Save
+            </button>
+
+            <button id="cancellation-send" type="button" (click)="openSendEmailModal()" [disabled]="!(mtaId$ | async)"
+                class="btn btn-primary cancellation-send">
+                Send
+            </button>
+        </mat-dialog-actions>
+
+        <ng-template #loading>
+            <div style="padding: 7px">
+                <mat-spinner strokeWidth="3" [diameter]="20"></mat-spinner>
+            </div>
+        </ng-template>
+    </div>
+</form>

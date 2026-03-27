@@ -1,0 +1,22 @@
+<div *ngIf="riskQuestion.isVisible" class="dropdown-with-validation">
+    <div (click)="toggleOptionsVisibility()"
+         title="{{selectedOption}}"
+         class="selected-placeholder form-control"
+         [ngClass]="{'disabled': formControl.enabled!==true}">
+        {{selectedOption}}
+    </div>
+  <input type="text" 
+         [formControl]="formControl" 
+         [id]="riskQuestion.tag"
+         tabindex="-1" 
+         (blur)="onTouchEvent()"
+         class="hidden-input" />
+ 
+  <ul class="list-options hide-invalid" *ngIf="isOptionsListVisible">
+    <li (click)="setSelectedOption(option)" *ngFor="let option of riskQuestion.options">
+      <i *ngIf="option.isValid===true" class="material-icons location-icon on">location_on</i>
+      <i *ngIf="option.isValid!==true" class="material-icons location-icon">location_off</i>
+      <span [ngClass]="{'off': option.isValid!==true}">{{ option.text }}</span>
+    </li>
+  </ul> 
+</div>

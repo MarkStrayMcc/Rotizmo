@@ -1,0 +1,59 @@
+<div *ngIf="item">
+    <ng-container *ngFor="let field of config.fields">
+        <ng-container *ngIf="field.isQuestion()">
+            <div class="form-group row" *ngIf="field.isVisible">
+                <div class="col-md-12 md-mt1">
+                    <label class="readonly-fieldvalue">{{field.label}}</label>
+                </div>
+            </div>
+        </ng-container>
+        <div class="form-group row" *ngIf="field.isVisible && !field.isQuestion()">
+            <div class="col-xs-12 col-md-4 md-mt1 text-right">
+                <label class="fieldname">{{field.label}}</label>
+            </div>
+            <div class="col-xs-12 col-md-8 change-type">
+                <app-form-field-renderer 
+                    [config]="field" 
+                    [formGroup]="form" 
+                    [selectedItem]="getSelectedItem(field)"
+                    [isVisible]="isVisible" 
+                    [item]="item">
+                </app-form-field-renderer>
+            </div>
+        </div>
+        <hr *ngIf="field.hasSeparator" />
+    </ng-container>
+</div>
+
+<div class="row group" *ngFor="let group of config.groups">
+    <div class="form-group col-md-12 title">
+        <h2>{{group?.title}}</h2>
+    </div>
+    <div *ngFor="let field of group.fields">
+        <div class="col-xs-12 col-md-4 md-mt1 text-right">
+            <label class="fieldname">{{field?.label}}</label>
+        </div>
+        <div class="col-xs-12 col-md-8 change-type">
+            <app-form-field-renderer 
+                [config]="field" 
+                [formGroup]="form" 
+                [selectedItem]="getSelectedItem(field)"
+                [isVisible]="isVisible" 
+                [item]="item">
+            </app-form-field-renderer>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-6 col-md-4 text-right md-mt1">
+    </div>
+    <div class="col-xs-6 col-md-8 md-mt1">
+        <ng-container *ngFor="let button of config.buttons">
+            <button [type]="button.type" (click)="clicked(button)" [disabled]="isButtonDisabled(button)" class="btn btn-{{button.style}} float-right {{button?.cssClass}}">
+                {{button.label}}
+                <mat-spinner *ngIf="button.isExecuting" strokeWidth="3" [diameter]="20"></mat-spinner>
+            </button>
+        </ng-container>
+    </div>
+</div>

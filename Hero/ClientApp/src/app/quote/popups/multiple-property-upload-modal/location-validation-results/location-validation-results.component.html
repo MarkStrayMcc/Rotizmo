@@ -1,0 +1,39 @@
+<div *ngIf="uploadResult">
+    <div *ngIf="uploadResult.propertyLimits?.length > 0">
+        <hr class="tw-h-px tw-my-6 tw-bg-gray-200 tw-border-0">
+        <div class="tw-flex tw-gap-3 tw-items-center">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd"
+                    d="M12 3.75C7.44365 3.75 3.75 7.44365 3.75 12C3.75 16.5563 7.44365 20.25 12 20.25C16.5563 20.25 20.25 16.5563 20.25 12C20.25 7.44365 16.5563 3.75 12 3.75ZM2.25 12C2.25 6.61522 6.61522 2.25 12 2.25C17.3848 2.25 21.75 6.61522 21.75 12C21.75 17.3848 17.3848 21.75 12 21.75C6.61522 21.75 2.25 17.3848 2.25 12ZM16.5087 8.4489C16.8131 8.72985 16.8321 9.20434 16.5511 9.50871L11.0126 15.5087C10.8707 15.6625 10.6709 15.75 10.4615 15.75C10.2522 15.75 10.0524 15.6625 9.91044 15.5087L7.4489 12.842C7.16794 12.5377 7.18692 12.0632 7.49129 11.7822C7.79566 11.5013 8.27015 11.5203 8.5511 11.8246L10.4615 13.8943L15.4489 8.49129C15.7298 8.18692 16.2043 8.16794 16.5087 8.4489Z"
+                    fill="#7BC20D" />
+            </svg>
+            <span id="matched-addresses" class="tw-font-bold tw-text-2xl">{{uploadResult.propertyLimits.length}}
+                address{{uploadResult.propertyLimits.length > 1 ? 'es' :''}} matched</span>
+        </div>
+    </div>
+    <div *ngIf="uploadResult.validationResults?.length > 0">
+        <hr class="tw-h-px tw-my-6 tw-bg-gray-200 tw-border-0">
+        <div class="tw-flex tw-gap-3 tw-items-center tw-mb-6">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd"
+                    d="M10.8607 2.64721C11.5845 2.31771 12.4155 2.31771 13.1393 2.64721C13.6354 2.87304 13.9969 3.29371 14.3213 3.77375C14.6447 4.25227 15.0012 4.90039 15.4425 5.70288L21.0672 15.9296C21.481 16.682 21.8167 17.2923 22.0356 17.794C22.2566 18.3005 22.4104 18.806 22.3479 19.3272C22.2562 20.0931 21.8469 20.7853 21.22 21.2348C20.7934 21.5407 20.2763 21.6496 19.7261 21.7C19.181 21.75 18.4845 21.75 17.6258 21.75H6.37425C5.51555 21.75 4.81902 21.75 4.2739 21.7C3.72366 21.6496 3.20655 21.5407 2.78002 21.2348C2.15311 20.7853 1.74384 20.0931 1.65207 19.3272C1.58963 18.806 1.74341 18.3005 1.96437 17.794C2.18327 17.2923 2.51895 16.682 2.93277 15.9296L8.55747 5.70287C8.99883 4.90038 9.35528 4.25227 9.67866 3.77375C10.0031 3.29371 10.3646 2.87304 10.8607 2.64721ZM12.5179 4.01241C12.1889 3.86264 11.8111 3.86264 11.4821 4.01241C11.3742 4.06153 11.2052 4.19388 10.9215 4.61364C10.6413 5.02827 10.3175 5.61533 9.85327 6.45943L4.26534 16.6193C3.82893 17.4128 3.52729 17.9628 3.33922 18.3938C3.14999 18.8276 3.12737 19.0315 3.14142 19.1487C3.18313 19.4969 3.36916 19.8115 3.65412 20.0158C3.7501 20.0847 3.93966 20.1631 4.41088 20.2063C4.87923 20.2493 5.5065 20.25 6.41207 20.25H17.5879C18.4935 20.25 19.1208 20.2493 19.5891 20.2063C20.0603 20.1631 20.2499 20.0847 20.3459 20.0158C20.6308 19.8115 20.8169 19.4969 20.8586 19.1487C20.8726 19.0315 20.85 18.8276 20.6608 18.3938C20.4727 17.9628 20.1711 17.4128 19.7347 16.6193L14.1467 6.45943C13.6825 5.61533 13.3587 5.02827 13.0785 4.61364C12.7948 4.19388 12.6258 4.06153 12.5179 4.01241ZM12 9.25001C12.4142 9.25001 12.75 9.58579 12.75 10V14C12.75 14.4142 12.4142 14.75 12 14.75C11.5858 14.75 11.25 14.4142 11.25 14V10C11.25 9.58579 11.5858 9.25001 12 9.25001ZM11.25 17C11.25 16.5858 11.5858 16.25 12 16.25H12.01C12.4242 16.25 12.76 16.5858 12.76 17C12.76 17.4142 12.4242 17.75 12.01 17.75H12C11.5858 17.75 11.25 17.4142 11.25 17Z"
+                    fill="#DC3A57" />
+            </svg>
+            <span id="error-results" class="tw-font-bold tw-text-2xl">{{uploadResult.validationResults.length}}
+                error{{uploadResult.validationResults.length > 1 ? 's' :''}}</span>
+        </div>
+        <div class="tw-grid tw-px-5 tw-py-5 tw-rounded-md tw-grid-cols-7 tw-mb-6"
+            *ngFor="let validationResult of uploadResult.validationResults; index as index"
+            [ngClass]="index %2 === 0 ? 'tw-bg-gray-100' : ''">
+            <div class = "tw-col-span-4 tw-flex tw-flex-col tw-gap-2">
+                <span class="tw-font-bold tw-text-cfc-navy-blue">{{validationResult.locationIdentifier}}</span>
+                <span class=" tw-font-semibold tw-truncate">{{validationResult.validationAddress}}</span>
+            </div>
+            <div class="tw-col-span-3 tw-flex tw-flex-col tw-gap-1 tw-text-end">
+                <span *ngFor="let error of validationResult.errors; errorIndex as index"
+                    class="tw-text-cfc-validation-error-red tw-font-bold">{{error.errorMessage}}</span>
+            </div>
+        </div>
+    </div>
+    <hr class="tw-h-px tw-my-6 tw-bg-gray-200 tw-border-0">
+</div>

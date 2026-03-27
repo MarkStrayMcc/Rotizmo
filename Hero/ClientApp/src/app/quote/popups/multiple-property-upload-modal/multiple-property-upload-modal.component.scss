@@ -1,0 +1,59 @@
+@import "utils/variables";
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 0 8px;
+}
+
+::ng-deep {
+    .mat-horizontal-stepper-content {
+        padding: 0 !important;
+    }
+
+    .mat-stepper-horizontal-line {
+        display: none !important;
+      }
+
+    .mat-horizontal-content-container {
+        margin-left: 0px !important;
+    }
+
+    .mat-horizontal-stepper-header-container {
+        gap: 12em !important;
+    }
+
+    .mat-horizontal-stepper-header{
+        padding: 24px 0px !important;
+    }
+
+    .mat-step-icon-selected {
+        background-color: $cfc-bright-blue !important;
+    }
+
+    .mat-step-icon-state-done {
+        background-color: $cfc-green !important;
+        color: white !important;
+    }
+}
+
+::ng-deep .mat-step-header {
+    background-color: white !important;
+  }
+
+.prior-submit-checkbox {
+    .styledCheckbox {
+        position: relative;
+        float: none;
+        margin: 0;
+    }
+
+    .label-checkbox {
+        margin-top: 0;
+    }
+
+    label {
+        margin-bottom: 0;
+    }
+}

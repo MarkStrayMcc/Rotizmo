@@ -1,0 +1,19 @@
+﻿<div class="input-group date datepicker">
+    <input #datepicker
+           type="text"
+           class="form-control float-left hide-invalid hide-invalid-focus"
+           [formControl]="dateControl"
+           placeholder="Choose a date"
+           (blur)="blur()"
+           date-only="true"
+           [matDatepicker]="picker"
+           [min]="minDate"
+           [max]="maxDate"
+           [readonly]="readonly" />
+
+    <span class="input-group-addon input-group-addon-calendar">
+        <i class="material-icons ico-cal" (click)="readonly ? null : picker.open()">date_range</i>
+    </span>
+
+  <mat-datepicker #picker [calendarHeaderComponent]="datepickerHeader"></mat-datepicker>
+</div>

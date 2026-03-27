@@ -1,0 +1,20 @@
+<div [formGroup]="percentageForm" class="hide-invalid">
+    <warning [hasWarning]="hasWarning && !hasError()" [warningText]="warningText">
+        <div class="input-group" [class.ng-invalid]="hasError()">
+            <input type="text" class="hide-invalid form-control"
+                   formControlName="percentage"
+                   number-only
+                   [allowNegative]="allowNegative"
+                   [allowDecimal]="allowDecimal"
+                   (blur)="blurred()"
+                   (focus)="focussed()"
+                   [readonly]="readonly || isDisabled" />
+            <span class="input-group-addon">%</span>
+        </div>
+    </warning>
+</div>
+<div *ngIf="hasError() && this.percentageFormErrors.length > 0" class="max126px help-block with-errors">
+    <ul class="list-unstyled">
+        <li *ngFor="let error of percentageFormErrors" [innerText]="error"></li>
+    </ul>
+</div>

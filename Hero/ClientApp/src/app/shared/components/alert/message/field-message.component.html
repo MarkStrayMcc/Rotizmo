@@ -1,0 +1,8 @@
+<div class="field-message" [ngClass]="isMessageVisible ? type : ''">
+    <ng-content></ng-content>
+
+    <div *ngIf="isMessageVisible" class="help-block">
+        <i class="md-mr1 glyphicon glyphicon-exclamation-sign"></i>
+        <span>{{ message }}</span>
+    </div>
+</div>

@@ -1,0 +1,18 @@
+﻿:host {
+    h2 {
+        padding: 0;
+        line-height: unset;
+    }
+    
+    textarea {
+        resize: vertical;
+    }
+
+    .select-max-width {
+        max-width: 71%;
+    }
+
+    .row {
+        padding-top: 5px;
+    }
+}

@@ -1,0 +1,96 @@
+{
+  "CommonColumns": [
+    {
+      "ColumnName": "Country",
+      "DataType": "String"
+    },
+    {
+      "ColumnName": "AddressLine1",
+      "DataType": "String",
+      "DisplayName": "Address Line 1"
+    },
+    {
+      "ColumnName": "AddressLine2",
+      "DataType": "String",
+      "DisplayName": "Address Line 2"
+    },
+    {
+      "ColumnName": "TownOrCity",
+      "DataType": "String",
+      "DisplayName": "Town/City"
+    },
+    {
+      "ColumnName": "StateOrProvince",
+      "DataType": "String",
+      "DisplayName": "State/Province (US/AUS/Canada only)"
+    },
+    {
+      "ColumnName": "County",
+      "DataType": "String",
+      "DisplayName": "County\n(all other territories)"
+    },
+    {
+      "ColumnName": "PostCode",
+      "DataType": "String",
+      "DisplayName": "Post/Zip Code"
+    },
+    {
+      "ColumnName": "Latitude",
+      "DataType": "Double"
+    },
+    {
+      "ColumnName": "Longitude",
+      "DataType": "Double"
+    },
+    {
+      "ColumnName": "BuildingUse",
+      "DataType": "String",
+      "DisplayName": "Building Use"
+    },
+    {
+      "ColumnName": "PropertyDamageLimit",
+      "DataType": "Integer",
+      "DisplayName": "Property Declared Value"
+    },
+    {
+      "ColumnName": "ContentsDamageLimit",
+      "DataType": "Integer",
+      "DisplayName": "Content Damage Sum Insured"
+    },
+    {
+      "ColumnName": "ActualLossSustainedLimit",
+      "DataType": "Integer",
+      "DisplayName": "Actual Loss Sustained Sum Insured"
+    },
+    {
+      "ColumnName": "IncreasedCostOfWorkingLimit",
+      "DataType": "Integer",
+      "DisplayName": "ICOW Sum Insured"
+    },
+    {
+      "ColumnName": "LossOfRentLimit",
+      "DataType": "Integer",
+      "DisplayName": "Loss of Rent Sum Insured"
+    },
+    {
+      "ColumnName": "AlternativeAccommodationLimit",
+      "DataType": "Integer",
+      "DisplayName": "Alternative Accommodation Sum Insured"
+    }
+  ],
+  "WordingVersionColumnConfigurations": [
+    {
+      "WordingVersions": [
+        25511,
+        27908,
+        27909,
+        25684,
+        26611
+      ],
+      "ExtractorColumnConfiguration": {
+        "InitialRowIndex": 2,
+        "Columns": []
+      }
+    }
+  ]
+}

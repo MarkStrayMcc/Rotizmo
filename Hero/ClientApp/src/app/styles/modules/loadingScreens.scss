@@ -1,0 +1,12 @@
+.spinner-wrapper {
+    text-align: center;
+
+    .mat-progress-spinner {
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    .spinner-wrapper-loading-text {
+        margin-top: 10px;
+    }
+}

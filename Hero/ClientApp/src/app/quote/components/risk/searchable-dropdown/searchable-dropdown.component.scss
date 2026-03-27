@@ -1,0 +1,9 @@
+﻿:host {
+  &.ng-invalid {
+    &.ng-touched, &.ng-dirty {
+      &> .mat-input-container {
+        border: 2px solid #ec4848;
+      }
+    }
+  }
+}

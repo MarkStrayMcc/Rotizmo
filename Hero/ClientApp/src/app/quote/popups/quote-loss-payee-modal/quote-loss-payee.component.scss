@@ -1,0 +1,72 @@
+.mat-spinner {
+    float: left;
+    width: 2px;
+    height: 2px;
+    margin: 0px 5px 0px 0px;
+    color: #ffffff;
+    stroke: #ffffff;
+}
+
+.add-loss-payee-box {
+    border: 2px dashed #ddd;
+    min-height: 58px;
+    cursor: pointer;
+    width: 100%;
+    padding: 16px;
+    margin-top: 16px;
+    margin-bottom: 22px;
+    height: 20px;
+    position: relative;
+}
+
+.add-loss-payee-title {
+    color: #ddd;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 24px;
+}
+
+.form{
+    border: solid 1px #e5e5e5;
+}
+
+.cancel-add {
+    float: right;
+    color: #00c6e3;
+    margin: 10px;
+    position: relative;
+    z-index: 1;
+}
+
+.cancel-edit {
+    float: right;
+    color: #00c6e3;
+    margin: 0px;
+    position: relative;
+    z-index: 1;
+}
+
+.edit{
+    display: inline-flex;
+    margin-top: 5px;
+}
+
+.block-list{
+    border: solid 1px #e5e5e5;
+    margin: 10px 1px;
+}
+
+.effective-date {
+    padding-left: 0px;
+}
+
+.entity {
+    display: inline-block;
+    vertical-align: middle;
+    margin: 12px 5px 0 0;
+}
+
+.lp-name {
+    color: #9b9c9d;
+    font-weight: bold;
+}

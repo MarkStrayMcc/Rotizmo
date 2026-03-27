@@ -1,0 +1,46 @@
+<section [formGroup]="coverageOptionForm" novalidate>
+    <div class="coverage-option"
+         [hidden]="isHidden()"
+         [attr.data-automation-id]="coverage.coverageType.name">
+        <div [ngClass]="{'coverage-option-header': showHeader, 'coverage-option-header-hidden': !showHeader }">
+            <div class="col-md-10">
+                <span class="coverage-option-title" (click)="toggleSelection()" [innerText]="coverage.coverageType.name" [ngClass]="{'readonly':readonly || isMandatory()}"></span>
+            </div>
+            <div class="col-md-2 no-pad-right">
+                <div class="normalCheckbox float-right-pad" (click)="toggleSelection()">
+                    <input class="input-checkbox"
+                           type="checkbox"
+                           [id]="'checkbox' + coverage.coverageType.id"
+                           name="checkbox"
+                           [checked]="isSelected"
+                           [disabled]="readonly || isMandatory()" />
+                    <label class="label-checkbox" [for]="'checkbox' + coverage.coverageType.id" (click)="$event.preventDefault()"></label>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="(hasLimits || hasExcesses)" class="col-xs-12 col-md-12 coverage-option-limits" [hidden]="!isSelected">
+            <limit #coverageLimit *ngFor="let limit of getLimits()"
+                   [limit]="limit"
+                   [leadLimitConfiguration]="getLeadLimitConfiguration(limit)"
+                   [leadLimitValue]="getLeadLimitValue(limit)"
+                   [leadLimitBasis]="getLeadLimitBasis(limit)"
+                   [leadLimitCostBasis]="getLeadCostBasis(limit)"
+                   [coverageType]="coverage.coverageType"
+                   [currency]="currency"
+                   [isSelected]="isSelected"
+                   [readonly]="readonly || limit.coverageLimitType.isReadOnly"
+                   (setForm)="addSubFormGroup('limit'+limit.limitTypeCode, $event)">
+            </limit>
+            <excess #excess *ngFor="let xs of getExcesses()"
+                    [excess]="xs"
+                    [leadExcessConfiguration]="getLeadExcessConfiguration(xs)"
+                    [leadExcessValue]="getLeadExcessValue(xs)"
+                    [leadExcessBasis]="getLeadExcessBasis(xs)"
+                    [currency]="currency"
+                    [isSelected]="isSelected"
+                    [readonly]="readonly || xs.excessType.isReadOnly"
+                    (setForm)="addSubFormGroup('excess'+xs.ExcessTypeCode, $event)">
+            </excess>
+        </div>
+    </div>
+</section>

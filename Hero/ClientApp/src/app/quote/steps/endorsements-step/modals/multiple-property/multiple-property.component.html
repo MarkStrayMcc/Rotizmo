@@ -1,0 +1,27 @@
+<div role="dialog">
+    <div role="document">
+        <div mat-dialog-title>
+            <h1>Additional Locations</h1>
+            <div class="close" aria-label="Close" (click)="close()" mat-dialog-close>&times;</div>
+        </div>
+
+        <div mat-dialog-content [formGroup]="formGroup">
+            <ng-container *ngFor="let control of formGroup.controls.propertyLimits.controls; let i = index;"
+                formArrayName="propertyLimits">
+                <property-limit [formControlName]="i" [currency]="quote.currency" [isNew]="control.isNew"
+                    [isEditing]="control.isEditing" (deleted)="delete(control.id)" (editing)="edit(control.id, $event)">
+                </property-limit>
+            </ng-container>
+
+            <div id="multiple-property-create" class="create">
+                <p class="text" (click)="create()">Add Additional Location</p>
+            </div>
+        </div>
+
+        <div mat-dialog-actions align="end">
+            <button id="multiple-property-save" class="btn-primary" (click)="save()" [disabled]="isSaveButtonDisabled">
+                Save
+            </button>
+        </div>
+    </div>
+</div>

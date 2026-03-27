@@ -1,0 +1,37 @@
+<div class="row" *ngFor="let carrierContribution of carrierContributions">
+    <div>
+        <div class="form-group col-md-2">
+            <label for="carrierName">Carrier</label>
+            <input id="carrierName" type="text" name="carrierName" disabled
+            class="form-control"
+            [value]="carrierContribution.carrierName"/>
+        </div>
+        <div class="form-group col-md-2">
+            <label for="contributionPercentage">Participation</label>
+            <percentage-input
+                id="contributionPercentage" name="contributionPercentage"
+                [defaultValue]="carrierContribution.contributionPercentage" [readonly]="true">
+            </percentage-input>
+        </div>
+    </div>
+    <div class="form-group col-md-3">
+        <label for="carrierBankAccountAmount">Account Amount</label>
+        <currency  id="carrierBankAccountAmount"
+            [decimals]="true" [negatives]="true" [currency]="carrierContribution.accountCurrency"
+            [value]="carrierContribution.accountAmount" [readonly]="true">
+        </currency>
+    </div>
+    <div class="form-group col-md-2">
+        <label for="carrierOriginalAmountCurrency">Currency</label>
+        <input id="carrierOriginalAmountCurrency" type="text"
+            name="carrierOriginalAmountCurrency" disabled class="form-control"
+            [value]="carrierContribution.currencyDisplayText" />
+    </div>
+    <div class="form-group col-md-3">
+        <label for="carrierOriginalAmount">Original Amount</label>
+        <currency id="carrierOriginalAmount"
+            [decimals]="true" [negatives]="true" [currency]="carrierContribution.originalCurrency"
+            [value]="carrierContribution.originalAmount" [readonly]="true">
+        </currency>
+    </div>
+</div>

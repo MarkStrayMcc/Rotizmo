@@ -1,0 +1,40 @@
+<tr class="policy-panel" [ngClass]="{'expired-policy': policyIsCancelled()}">
+    <td data-th="Policy Number" class="col-md-2 policy-number">
+        <div class="policy-item-value">{{policy.reference}}</div>
+    </td>
+    <td data-th="Client" class="col-md-2 client-name">
+        <div class="policy-item-value" matTooltip={{policy.companyName}}>{{policy.companyName}}</div>
+    </td>
+    <td data-th="Broker" class="col-md-2 broker-name">
+        <div class="policy-item-value" matTooltip={{policy.brokerName}}>{{policy.brokerName}}</div>
+    </td>
+    <td data-th="Product" class="col-md-1 product-name">
+        <div class="policy-item-value">{{policy.productName}}</div>
+    </td>
+    <td data-th="Type" class="col-md-1 type">
+        <div class="policy-item-value">{{policy.policyType}}</div>
+    </td>
+    <td data-th="Inception" class="col-md-1 inception-date">
+        <div class="policy-item-value">{{policy.inceptionDate | date:'dd/MM/y'}}</div>
+    </td>
+    <td data-th="Expiry" class="col-md-1 expiry-date">
+        <div class="policy-item-value">{{policy.expirationDate | date:'dd/MM/y'}}</div>
+    </td>
+    <td class="col-md-1 actions-menu">
+        <a *ngIf="policy.nerdVersion != 1" id="previewPolicy" alt="preview" matTooltip="Preview" data-toggle="modal"
+            data-target="#modalUnderwriterNotes"
+            (click)="openPreviewDocumentDialog(this.previewTypes.policyDocumentPreview)">
+            <mat-icon>visibility</mat-icon>
+        </a>
+        <a *ngIf="policy.nerdVersion != 1" id="downloadPolicy" target="_self" [href]="getPolicyDownloadUrl()"
+            alt="download" matTooltip="Download" (click)="allowNavigation()">
+            <mat-icon>cloud_download</mat-icon>
+        </a>
+        <policy-mta-type-menu 
+            [policy]="policy"
+            [menuItems]="mtaSelectionTypes" 
+            (menuClicked)="mtaTypeClicked($event)"
+            class="policy-mta-type-menu">
+        </policy-mta-type-menu>
+    </td>
+</tr>

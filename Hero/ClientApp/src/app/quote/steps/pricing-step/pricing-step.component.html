@@ -1,0 +1,20 @@
+<section class="section-content" *ngIf="stepForm && isLoaded()">
+    <form [formGroup]="stepForm" novalidate>
+        <div class="container">
+            <div class="row">
+                <div formArrayName="pricingInformation" class="col-md-8 hide-invalid">
+                    <business-line *ngFor="let businessLine of stepForm.controls.pricingInformation.controls"
+                        [form]="businessLine" [currency]="vm.currency" [quoteState]="vm.state"
+                        (onWarning)="handleWarnings(businessLine, $event)" [readonly]="readonly"
+                        [isNewQuote]="isNewQuote" [isAdmitted]="vm.product.isAdmitted" [endorsements]="vm.endorsements">
+                    </business-line>
+                </div>
+            </div>
+            <div class="row" *ngIf="stepForm.controls.commission">
+                <commission-pricing [form]="stepForm.controls.commission" [currency]="vm.currency" [productName]="vm.product?.productName"
+                    [readonly]="readonly">
+                </commission-pricing>
+            </div>
+        </div>
+    </form>
+</section>

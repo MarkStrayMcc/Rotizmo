@@ -1,0 +1,14 @@
+﻿.mat-warn.hide-invalid-focus .mat-input-element,
+.mat-form-field-invalid.hide-invalid-focus .mat-input-element {
+  caret-color: #000000;
+}
+.mat-spinner {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  margin: 0px 5px 0px 0px;
+  color: #ffffff;
+  stroke: #ffffff;
+  top:0;
+  right:0;
+}

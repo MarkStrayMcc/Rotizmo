@@ -1,0 +1,7 @@
+<div [formGroup]="formGroup" class="{{config?.cssClass}}">
+  <error *ngIf="formGroup.get(config.property)" 
+    [errorText]="fieldErrors"
+    [formCtrl]="formGroup.get(config.property)">
+    <datepicker [formControl]="formGroup.get(config.property)"></datepicker>
+  </error>
+</div>

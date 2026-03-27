@@ -1,0 +1,10 @@
+<!--<input placeholder="Search by policy number or client name" formControlName="search" autocomplete="off" spellcheck="false"
+       style="height: 40px; line-height: 28px;" >-->
+<mat-form-field appearance="outline" >
+  <input matInput type="text"
+         [disabled]="disabled"
+         class="hide-invalid"
+         placeholder="Search by policy number or client name"
+         formControlName="search" />
+  <mat-icon matSuffix>search</mat-icon>
+</mat-form-field>

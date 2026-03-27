@@ -1,0 +1,7 @@
+﻿<div [class.warning-border]="hasWarning && showBorder">
+    <ng-content></ng-content>
+
+    <div *ngIf="hasWarning" class="help-block with-warnings">
+        {{ warningText }}
+    </div>
+</div>

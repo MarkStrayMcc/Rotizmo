@@ -1,0 +1,44 @@
+.subjectivity-error {
+    margin-top: 6px;
+    margin-bottom: 8px;
+    padding: 8px 10px 8px 10px;
+    color: #fff;
+    background-color: #ec4848;
+    font-weight: 500;
+    font-size: 12px;
+    font-family: Montserrat;
+}
+
+.subjectivity-list {
+    display: inline-block;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.subjectivity-row {
+    float: left;
+    width: 100%;
+    margin-bottom: 14px;
+    background-color: #f9f9f9;
+}
+
+.subjectivity-row:hover {
+    background-color: #ececec;
+}
+
+.subjectivity-row:last-child {
+    margin-bottom: 0;
+}
+
+.subjectivity-title {
+    float: left;
+    padding: 10px 5px 10px 15px;
+    font-weight: 600;
+    font-size: 13px;
+    color: #818182;
+}
+
+.subjectivity-icons {
+    float: left;
+    text-align: right;
+}

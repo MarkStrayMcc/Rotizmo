@@ -1,0 +1,33 @@
+﻿<mat-dialog-content>
+    <div id="modalPublishQuote" role="dialog">
+        <div role="document">
+            <div mat-dialog-title>
+                <h1>Publish Quote</h1>
+                <div class="close" aria-label="Close" (click)="onCloseModal()">&times;</div>
+            </div>
+
+            <div class="md-mt0 md-mb0 row rowField" *ngIf="!hasNoError">
+                <div class="col-md-12">
+                    <message></message>
+                </div>
+            </div>
+            
+            <div class="publish-quote-modal-content" role="document">
+                <div class="row rowField">
+                    <div class="col-md-12">
+                        Publishing this quote will make it available for download and sharing on the Connect Platform.
+                        Brokers will also have authority to bind, edit the risk inputs and create new quote options within their authority.<br /><br />
+                        Are you sure you want to publish this quote?
+                    </div>
+                </div>
+                <div class="row rowField">
+                    <div class="col-md-12">
+                        <button id="publishQuoteButton" class="btn btn-primary full-width" type="button" (click)="publishQuote()" [disabled]="disabled">
+                            Publish Quote
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</mat-dialog-content>

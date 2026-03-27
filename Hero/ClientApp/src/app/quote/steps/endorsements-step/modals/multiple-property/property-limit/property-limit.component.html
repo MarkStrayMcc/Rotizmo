@@ -1,0 +1,140 @@
+<div [formGroup]="formGroup" class="entity row">
+    <ng-template #readonly>
+        <div class="col-md-10">
+            <div id="property-limit-label-primary" class="summary primary">{{ insuredAddress.address1 }}</div>
+            <div id="property-limit-label-secondary" class="summary">{{ insuredAddress.city }}</div>
+        </div>
+
+        <div class="col-md-2 text-right">
+            <a id="property-limit-edit" class="edit" (click)="edit(true)">Edit</a><br />
+            <a id="property-limit-delete" class="delete" (click)="delete()">Delete</a>
+        </div>
+    </ng-template>
+
+    <ng-container *ngIf="isEditing; else readonly" class="md-mt2">
+        <a id="property-limit-cancel-editing" class="cancel" *ngIf="!isNew" (click)="cancel()">Cancel Editing</a>
+        <a id="property-limit-cancel-adding" class="cancel" *ngIf="isNew" (click)="delete()">Cancel Adding</a>
+
+        <div class="row md-mr2 md-ml1">
+            <div class="col-md-12">
+                <insured-address formControlName="insuredAddress" (countrySelected)="onCountrySelected($event)">
+                </insured-address>
+
+                <div class="form-group row">
+                    <div class="col-md-12 splitter-line"></div>
+                </div>
+
+                <div class="form-group row">
+
+                    <ng-container *ngIf="formGroup.controls.propertyDamageLimit.enabled">
+                        <div class="col-xs-12 col-md-2 md-mt1 text-right">
+                            <label class="fieldname">Property Damage Limit</label>
+                        </div>
+
+                        <div class="col-xs-12 col-md-4">
+                            <error [errorText]="{ required: 'Required', aboveLimit: aboveLimitValidationMessage }"
+                                [formCtrl]="formGroup.controls.propertyDamageLimit">
+                                <currency id="property-limit-property-damage-limit"
+                                    [matTooltip]="getCoverageLimitTooltip('propertyDamageLimit')"
+                                    formControlName="propertyDamageLimit" [currency]="currency">
+                                </currency>
+                            </error>
+                        </div>
+                    </ng-container>
+
+                    <ng-container *ngIf="formGroup.controls.contentsDamageLimit.enabled">
+                        <div class="col-xs-12 col-md-2 md-mt1 text-right">
+                            <label class="fieldname">Contents Damage Limit</label>
+                        </div>
+
+                        <div class="col-xs-12 col-md-4">
+                            <error [errorText]="{ required: 'Required', aboveLimit: aboveLimitValidationMessage }"
+                                [formCtrl]="formGroup.controls.contentsDamageLimit">
+                                <currency id="property-limit-contents-damage-limit"
+                                    [matTooltip]="getCoverageLimitTooltip('contentsDamageLimit')" [currency]="currency"
+                                    formControlName="contentsDamageLimit">
+                                </currency>
+                            </error>
+                        </div>
+                    </ng-container>
+
+                </div>
+
+                <div class="form-group row">
+                    <ng-container *ngIf="formGroup.controls.stockDamageLimit.enabled">
+                        <div class="col-xs-12 col-md-2 md-mt1 text-right">
+                            <label class="fieldname">Stock Damage Limit</label>
+                        </div>
+
+                        <div class="col-xs-12 col-md-4">
+                            <error [errorText]="{ required: 'Required', aboveLimit: aboveLimitValidationMessage }"
+                                [formCtrl]="formGroup.controls.stockDamageLimit">
+                                <currency id="property-limit-stock-damage-limit"
+                                    [matTooltip]="getCoverageLimitTooltip('stockDamageLimit')"
+                                    formControlName="stockDamageLimit" [currency]="currency">
+                                </currency>
+                            </error>
+                        </div>
+                    </ng-container>
+
+                    <ng-container *ngIf="formGroup.controls.actualLossSustainedLimit.enabled">
+                        <div class="col-xs-12 col-md-2 md-mt1 text-right">
+                            <label class="fieldname">Actual Loss Sustained Limit</label>
+                        </div>
+
+                        <div class="col-xs-12 col-md-4">
+                            <error [errorText]="{ required: 'Required', aboveLimit: aboveLimitValidationMessage }"
+                                [formCtrl]="formGroup.controls.actualLossSustainedLimit">
+                                <currency id="property-limit-actual-loss-sustained-limit" type="text"
+                                    [matTooltip]="getCoverageLimitTooltip('actualLossSustainedLimit')"
+                                    formControlName="actualLossSustainedLimit" [currency]="currency">
+                                </currency>
+                            </error>
+                        </div>
+                    </ng-container>
+                </div>
+
+                <div class="form-group row">
+                    <ng-container *ngIf="formGroup.controls.grossRentalLimit.enabled">
+                        <div class="col-xs-12 col-md-2 md-mt1 text-right">
+                            <label class="fieldname">Gross Rentals Limit</label>
+                        </div>
+
+                        <div class="col-xs-12 col-md-4">
+                            <error [errorText]="{ required: 'Required', aboveLimit: aboveLimitValidationMessage }"
+                                [formCtrl]="formGroup.controls.grossRentalLimit">
+                                <currency id="property-limit-gross-rental-limit"
+                                    [matTooltip]="getCoverageLimitTooltip('grossRentalLimit')"
+                                    formControlName="grossRentalLimit" [currency]="currency">
+                                </currency>
+                            </error>
+                        </div>
+                    </ng-container>
+
+                    <ng-container *ngIf="formGroup.controls.additionalIncreasedCostOfWorkingLimit.enabled">
+                        <div class="col-xs-12 col-md-2 md-mt1 text-right">
+                            <label class="fieldname">AICOW Limit</label>
+                        </div>
+
+                        <div class="col-xs-12 col-md-4">
+                            <error [errorText]="{ required: 'Required'}"
+                                [formCtrl]="formGroup.controls.additionalIncreasedCostOfWorkingLimit">
+                                <currency id="property-limit-additional-increased-cost-of-working-limit"
+                                    formControlName="additionalIncreasedCostOfWorkingLimit" [currency]="currency">
+                                </currency>
+                            </error>
+                        </div>
+                    </ng-container>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-offset-4 col-md-8 md-mt1">
+                        <button id="property-limit-add" (click)="add()" class="btn-primary float-right md-mr2">
+                            Add
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+</div>

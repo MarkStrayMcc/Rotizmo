@@ -1,0 +1,22 @@
+<section class="section-content" id="section-activities" data-content="2" [formGroup]="stepForm">
+            <div class="form-group row">
+                <div class="col-md-4  text-right"><label class="fieldname">Description of business</label></div>
+                <div class="col-md-7 hide-invalid">
+
+                    <error [errorText]="{required: 'Required' }"
+                           [formCtrl]="stepForm.controls.descriptionOfBusiness">
+                        <mat-form-field appearance="outline">
+                            <textarea matInput id="txtDescriptionOfBusiness" class="activityStepDescription full-width user-success" placeholder="" rows="3"
+                                      spellcheck="true" formControlName="descriptionOfBusiness" (blur)="onDescriptionBlur()" [(ngModel)]='vm.descriptionOfBusiness'>
+                        </textarea>
+                        </mat-form-field>
+                    </error>
+                </div>
+            </div>
+            <activity-list
+                           [validatePercentage]="validatePercentage"
+                           [activityListVm]="activityListVm"
+                           (onChange)="onActivitiesChange()"
+                           (loaded)="onActivityListLoad()"
+                           [readonly]="readonly"></activity-list>
+</section>

@@ -1,0 +1,85 @@
+<div role="dialog">
+    <div mat-dialog-title>
+        <h1>Underwriter notes</h1>
+        <div class="close" aria-label="Close" (click)="onCloseModal()">&times;</div>
+    </div>
+
+    <div class="md-mt0 md-mb0 row rowField" *ngIf="!hasNoError">
+        <div class="col-md-12">
+            <message></message>
+        </div>
+    </div>
+
+    <div role="document" mat-dialog-content>
+        <div>
+            <div class="md-mt0 md-mb0 row rowField">
+                <div class="col-md-12">
+                    <mat-form-field appearance="outline">
+                        <textarea matInput id="#txtNote" class="full-width" placeholder="Please enter a note" rows="6"
+                            [(ngModel)]='newNoteValue'></textarea>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row rowField">
+                <div class="col-md-12 md-ml0 md-pl0 md-pr0">
+                    <div class="col-md-3">
+                        <select [(ngModel)]="currentYear">
+                            <option *ngFor="let year of years" [value]="year">{{ year }} notes</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3 md-mb2"></div>
+                    <div class="col-md-6">
+                        <a class="btn-primary float-right md-ml3" (click)="addNote(newNoteValue)">Add note</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="rowNotes" *ngIf='parentNotes; else loadingScreen;'>
+            <div *ngFor="let underwriterNote of parentNotes" class="rowNoteDisplay">
+                <div class="row rowField md-mb0 rowNoteContent">
+                    <div class="col-md-12 md-pl0">
+                        <div class="note-image"
+                            [ngStyle]="{ 'background-image': 'url(' + underwriterNote?.imageUrl + ')'}"></div>
+                        <span class="note-name">{{ underwriterNote.authorName }}</span>
+                        <br />
+                        <span class="note-date">{{ underwriterNote.formattedCreatedDate }}</span>
+                    </div>
+                    <div class="col-md-12 md-pl0">
+                        <p class="note">{{ underwriterNote.note }}</p>
+                    </div>
+                </div>
+                <div *ngIf="getChildNotes(underwriterNote.clientNoteId).length > 0" class="row rowField md-mt0">
+                    <div *ngFor="let childNote of getChildNotes(underwriterNote.clientNoteId)" class="col-md-12">
+                        <div class="subnotes subnotes-hasreply clearfix">
+                            <div class="col-md-12 md-pl0">
+                                <div class="note-image"
+                                    [ngStyle]="{ 'background-image': 'url(' + childNote.imageUrl + ')'}"></div>
+                                <span class="reply-note-name">{{ childNote.authorName }}</span>
+                                <br />
+                                <div class="note-date-reply">{{ childNote.formattedCreatedDate }}</div>
+                            </div>
+                            <div class="col-md-12 md-pl0">
+                                <p class="reply-note">{{ childNote.note }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row rowField md-mt0">
+                    <div class="col-md-12">
+                        <underwriter-note-reply (addNote)="addNote($event, underwriterNote.clientNoteId)">
+                        </underwriter-note-reply>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <ng-template #loadingScreen>
+            <div role="alert">
+                <mat-progress-spinner mode="indeterminate">
+                </mat-progress-spinner>
+                loading...
+            </div>
+        </ng-template>
+    </div>
+</div>

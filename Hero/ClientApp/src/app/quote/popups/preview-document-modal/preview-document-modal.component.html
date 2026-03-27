@@ -1,0 +1,42 @@
+﻿<div id="previewDocumentModal" role="dialog">
+    <div role="document">
+        <div class="zoom-btn">
+            <a (click)="zoomIn()">
+                <i class="material-icons md-36">add_circle</i>
+            </a>
+            <br />
+            <a (click)="zoomOut()">
+                <i class="material-icons md-36">remove_circle</i>
+            </a>
+        </div>
+
+        <div mat-dialog-title>
+            <h1>{{this.modalTitle}}</h1>
+            <div class="close" aria-label="Close" mat-dialog-close>&times;</div>
+        </div>
+
+        <div class="md-mt0 md-mb0 row rowField" mat-dialog-content>
+            <div class="col-md-12">
+                <div *ngIf="documentType === previewDocumentFormat.Pdf">
+                    <pdf-viewer src="{{this.previewDocumentUrl}}"
+                        (after-load-complete)="afterLoadComplete()"
+                        (error)="onError($event)"
+                        [original-size]="true"
+                        [zoom]="zoomTo">
+                    </pdf-viewer>
+                </div>
+
+                <div *ngIf="!isLoaded">
+                    <div role="alert" class="md-p5">
+                        <mat-progress-spinner mode="indeterminate" mat-diameter="96" class="mat-info mat-hue-3 spinner">
+                        </mat-progress-spinner>
+                        loading...
+                    </div>
+                </div>
+                <div *ngIf="isErrorLoading">
+                    An error occurred whilst loading your document. Please contact IT Support.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

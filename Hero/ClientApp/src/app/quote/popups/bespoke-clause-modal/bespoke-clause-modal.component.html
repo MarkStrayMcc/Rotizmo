@@ -1,0 +1,45 @@
+﻿<form [formGroup]="bespokeClauseForm" (ngSubmit)="save(bespokeClauseForm.value, bespokeClauseForm.valid)">
+    <div role="dialog">
+        <div role="document">
+            <div mat-dialog-title>
+                <h1>Bespoke Clause</h1>
+                <div class="close" aria-label="Close" (click)="onCloseModal()">&times;</div>
+            </div>
+
+            <div mat-dialog-content>
+                <div class="row rowField">
+                    <div class="col-md-3"><label>Title</label></div>
+                    <div class="form-group">
+                        <div class="col-md-9">
+                            <input class="input-padding-fix" type="text" formControlName="clauseTitle" />
+                            <div *ngIf="!bespokeClauseForm.controls.clauseTitle.valid && bespokeClauseForm.controls.clauseTitle.touched" class="help-block with-errors">
+                                <ul class="list-unstyled">
+                                    <li *ngIf="bespokeClauseForm.controls.clauseTitle.errors.required">Required</li>
+                                    <li *ngIf="bespokeClauseForm.controls.clauseTitle.errors.duplicateValidator">Title must be unique</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row rowField">
+                    <div class="col-md-3"><label>Text</label></div>
+                    <div class="form-group">
+                        <div class="col-md-9">
+                            <textarea class="clauseText full-width" formControlName="clauseText" rows="15"></textarea>
+                            <div *ngIf="!bespokeClauseForm.controls.clauseText.valid && bespokeClauseForm.controls.clauseText.touched" class="help-block with-errors">
+                                <ul class="list-unstyled">
+                                    <li *ngIf="bespokeClauseForm.controls.clauseText.errors.required">Required</li>
+                                </ul>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div mat-dialog-actions align="end">
+                <button type="submit" class="btn btn-primary" [disabled]="!bespokeClauseForm.valid">Save</button>
+            </div>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,142 @@
+<section class="section-content" id="section-endorsements" data-content="4" [formGroup]="stepForm" *ngIf="stepForm">
+    <div class="form-group row">
+        <div class="col-md-4  text-right"><label class="fieldname">Add Clause</label></div>
+        <div class="col-md-7 form-group">
+            <autocomplete-dropdown [dataSource]="selectList"
+                                   [customDisplayMethod]="documentDisplayMethod"
+                                   [myControl]="stepForm.get('selectedValue')"
+                                   class="endorsementSelect">
+            </autocomplete-dropdown>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-4 col-xs-push-8">
+            <a class="btn btn-secondary endorsement-add-button md-mt1" [ngClass]="{'disabled':!checkValidation()}" (click)="addEndorsement()">Add</a>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-offset-2 col-md-10 splitter-line"></div>
+    </div>
+    <div class="form-group row" *ngIf="vm.endorsements?.length > 0">
+        <div class="col-md-4  text-right"><label class="fieldname">Quote Clauses</label></div>
+        <div class="col-md-7">
+            <table class="table table-striped  md-mb0">
+                <tbody>
+                    <tr class="rowEndorsement" data-toggle="tooltip" data-placement="top" title="" data-original-title="">
+                        <td style="width: 85%">
+                            <p>
+                                <span class="txtRowEndorsement"></span>
+                            </p>
+                        </td>
+                        <td class="text-right" style="width: 15%">
+                            <a class="tableaction btnRemoveEndorsement"></a>
+                        </td>
+                    </tr>
+                    <tr *ngFor="let endorsement of vm.endorsements | scope: 'quote'; let i = index" class="rowEndorsement" data-toggle="tooltip" data-placement="top" title="">
+                        <td style="width: 80%">
+                            <p>
+                                <span class="txtRowEndorsement">
+                                    {{
+ endorsement.reference
+                                    }} - {{ endorsement.title }}
+                                </span>
+                            </p>
+                        </td>
+                        <td class="icon-padding text-right" style="width: 20%">
+                            <a class="btnEditEndorsement" *ngIf="isEditableEndorsement(endorsement.reference)" (click)="!readonly && showEndorsementModal(endorsement)">
+                                <i class="material-icons" [ngClass]="{'disabled': readonly}">edit</i>
+                            </a>
+                            <a class="btnRemoveEndorsement" *ngIf="!endorsement.isMandatory" (click)="!readonly && removeEndorsement(endorsement.documentId)">
+                                <i class="material-icons" [ngClass]="{'disabled': readonly}">delete</i>
+                            </a>
+                            <a alt="Preview" title="Preview" data-toggle="modal" (click)="this.openEndorsementPreview(endorsement)">
+                                <i class="material-icons">zoom_in</i>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr *ngFor="let clause of bespokeClauses; let i = index" class="rowEndorsement" data-toggle="tooltip" data-placement="top" title="">
+                        <td style="width: 85%">
+                            <p>
+                                <span class="txtRowEndorsement">{{ clause.clauseTitle }}</span>
+                            </p>
+                        </td>
+                        <td class="icon-padding text-right" style="width: 15%">
+                            <a class="btnRemoveEndorsement" (click)="!readonly && removeClause(clause.clauseTitle)">
+                                <i class="material-icons" [ngClass]="{'disabled': readonly}">delete</i>
+                            </a>
+                            <a alt="Preview" title="View" data-toggle="modal" (click)="showClause(clause.key)">
+                                <i class="material-icons">zoom_in</i>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-offset-4 col-md-7 splitter-line md-mb2"></div>
+    </div>
+    <div class="form-group row" *ngIf="vm.endorsements?.length > 0">
+        <div class="col-md-4  text-right"><label class="fieldname">Policy Clauses</label></div>
+        <div class="col-md-7">
+            <table class="table table-striped  md-mb0">
+                <tbody>
+                    <tr class="rowEndorsement" data-toggle="tooltip" data-placement="top" title="" data-original-title="">
+                        <td style="width: 85%">
+                            <p>
+                                <span class="txtRowEndorsement"></span>
+                            </p>
+                        </td>
+                        <td class="text-right" style="width: 15%">
+                            <a class="tableaction btnRemoveEndorsement"></a>
+                        </td>
+                    </tr>
+                    <tr *ngFor="let endorsement of vm.endorsements | scope: 'policy'; let i = index" class="rowEndorsement" data-toggle="tooltip" data-placement="top" title="">
+                        <td style="width: 80%">
+                            <p>
+                                <span class="txtRowEndorsement">{{ endorsement.reference }} - {{ endorsement.title }}</span>
+                            </p>
+                        </td>
+                        <td class="icon-padding text-right" style="width: 20%">
+                            <a class="btnEditEndorsement" *ngIf="isEditableEndorsement(endorsement.reference)" (click)="!readonly && showEndorsementModal(endorsement)">
+                                <i class="material-icons" [ngClass]="{'disabled': readonly}">edit</i>
+                            </a>
+                            <a class="btnRemoveEndorsement" *ngIf="!endorsement.isMandatory" (click)="!readonly && removeEndorsement(endorsement.documentId)">
+                                <i class="material-icons" [ngClass]="{'disabled': readonly}">delete</i>
+                            </a>
+                            <a alt="Preview" title="Preview" data-toggle="modal" (click)="this.openEndorsementPreview(endorsement)">
+                                <i class="material-icons">zoom_in</i>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr *ngFor="let clause of bespokeClauses; let i = index" class="rowEndorsement" data-toggle="tooltip" data-placement="top" title="">
+                        <td style="width: 85%">
+                            <p>
+                                <span class="txtRowEndorsement">{{ clause.clauseTitle }}</span>
+                            </p>
+                        </td>
+                        <td class="icon-padding text-right" style="width: 15%">
+                            <a class="btnRemoveEndorsement" (click)="!readonly && removeClause(clause.clauseTitle)">
+                                <i class="material-icons" [ngClass]="{'disabled': readonly}">delete</i>
+                            </a>
+                            <a alt="Preview" title="View" data-toggle="modal" (click)="showClause(clause.key)">
+                                <i class="material-icons">zoom_in</i>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-offset-2 col-md-10 splitter-line"></div>
+    </div>
+    <div class="col-md-8 md-mb4 md-pl0">
+        <risk-panel formControlName="riskQuestionAnswers"
+                    [riskQuestions]="filteredRiskQuestions"
+                    [quote]="vm"
+                    (onWarningChange)="onRiskQuestionWarningChange($event)"
+                    [isRiskStep]="false">
+        </risk-panel>
+    </div>
+</section>

@@ -1,0 +1,20 @@
+<form id="activity-search-form" novalidate [formGroup]="activityForm">
+    <div class="row rowMargins">
+        <label class="fieldname col-md-4">Activity Search</label>
+        <div class="col-md-7">
+            <mat-form-field appearance="outline">
+                <input matInput formControlName="activity" id="activity-search-field" [matAutocomplete]="auto">
+                <mat-spinner *ngIf="isLoadingActivities$ | async" strokeWidth="3" [diameter]="20"></mat-spinner>
+                <mat-icon matSuffix>search</mat-icon>
+            </mat-form-field>
+
+            <mat-autocomplete #auto="matAutocomplete" [displayWith]="formatSearchSelectedItem">
+                <mat-option class="list-item" *ngFor="let activityItem of activityListDropdownItems$ | async"
+                    [value]="activityItem" [title]="formatSearchSelectedItem(activityItem)">
+                    <div class="activity-name">{{activityItem?.activityName}}</div>
+                    <div class="activity-path" *ngIf="!!activityItem?.activityPath">{{activityItem?.activityPath}}</div>
+                </mat-option>
+            </mat-autocomplete>
+        </div>
+    </div>
+</form>

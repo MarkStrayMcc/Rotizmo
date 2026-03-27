@@ -1,0 +1,31 @@
+﻿.list-radio {
+  margin-top: -5px;
+  height: 37px;
+  left: -15px;
+}
+
+.error-radio {
+  border: 2px solid #ec4848;
+  margin-bottom: 0px;
+}
+
+.input-radio[type=radio] {
+  visibility: visible;
+  height: 0;
+}
+
+input:focus + .label-radio {
+  outline-width: 2px;
+  outline-style: solid;
+  outline-color: Highlight;
+}
+
+:host {
+  &.ng-invalid {
+    &.ng-dirty, &.ng-touched {
+      .risk-radiobutton-wrapper {
+        border: 2px solid #ec4848;
+      }
+    }
+  }
+}

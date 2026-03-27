@@ -1,0 +1,124 @@
+@import "utils/variables";
+
+.mat-spinner {
+    float: left;
+    width: 2px;
+    height: 2px;
+    margin: 0px 5px 0px 0px;
+    color: #ffffff;
+    stroke: #ffffff;
+}
+
+.add-additional-insured-box {
+    border: 2px dashed #ddd;
+    min-height: 58px;
+    cursor: pointer;
+    width: 100%;
+    padding: 16px;
+    margin-top: 16px;
+    margin-bottom: 22px;
+    height: 20px;
+    position: relative;
+}
+
+.add-additional-insured-title {
+    color: #ddd;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 24px;
+}
+
+.form{
+    border: solid 1px #e5e5e5;
+}
+
+.cancel-add {
+    float: right;
+    color: #00c6e3;
+    margin: 10px;
+    position: relative;
+    z-index: 1;
+}
+
+.cancel-edit {
+    float: right;
+    color: #00c6e3;
+    margin: 0px;
+    position: relative;
+    z-index: 1;
+}
+
+.edit{
+    display: inline-flex;
+    margin-top: 5px;
+}
+
+.block-list{
+    border: solid 1px #e5e5e5;
+    margin: 10px 1px;
+}
+
+.effective-date {
+    padding-left: 0px;
+}
+
+.entity {
+    display: inline-block;
+    vertical-align: middle;
+    margin: 12px 5px 0 0;
+}
+
+.ai-name {
+    color: #9b9c9d;
+    font-weight: bold;
+}
+
+h1 {
+    font-size: 24px;
+    font-weight: 300;
+}
+
+%label-shared {
+    font-family: $font-family;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    color: $cfc-font-black;
+}
+
+:host ::ng-deep .fieldname {
+    @extend %label-shared;
+    font-size: $font-size-h5;
+    font-weight: 600;
+    text-align: right;
+}
+
+:host ::ng-deep .readonly-fieldvalue {
+    @extend %label-shared;
+    font-size: $font-size-h5;
+    font-weight: normal;
+}
+
+@media only screen and (max-width: $tablet-width) {
+    :host ::ng-deep .text-right {
+        text-align: left;
+    }
+
+    :host ::ng-deep .fieldname {
+        @extend %label-shared;
+        font-size: $font-size-h5;
+        font-weight: 600;
+        text-align: left;
+    }
+
+    :host ::ng-deep .readonly-fieldvalue {
+        @extend %label-shared;
+        font-size: $font-size-h5;
+        font-weight: normal;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+}

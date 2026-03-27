@@ -1,0 +1,34 @@
+<div class="col-md-8" *ngIf="client">
+    <warning [hasWarning]="!isAuthorisedLocation" warningText="No authority to quote in this territory">
+            <div *ngIf="client.primaryLocation" [class.left-padding]="!isAuthorisedLocation || !(client.primaryLocation)" [class.has-error]="!(client.primaryLocation)">
+                <div *ngIf="client.primaryLocation.address1">
+                    <h6 class="small-top-margin">{{ client.primaryLocation.address1 }}</h6>
+                </div>
+                <div *ngIf="client.primaryLocation.address2">
+                    <h6>{{ client.primaryLocation.address2 }}</h6>
+                </div>
+                <div *ngIf="client.primaryLocation.address3">
+                    <h6>{{ client.primaryLocation.address3 }}</h6>
+                </div>
+                <div *ngIf="client.primaryLocation.city">
+                    <h6>{{ client.primaryLocation.city }}</h6>
+                </div>
+                <div *ngIf="client.primaryLocation.stateProvinceCode && client.primaryLocation.stateProvinceCode !== '' && client.primaryLocation.stateProvinceCode !== '0' ">
+                    <h6 id="addressState">{{ client.primaryLocation.stateProvinceCode }}</h6>
+                </div>
+                <div *ngIf="client.primaryLocation.postcode">
+                    <h6>{{ client.primaryLocation.postcode }}</h6>
+                </div>
+                <div *ngIf="client.primaryLocation.country">
+                    <h6 class="small-bottom-margin" id="addressCountry">{{ client.primaryLocation.country.name }}</h6>
+                </div>
+            </div>
+            <div *ngIf="!(client.primaryLocation)" class="help-block with-errors">
+                Please add a primary location
+            </div>
+    </warning>
+    <p>
+        <a tabindex="10" data-toggle="modal" data-target="#modalMap" (click)="openClientAddressMapDialog(0)">View on map</a> |
+        <a tabindex="11" data-toggle="modal" data-target="#modalAddress" (click)="openClientAddressDialog()">{{ !readonly ? 'Change': 'Show Addresses'}}</a>
+    </p>
+</div>

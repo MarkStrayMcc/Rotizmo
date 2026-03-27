@@ -1,0 +1,78 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="col-md-9">
+                <h1><a routerLink="/bulk-quoting" routerLinkActive="active">Bulk Quoting</a> &gt; Upload Detail</h1>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <td style="width: 20%">
+                            <p><span>Uploaded file:</span></p>
+                        </td>
+                        <td style="width: 80%">
+                            <p><span>{{runDetail?.fileName}}</span></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 20%">
+                            <p><span>Uploaded on:</span></p>
+                        </td>
+                        <td style="width: 80%">
+                            <p><span>{{runDetail?.dateCreated | date:'dd MMM, yyyy'}}</span></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 20%">
+                            <p><span>Broker company:</span></p>
+                        </td>
+                        <td style="width: 80%">
+                            <p><span>{{runDetail?.brokerGroupName}}</span></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 20%">
+                            <p><span>Uploaded by:</span></p>
+                        </td>
+                        <td style="width: 80%">
+                            <p><span>{{runDetail?.underwriter}}</span></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 20%">
+                            <p><span>Status:</span></p>
+                        </td>
+                        <td style="width: 80%">
+                            <p><span>{{runDetail?.displayStatus}}</span></p>
+                        </td>
+                    </tr>
+                    <tr *ngIf="runDetail?.status==='completed'">
+                      <td></td>
+                      <td>
+                        <a class="btn btn-primary" [href]="getReportUrl()">
+                          <mat-icon>get_app</mat-icon>
+                          Download Report
+                        </a>
+                      </td>
+                    </tr>
+                </tbody>
+            </table>
+            
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <ag-grid-angular [gridOptions]="gridOptions" class="ag-theme-material"
+                style="width: 100%; height: 650px;"
+                (gridReady)="onGridReady($event)"
+                [columnDefs]="columnDefs"
+                [enableColResize]="true">
+            </ag-grid-angular>
+        </div>
+    </div>
+</div>

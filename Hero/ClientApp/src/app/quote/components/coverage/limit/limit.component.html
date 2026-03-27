@@ -1,0 +1,47 @@
+<form [formGroup]="form">
+    <div class="limit row md-mb2" [hidden]="limit.coverageLimitType.isHidden">
+        <div class="text-right col-xs-12 col-md-2">
+            <label class="limit-field-title">Limit</label>
+
+        </div>
+        <div class="col-xs-12 col-md-10">
+            <div class="row">
+                <div class="col-xs-4">
+                    <warning [hasWarning]="hasWarning" [warningText]="warningMessage">
+                        <currency #limitvalue formControlName="limitValue" [(ngModel)]="limit.limit"
+                            (valueChange)="limitValueChanged()" (blur)="onLimitBlur()" [isRequired]="isLimitSelected"
+                            [currency]="currency" [decimals]="false" [readonly]="limitReadOnly" [minValue]="minValue">
+                        </currency>
+                    </warning>
+                </div>
+                <div class="col-xs-4 md-pr0 md-pl0">
+                    <select #limitBasis formControlName="limitBasis" (change)="checkUnderwriterAuthority();updateTotalInsuredLimitValue()"
+                        [(ngModel)]="limit.limitBasis" [required]="isLimitSelected" [ngClass]="{'disabled': readonly}">
+                        <option *ngIf="!form.value.limitBasis" [value]="null"
+                            [ngClass]="{ 'hidden' : !!form.value.excessBasis }" selected hidden>
+                        </option>
+                        <option *ngFor="let key of limitKeys" [value]="key">
+                            {{this.limit.coverageLimitType.availableLimitBasis[key] }}
+                        </option>
+                    </select>
+                    <div class="help-block with-errors" *ngIf="limitBasisError()">
+                        Required
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <select #costBasis formControlName="costBasis" [(ngModel)]="limit.costBasis"
+                        [required]="isLimitSelected" [ngClass]="{'disabled': readonly}">
+                        <option *ngIf="!form.value.costBasis" [value]="null"
+                            [ngClass]="{ 'hidden' : !!form.value.costBasis }" selected hidden></option>
+                        <option *ngFor="let key of costKeys" [value]="key">{{
+                            this.limit.coverageLimitType.availableCostBasis[key] }}</option>
+                    </select>
+                    <div class="help-block with-errors" *ngIf="costBasisError()">
+                        Required
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</form>

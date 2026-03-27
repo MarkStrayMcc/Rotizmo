@@ -1,0 +1,28 @@
+﻿@import "utils/variables";
+
+.textarea {
+    resize: vertical;
+}
+
+.col-md-9 {
+    min-height: 40px;
+}
+
+.input-padding-fix {
+    padding-top: 9px;
+    padding-bottom: 9px;
+}
+
+mat-icon {
+    padding-top: 6px;
+    width: 24px !important;
+}
+
+mat-spinner {
+    float: left;
+    width: 2px;
+    height: 2px;
+    margin: 0px 0px 0px 0px;
+    color: #ffffff;
+    stroke: #ffffff;
+}

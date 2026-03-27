@@ -1,0 +1,123 @@
+﻿@import "../../styles/utils/variables.scss";
+
+.ag-header-select-all {
+    top: 8px;
+    position: absolute;
+    left: 6px;
+}
+
+h1 {
+    padding: 13px 0px;
+}
+
+.form-group {
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+}
+
+.height-57px {
+    height: 57px;
+}
+
+.bottom-0 {
+    position: absolute;
+    bottom: 0px;
+}
+
+
+tr:nth-child(even) {
+    background: #F4F4F4;
+}
+
+.negative {
+    color: #ec4848;
+}
+
+.btn {
+    margin-right: 8px;
+}
+
+.ag-center-text {
+    display: block;
+    width: 100%;
+    text-align: center;
+}
+
+.ag-row-align {
+    text-align: center;
+    border-bottom: solid 1px #f3eeee;
+    padding-top: 13px;
+}
+
+.ag-icon-checkbox-checked,
+.ag-icon-checkbox-unchecked,
+.ag-icon-checkbox-indeterminate {
+    background-size: 19px 17px;
+    height: 19px;
+    width: 20px;
+    vertical-align: text-bottom;
+    margin-right: 13px;
+}
+
+.cell-text-align {
+    max-height: 35px;
+    text-align: left;
+    padding-left: $grid-padding-left;
+}
+
+.link-cell {
+    cursor: pointer;
+}
+
+.link-cell-actions {
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.link-cell:hover {
+    color: $cfc-light-blue;
+}
+
+.ag-font-style {
+    user-select: initial;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    -webkit-user-select: text;
+}
+
+.label-checkbox {
+    position: relative;
+}
+
+.ecf-reconciliation-tab-group {
+    font-family: inherit;
+}
+
+.ecf-reconciliation-tab-group .mat-ink-bar {
+    display: none;
+}
+
+.ecf-reconciliation-tab-group .mat-tab-header {
+    border-bottom: 0;
+}
+
+.ecf-reconciliation-tab-group .mat-tab-label {
+    margin: 0px 1px;
+    opacity: 1;
+    height: 40px;
+    padding: 0 20px;
+}
+
+.ecf-reconciliation-tab-group.mat-primary .mat-tab-label,
+.ecf-reconciliation-tab-group.mat-primary .mat-tab-label:focus {
+    background-color: $grey-200;
+}
+
+.ecf-reconciliation-tab-group.mat-primary .mat-tab-label-active,
+.ecf-reconciliation-tab-group.mat-primary .mat-tab-label-active:focus {
+    background-color: $cfc-navy-blue;
+}
+
+.ecf-reconciliation-tab-group.mat-primary .mat-tab-label-active h5 {
+    color: white;
+}

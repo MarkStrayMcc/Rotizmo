@@ -1,0 +1,37 @@
+<div class="col-md-12">
+    <table *ngIf="policies?.length">
+        <thead>
+            <tr>
+                <th class="col-md-2 policy-number text-left">
+                    Policy Number
+                </th>
+                <th class="col-md-2 client-name text-left">
+                    Client
+                </th>
+                <th class="col-md-2 broker-name">
+                    Broker
+                </th>
+                <th class="col-md-1 product-name">
+                    Product
+                </th>
+                <th class="col-md-1 type">
+                    Type
+                </th>
+                <th class="col-md-1 inception-date">
+                    Inception
+                </th>
+                <th class="col-md-1 expiry-date">
+                    Expiry
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <ng-container *ngFor="let policy of policies">
+                <policy-item [policy]="policy" [mtaSelectionTypes]="mtaSelectionTypes"></policy-item>
+            </ng-container>
+        </tbody>
+    </table>
+    <ng-container *ngIf="!policies?.length">
+        <no-results></no-results>
+    </ng-container>
+</div>

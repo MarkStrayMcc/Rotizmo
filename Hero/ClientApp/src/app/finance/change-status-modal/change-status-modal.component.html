@@ -1,0 +1,82 @@
+<form #changStatusForm [formGroup]="statusForm" (ngSubmit)="onSubmit()">
+  <div mat-dialog-title>
+    <h1>Change Status</h1>
+    <div class="close" aria-label="Close" mat-dialog-close>&times;</div>
+  </div>
+
+  <mat-dialog-content [ngSwitch]="currentStatus">
+      <div class="row" *ngIf="displayErrorMessage">
+        <div class="form-group col-md-12">
+          <message></message>
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-md-6">
+          <label for="status">Status</label>
+          <error [errorText]="{ required: 'Required' }"
+                 [formCtrl]="statusForm.controls.status">
+            <select class="form-control"
+                    id="status"
+                    formControlName="status"
+                    name="status"
+                    #status>
+              <option *ngFor="let status of statusOptions"
+                      [value]="status.value">
+                {{ status.text }}
+              </option>
+            </select>
+          </error>
+        </div>
+      </div>
+    <main *ngIf="pendingPaymentRequest">
+      <div *ngSwitchCase="financialItemStatusType.Paid">
+        <app-paid-form [paidFormGroup]="paidFormGroup()"
+                       [cfcBankAccounts]="cfcBankAccounts"
+                       [supportedCurrencyCodes]="supportedCurrencyCodes"
+                       [selectedCurrency]="selectedCurrency"
+                       [pendingPaymentRequestCurrency]="pendingPaymentRequest.currency"></app-paid-form>
+      </div>
+      <div *ngSwitchCase="financialItemStatusType.Received">
+        <app-paid-form [paidFormGroup]="paidFormGroup()"
+                       [cfcBankAccounts]="cfcBankAccounts"
+                       [supportedCurrencyCodes]="supportedCurrencyCodes"
+                       [selectedCurrency]="selectedCurrency"
+                       [pendingPaymentRequestCurrency]="pendingPaymentRequest.currency"></app-paid-form>
+      </div>
+      <div *ngSwitchCase="financialItemStatusType.PartReceived">
+        <app-part-received-form [paidFormGroup]="paidFormGroup()"
+                                [cfcBankAccounts]="cfcBankAccounts"
+                                [carriers]="carriers"
+                                [isLoadingCarriers]="isLoadingCarriers"
+                                [supportedCurrencyCodes]="supportedCurrencyCodes"
+                                [selectedCurrency]="selectedCurrency"
+                                [pendingPaymentRequestCurrency]="pendingPaymentRequest.currency">
+        </app-part-received-form>
+      </div>
+      <div class="row">
+        <div class="form-group col-md-12">
+          <label for="notes">Notes</label>
+          <textarea draggable="true"
+                    class="form-control"
+                    id="notes"
+                    formControlName="notes"
+                    name="notes"
+                    #notes>
+          </textarea>
+        </div>
+      </div>
+    </main>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button type="button"
+            class="btn btn-link"
+            (click)="onCloseModal()">
+      Cancel
+    </button>
+    <button type="submit"
+            class="btn btn-primary"
+            [disabled]="!statusForm.valid || !statusForm.dirty || queryInProgress">
+      {{ submitButtonMessage }}
+    </button>
+  </mat-dialog-actions>
+</form>

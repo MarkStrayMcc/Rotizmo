@@ -1,0 +1,8 @@
+<div [formGroup]="formGroup">
+  <input 
+    type="text"
+    class="form-control {{config?.cssClass}}" 
+    [formControlName]="config.property" 
+    [(ngModel)]="item[config.property]" 
+    (keydown)="onKeyDown($event)" />
+</div>

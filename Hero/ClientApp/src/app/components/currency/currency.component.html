@@ -1,0 +1,17 @@
+﻿<form [formGroup]="form" autocomplete="off">
+    <warning [hasWarning]="hasWarning && control && !(control.invalid && control.touched)" [warningText]="warningText">
+        <div class="input-group" [class.ng-invalid]="!control || (control.invalid && control.touched)">
+            <span *ngIf="currency" class="input-group-addon">{{ currency.symbol }}</span>
+            <input type="text" largeNumber [ngModel]="value" [initialValue]="value"
+                (onValueChanged)="onValueChanged($event)" [allowDecimals]="decimals" [allowNegative]="negatives"
+                (blur)="blurred()" (focus)="focussed()" class="form-control hide-invalid" formControlName="value"
+                [required]="isRequired" [name]="inputName" [readonly]="readonly || isDisabled">
+        </div>
+    </warning>
+    <div class="help-block with-errors" *ngIf="!control || (control.invalid && control.touched && !minValue)">
+        Required
+    </div>
+    <div class="help-block with-errors" *ngIf="control?.invalid && control?.touched && minValue ">
+        Limit must be more than 0
+    </div>
+</form>

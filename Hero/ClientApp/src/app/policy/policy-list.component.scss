@@ -1,0 +1,53 @@
+@import "utils/variables";
+
+table th {
+    float: left;
+    padding: 10px 15px;
+    font-weight: 600;
+}
+
+.policy-number {
+    width: 16.59999999%;
+}
+
+.client-name {
+    width: 19.36666667%;
+}
+
+.broker-name {
+    width: 19.36666667%;
+}
+
+.product-name {
+    width: 7%;
+}
+
+.type {
+    width: 7%;
+}
+
+@media only screen and (max-width: $tablet-width) {
+    table {
+        display: block;
+        width: 100%;
+    }
+
+    thead {
+        display: none;
+    }
+
+    tbody {
+        max-width: 100%;
+        display: block;
+    }
+
+    td {
+        display: block;
+        float: none;
+        width: 100%;
+    }
+
+    td[data-th]:before {
+        content: attr(data-th);
+    }
+}

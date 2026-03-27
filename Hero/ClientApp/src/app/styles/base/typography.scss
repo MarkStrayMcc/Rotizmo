@@ -1,0 +1,100 @@
+
+@import "utils/variables";
+@mixin H4b {
+    font-family: Montserrat;
+    font-size: 15px;
+    font-weight: 600;
+    text-align: center;
+    color: #ffffff;
+}
+
+@mixin H7 {
+    font-family: Montserrat;
+    font-size: 12px;
+    font-weight: 500;
+    color: $grey;
+}
+
+@mixin normal-montserrat-font {
+    font-family: Montserrat;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    color: $grey;
+}
+
+h1 {
+    @include normal-montserrat-font;
+    font-size: 20px;
+    font-weight: 600;
+    padding: 18px 0px;
+    margin: 0px;
+}
+
+h4 {
+    font-family: Montserrat;
+    font-size: 15px;
+    font-weight: 500;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    text-align: center;
+    color: #ffffff;
+}
+
+h5 {
+    @include normal-montserrat-font;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+h6 {
+    @include normal-montserrat-font;
+    font-size: 14px;
+    font-weight: normal;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+}
+
+label {
+    font-size: 13px;
+    font-weight: 400;
+    color: #666666;
+}
+
+.bold{
+    font-weight:700;
+}
+
+.normal{
+    font-weight:400;
+}
+
+h2 {
+    font-weight: 600;
+    font-size: 20px;
+    color: $grey;
+    padding: 24px 0px 10px 0px;
+    margin: 0px;
+}
+
+h3{
+    font-size: 14px;
+    color: #9b9c9d;
+    font-weight: 600;
+    float: left;
+    margin-top: 16px;
+    margin-bottom: 16px;
+}
+
+.mat-calendar{
+
+}
+
+.mat-stepper-horizontal {
+    font-family: Montserrat !important;
+}

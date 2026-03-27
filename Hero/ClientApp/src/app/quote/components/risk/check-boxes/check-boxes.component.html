@@ -1,0 +1,22 @@
+<div [hidden]="this.formControl?.disabled"  class="border-0">
+    <mat-form-field appearance="fill">
+        <mat-label>Select</mat-label>
+        <mat-select ngDefaultControl [formControl]="formControl" multiple (selectionChange)="onChangeCategory($event, checkboxMultiSelect)" [compareWith]="compare" >
+            <mat-select-trigger>
+                {{this.formControl?.value ? this.formControl?.value[0]?.text : ''}}
+                <span *ngIf="this.formControl?.value?.length > 1" class="checkbox-additional-selection">
+                    {{this.formControl?.value?.length > 1 ? ', ...': ''}}
+                </span>
+            </mat-select-trigger>
+            <mat-option *ngFor="let option of this.riskQuestion?.options" [value]="option">{{option.text}}</mat-option>
+        </mat-select>
+    </mat-form-field>
+</div>
+<div [hidden]="!this.formControl?.disabled" class="checkbox-view-mode">
+    <ul *ngIf="this.formControl?.value?.length > 0" class="checkbox-list">
+        <li  *ngFor="let option of this.formControl?.value">
+            <span>{{ option.text }}</span>
+        </li>
+    </ul>
+</div>
+

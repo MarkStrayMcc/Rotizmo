@@ -1,0 +1,11 @@
+﻿<div class="input-group hide-invalid">
+    <input type="text" class="form-control hide-invalid"
+        [formControl]="this.formControl"
+        number-only
+        [allowNegative]="false"
+        [allowDecimal]="false"
+        [required]="this.riskQuestion.isMandatory"
+        [id]="this.riskQuestion.tag"
+        (blur)="this.onTouchEvent()">
+    <span class="input-group-addon">%</span>
+</div>

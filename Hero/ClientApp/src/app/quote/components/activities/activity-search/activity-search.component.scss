@@ -1,0 +1,46 @@
+@import '../../../../styles/utils/variables.scss';
+
+%label-shared {
+  font-family: $font-family;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: $cfc-font-black;
+}
+
+.fieldname {
+  @extend %label-shared;
+  font-size: $font-size-h5;
+  font-weight: 600;
+
+  &.right {
+    text-align: right;
+  }
+}
+
+.list-item {
+  border: none;
+  line-height: 16px;
+}
+
+.activity-path {
+  color: #999;
+  font-size: 0.8em;
+}
+
+.mat-warn.hide-invalid-focus .mat-input-element,
+.mat-form-field-invalid.hide-invalid-focus .mat-input-element {
+  caret-color: #000000;
+}
+
+.mat-spinner {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  margin: 0px 5px 0px 0px;
+  color: #ffffff;
+  stroke: #ffffff;
+  top: 0;
+  right: 0;
+}

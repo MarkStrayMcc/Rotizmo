@@ -1,0 +1,78 @@
+<div role="dialog">
+    <div mat-dialog-title>
+        <h1>Bind Quote</h1>
+        <div class="close" aria-label="Close" (click)="onCloseModal()">&times;</div>
+    </div>
+
+    <nav class="col-md-12">
+        <ul class="secondary-menu">
+            <li>
+                <a [attr.tabindex]="steps.basic + 1" [ngClass]="{'active': currentStep === steps.basic, 'inactive': !isEnabled(steps.basic)}" (click)="setStep(steps.basic)">
+                    <span class="sub-menu-step sub-menu-step1" [innerText]="steps.basic + 1"></span>
+                    <span class="sub-menu-title">Basic</span>
+                    <span class="sub-menu-desc">Basic info</span>
+                </a>
+            </li>
+            <li>
+                <a [attr.tabindex]="steps.subjectivities + 1" [ngClass]="{'active': currentStep === steps.subjectivities, 'inactive': !isEnabled(steps.subjectivities)}" (click)="setStep(steps.subjectivities)">
+                    <span class="sub-menu-step" [innerText]="steps.subjectivities + 1"></span>
+                    <span class="sub-menu-title">Subjectivities</span>
+                    <span class="sub-menu-desc">Subjectivity details</span>
+                </a>
+            </li>
+            <li>
+                <a [attr.tabindex]="steps.pricing + 1" [ngClass]="{'active': currentStep === steps.pricing, 'inactive': !isEnabled(steps.pricing)}" (click)="setStep(steps.pricing)">
+                    <span class="sub-menu-step" [innerText]="steps.pricing + 1"></span>
+                    <span class="sub-menu-title">Pricing</span>
+                    <span class="sub-menu-desc">Premium details</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <div mat-dialog-content class="bind-quote-modal-content" role="document">
+        <div class="md-mt0 md-mb0 row rowField">
+            <form [formGroup]="bindQuoteForm">
+                <div class="col-md-12" [ngSwitch]="currentStep">
+                    <bind-quote-basic-step #basicStepComponent
+                                            *ngSwitchCase="steps.basic"
+                                            [form]="bindQuoteForm.get('basic')"
+                                            [countryId]="quote?.insuredLocation?.country?.countryId"
+                                            [brokerTeamId]="quote?.brokerTeam?.id"
+                                            [state]="quote?.insuredLocation?.stateProvinceCode"
+                                            [quote]=quote>
+                    </bind-quote-basic-step>
+                    <bind-quote-subjectivities-step *ngSwitchCase="steps.subjectivities"
+                                                    formControlName="subjectivities"
+                                                    [showOnlyPostError]="bindQuoteForm.get('subjectivities').touched && !bindQuoteForm.get('subjectivities').valid"
+                                                    (changed)="onSubjectivityChange($event)">
+                    </bind-quote-subjectivities-step>
+                    <bind-quote-pricing-step *ngSwitchCase="steps.pricing" [isCalculating]="isCalculating" formControlName="pricing">
+                    </bind-quote-pricing-step>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <div class="bind-quote-modal-footer md-pt2">
+        <div class="row">
+            <div class="col-md-6">
+                <skip-to tabindex="11" [isPrevious]="true" [isDisabled]="currentStep === steps.basic" (onSkipToClick)="previousStep()"></skip-to>
+            </div>
+            <div class="col-md-6">
+                <button *ngIf="currentStep === steps.pricing; else next"
+                        type="submit"
+                        class="btn-primary float-right d-flex"
+                        [disabled]="bindQuoteForm.invalid || isBinding || isCalculating"
+                        (click)="bindTheQuote()">
+                    Bind Quote
+                    <mat-spinner *ngIf="isBinding || isCalculating" class="md-ml1" strokeWidth="3" [diameter]="20"></mat-spinner>
+                </button>
+
+                <ng-template #next>
+                    <skip-to tabindex="12" [isDisabled]="disableNext" (onSkipToClick)="nextStep()" class="md-ml2"></skip-to>
+                </ng-template>
+            </div>
+        </div>
+    </div>
+</div>

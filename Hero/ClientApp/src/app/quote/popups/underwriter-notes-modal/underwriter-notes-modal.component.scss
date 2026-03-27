@@ -1,0 +1,103 @@
+@import "utils/variables";
+
+.note-image {
+    height: 36px;
+    width: 36px;
+    border: solid 2px #e0dddd;
+    float: left;
+    background-size: cover;
+    background-position: center;
+}
+
+.note-name {
+    color: $cfc-bright-blue;
+    font-weight: 600;
+    font-size: 13px;
+    margin: -3px 0px 0px 10px;
+}
+
+.note-date {
+    font-size: 11px;
+    margin-left: 10px;
+    margin-top: -3px;
+    float: left;
+    color: #9E9E9E;
+}
+
+.rowNotes {
+    border-top: solid 1px #ececec;
+}
+
+.rowNoteContent {
+    padding: 0px 16px 16px 16px;
+    margin-top: 0px !important;
+}
+
+.rowNoteDisplay {
+    padding-top: 16px;
+    border-bottom: solid 1px #ececec;
+}
+
+    .rowNoteDisplay:hover {
+        background-color: #f9f9f9;
+    }
+
+.subnotes {
+    display: none;
+}
+
+.subnotes-hasreply {
+    display: block !important;
+}
+
+.note {
+    margin: 12px 0px 0px 0px;
+    color: #666;
+    font-size: 13px;
+    white-space: -moz-pre-wrap; /* Firefox */
+    white-space: -pre-wrap; /* ancient Opera */
+    white-space: -o-pre-wrap; /* newer Opera */
+    white-space: pre-wrap; /* Chrome; W3C standard */
+    word-wrap: break-word; /* IE */
+}
+
+.subnotes {
+    background-color: #f1efef;
+    padding: 12px;
+}
+
+.reply-note {
+    font-size: 12px;
+    color: #666;
+    margin: 12px 0px 0px 0px;
+    white-space: -moz-pre-wrap;
+    white-space: -pre-wrap;
+    white-space: -o-pre-wrap;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.reply-note-name {
+    color: $cfc-bright-blue;
+    font-weight: 600;
+    font-size: 13px;
+    margin: -3px 0px 0px 10px;
+}
+
+.note-date-reply {
+    font-size: 11px;
+    margin-left: 10px;
+    margin-top: -3px;
+    float: left;
+    color: #9E9E9E;
+}
+
+.mat-progress-spinner {
+    width: 30px;
+    height: 30px;
+    margin-left: 45%;
+}
+
+.notes-title {
+    float: left;
+}

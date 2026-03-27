@@ -1,0 +1,37 @@
+<div class="tw-absolute tw-bottom-1 tw-right-1/2 tw-m-5" *ngIf="(toastType$ | async) as toastType">
+    <!-- Toast Notification Success-->
+    <div *ngIf="toastType === 'success'"
+        class="tw-flex toast tw-gap-4 tw-min-w-[380px] tw-h-[64px] tw-items-center tw-rounded-[6px] tw-border-solid tw-border-l-8 tw-border-r-0
+                tw-border-y-0 tw-border-alert-border-green  tw-pr-[16px] tw-pl-[24px] tw-py-[16px] tw-bg-alert-green tw-shadow-md">
+        <!-- icons -->
+        <div class="tw-rounded-full tw-flex tw-items-center tw-mr-4 tw-text-green-500">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                    d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM10 17L5 12L6.41 10.59L10 14.17L17.59 6.58L19 8L10 17Z"
+                    fill="white" />
+            </svg>
+        </div>
+        <!-- message -->
+        <div class="tw-max-w-sm tw-text-white ">
+            {{ message$ | async }}
+        </div>
+    </div>
+
+    <div *ngIf="toastType === 'error'"
+        class="tw-flex toast tw-gap-4 tw-min-w-[380px] tw-h-[64px] tw-items-center tw-rounded-[6px] tw-border-solid tw-border-l-8 tw-border-r-0
+            tw-border-y-0 tw-border-alert-border-error  tw-pr-[16px] tw-pl-[24px] tw-py-[16px] tw-bg-alert-error tw-shadow-md">
+        <!-- icons -->
+        <div class="tw-rounded-full tw-flex tw-items-center tw-mr-4 tw-text-white">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd"
+                    d="M12 0.25C5.51065 0.25 0.25 5.51065 0.25 12C0.25 18.4893 5.51065 23.75 12 23.75C18.4893 23.75 23.75 18.4893 23.75 12C23.75 5.51065 18.4893 0.25 12 0.25ZM12 1.75C17.6609 1.75 22.25 6.33908 22.25 12C22.25 17.6609 17.6609 22.25 12 22.25C6.33908 22.25 1.75 17.6609 1.75 12C1.75 6.33908 6.33908 1.75 12 1.75ZM14.6861 3.94988C14.6607 3.56186 14.3375 3.25 13.9376 3.25H10.0627L9.96448 3.25636C9.5789 3.3067 9.28851 3.64926 9.31428 4.04834L9.9601 14.0483L9.97436 14.1536C10.0457 14.4962 10.349 14.75 10.7085 14.75H13.2918L13.3978 14.7426C13.7443 14.6935 14.0171 14.4071 14.0402 14.0483L14.6861 4.04834L14.6861 3.94988ZM12.0002 15.1824C12.7814 15.1824 13.4555 15.4526 13.9742 15.9847C14.4885 16.5114 14.75 17.1786 14.75 17.9438C14.75 18.707 14.4859 19.379 13.9688 19.9203C13.4435 20.4682 12.772 20.75 12.0002 20.75C11.2277 20.75 10.5555 20.468 10.0316 19.92C9.51433 19.3799 9.25 18.7078 9.25 17.9438C9.25 17.1783 9.51162 16.5112 10.0262 15.9847C10.546 15.4524 11.2193 15.1824 12.0002 15.1824ZM12.0002 16.6824C11.6143 16.6824 11.3302 16.7964 11.0991 17.033C10.8634 17.2741 10.75 17.5633 10.75 17.9438C10.75 18.325 10.8678 18.6245 11.1154 18.883C11.3542 19.1327 11.6336 19.25 12.0002 19.25C12.3664 19.25 12.6459 19.1327 12.8851 18.8832C13.1321 18.6246 13.25 18.3246 13.25 17.9438C13.25 17.5633 13.1366 17.274 12.9005 17.0322C12.6707 16.7965 12.3862 16.6824 12.0002 16.6824ZM13.137 4.75H10.863L11.411 13.25H12.588L13.137 4.75Z"
+                    fill="currentColor" />
+            </svg>
+        </div>
+        <!-- message -->
+        <div class="tw-max-w-sm tw-text-white ">
+            {{ message$ | async }}
+        </div>
+    </div>
+</div>
+

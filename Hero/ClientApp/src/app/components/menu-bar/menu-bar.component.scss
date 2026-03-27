@@ -1,0 +1,123 @@
+@import "utils/variables";
+@import "utils/mixins";
+
+#header {
+    background-color: $cfc-navy-blue;
+    color: #FFF;
+    height: 120px;
+}
+
+#middle {
+    width: 90%;
+    max-width: 1170px;
+    margin: 0 auto;
+    display: flex;
+}
+
+#logo {
+    padding-bottom: 0;
+    padding-top: 38px;
+    height: 2.6em;
+    min-width: 220px;
+    display: inline-block;
+}
+
+#logo img {
+    max-height: 53px;
+    max-width: 150px;
+}
+
+.menu {
+    @include fonttypeSize("90%","Montserrat");
+    font-weight: bold;
+    width: 80%;
+    display: inline-block;
+    height: 80px;
+    padding-top: 45px;
+    z-index:9;
+
+    ul {
+        width: 100%;
+        padding: 4px 0;
+        margin: 0;
+        text-align: left;
+        display: flex;
+        flex-wrap: wrap;
+
+        li {
+            margin-right: 3%;
+            position: relative;
+            list-style: none;
+            padding: 0 0.6em;
+
+            &:hover > a {
+                color: #FFF;
+                border-bottom: solid 2px $cfc-light-blue;
+            }
+
+            a {
+                color: #FFF;
+                padding: 4px 0px 15px;
+                margin: 0;
+                text-decoration: none;
+                display: inline-block;
+                text-transform: none;
+
+                &:hover {
+                    color: #FFF;
+                    border-bottom: solid 2px $cfc-light-blue;
+                }
+            }
+        }
+
+        ul {
+            display: none;
+            margin-right: 3%;
+            position: absolute;
+            top: 39px;
+            padding: 45px 0 15px;
+            left: -17px;
+            z-index: 1;
+            width: 200px;
+            background: $cfc-navy-blue;
+
+            li {
+                width: auto;
+                display: block;
+                margin: 0;
+
+                a {
+                    width: auto;
+                    padding: 8px 22px;
+                    background: $cfc-navy-blue;
+                    font-weight: normal;
+                    font-size: 90%;
+                    display: block;
+
+                    &:hover {
+                        background: #002b48;
+                        border-bottom: none;
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+.menu ul li:hover > ul {
+    display: block;
+}
+
+
+@media only screen and (max-width: $desktop-width) {
+    .menu {
+        padding-top: 30px;
+    }
+}
+
+@media only screen and (max-width: $tablet-width) {
+    .menu ul > li {
+        padding: 0;
+    }
+}

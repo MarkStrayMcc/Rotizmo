@@ -1,0 +1,11 @@
+﻿<section class="section-content" id="section-risk" data-content="1" style="display: block;">
+    <form [formGroup]="stepForm" *ngIf="stepForm" class="form-group hide-invalid">
+        <risk-panel
+            formControlName="riskQuestionAnswers"
+            [riskQuestions]="riskQuestions"
+            [quote]="vm"
+            (onWarningChange)="onWarningChange.emit($event)"
+            [isRiskStep]="true">
+        </risk-panel>
+    </form>    
+</section>

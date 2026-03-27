@@ -1,0 +1,12 @@
+<div mat-dialog-content id="modalCancellation" role="dialog">
+    <div role="document">
+        <div #formComponent>
+            <div class="close" aria-label="Close" mat-dialog-close>&times;</div>
+            <shared-form-creator                
+                [config]="formModalConfig"
+                [item]=""
+                (validForm)="openConfirmationModal($event)">
+            </shared-form-creator>
+        </div>
+    </div>
+</div>

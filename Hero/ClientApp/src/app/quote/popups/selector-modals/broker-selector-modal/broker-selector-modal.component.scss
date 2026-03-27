@@ -1,0 +1,41 @@
+﻿@import "utils/variables";
+
+:host {
+    table {
+        width: 100%;
+        margin-bottom: 25px;
+    }
+
+    table tr {
+        border-bottom: solid 1px #e5e5e5;
+        padding: 10px 0;
+    }
+
+    table td,
+    table th {
+        padding: 10px;
+    }
+
+    td.broker-selector {
+        width: 5%;
+        text-align: left;
+    }
+
+    .assigned-underwriter {
+        width: 27%;
+        text-align: left;
+    }
+
+    td.broker {
+        width: 40%;
+    }
+
+    td.enquiry-received {
+        width: 24%;
+        text-align: left;
+    }
+
+    input {
+        border: 0;
+    }
+}

@@ -1,0 +1,53 @@
+<div id="modalAdditionalInsured" role="dialog">
+    <div role="document">
+        <div mat-dialog-title>
+            <h1>Additional Insured</h1>
+            <div class="close" aria-label="Close" mat-dialog-close>&times;</div>
+        </div>
+
+        <div mat-dialog-content #formComponent>
+            <div class="row block-list" *ngFor="let form of formList">
+                <div class="col-md-10">
+                    <div class="entity ai-name" *ngIf="!form.isVisible">{{form.additionalInsured.entityName}}</div>
+                    <div class="entity ai-address" *ngIf="!form.isVisible">{{form.additionalInsured.addressLine1}} {{form.additionalInsured.addressLine2}} {{form.additionalInsured.addressLine3}}</div>
+                </div>
+                <div class="col-md-2 text-right">
+                    <a class="edit" *ngIf="!isSaved && !form.isVisible && !isSaving" (click)="editAdditionalInsured(form.id)">Edit</a><br />
+                    <a class="delete" *ngIf="!isSaved && !form.isVisible && !isSaving" (click)="deleteAdditionalInsured(form.id)">Delete</a>
+                    <a class="cancel-edit" *ngIf="form.isVisible && formModalConfig && actionType === 1" (click)="cancelEditing(form)">Cancel Editing</a>
+                </div>
+                <div class="col-md-12">
+                    <shared-form-creator *ngIf="form.isVisible && formModalConfig && actionType === 1"
+                                         [config]="formModalConfig"
+                                         [item]="additionalInsuredForEditing"
+                                         (validForm)="updateListItem($event, form)">
+                    </shared-form-creator>
+                </div>
+            </div>
+
+            <div class="form" *ngIf="formModalConfig && actionType === 0">
+                <a class="cancel-add" *ngIf="formModalConfig && actionType === 0" (click)="cancelEditing()">Cancel Adding</a>
+                <div class="row  md-mr2 md-ml1">
+                    <div class="col-md-12">
+                        <shared-form-creator *ngIf="formModalConfig && actionType === 0"
+                                             [config]="formModalConfig"
+                                             [item]=""
+                                             (validForm)="addToList($event)">
+                        </shared-form-creator>
+                    </div>
+                </div>
+            </div>
+
+            <div *ngIf="!isSaved" class="add-additional-insured-box">
+                <p class="add-additional-insured-title" (click)="addAdditionalInsured()">Add Additional Insured</p>
+            </div>
+        </div>
+
+        <div mat-dialog-actions align="end">
+            <button type="submit" (click)="save()" [disabled]="isSaveDisabled" class="btn-primary additional-insured-submit">
+                Save
+                <mat-spinner *ngIf="isSaving" strokeWidth="3" [diameter]="20"></mat-spinner>
+            </button>
+        </div>
+    </div>
+</div>

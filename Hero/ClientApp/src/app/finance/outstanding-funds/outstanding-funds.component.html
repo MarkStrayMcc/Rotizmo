@@ -1,0 +1,16 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="col-md-9">
+                <h1>Outstanding Funds</h1>
+            </div>
+        </div>
+    </div>
+    <div class="row" *ngIf="displayErrorMessage">
+        <div class="form-group col-md-12">
+            <message [closable]="true"></message>
+        </div>
+    </div>
+    <finance-outstanding-funds-form></finance-outstanding-funds-form>
+    <finance-outstanding-funds-grid></finance-outstanding-funds-grid>
+</div>

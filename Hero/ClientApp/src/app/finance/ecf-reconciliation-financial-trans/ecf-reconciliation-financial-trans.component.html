@@ -1,0 +1,159 @@
+<div [formGroup]="ecfReconciliationFinancialTransForm">
+    <div class="row" *ngIf="displayErrorMessage">
+        <div class="col-md-12">
+            <message></message>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-md-2">
+            <label for="ucr">UCR</label>
+            <error [errorText]="{ invalidOption: 'Invalid Option'}" [formCtrl]="ecfReconciliationFinancialTransForm.controls.ucr">
+                <autocomplete-dropdown id="ucr"
+                                       formControlName="ucr"
+                                       *ngIf="ecfReconciliationFinancialTransForm"
+                                       [customDisplayMethod]="ucrDisplay"
+                                       [myControl]="ecfReconciliationFinancialTransForm.get('ucr')"
+                                       [dataSource]="ucrLookups$"
+                                       class="hide-invalid">
+                </autocomplete-dropdown>
+            </error>
+        </div>
+        <div class="form-group col-md-1">
+            <label for="ecfReconciliationId">Sequence</label>
+            <error [errorText]="{ invalidOption: 'Invalid Option'}" [formCtrl]="ecfReconciliationFinancialTransForm.controls.ecfReconciliationId">
+                <autocomplete-dropdown id="binder"
+                                       formControlName="ecfReconciliationId"
+                                       *ngIf="ecfReconciliationFinancialTransForm"
+                                       [customDisplayMethod]="sequenceDisplay"
+                                       [myControl]="ecfReconciliationFinancialTransForm.get('ecfReconciliationId')"
+                                       [dataSource]="ecfReconciliationLookups$"
+                                       class="hide-invalid">
+                </autocomplete-dropdown>
+            </error>
+        </div>
+        <div class="form-group col-md-1">
+            <label for="ecfAmount">ECF Amount</label>
+            <input type="text"
+                   largeNumber
+                   formControlName="ecfAmount" class="form-control" id="ecfAmount" name="ecfAmount"
+                   [initialValue]="ecfAmount"
+                   [allowDecimals]="true"
+                   [allowNegative]="true"
+                   [readonly]
+                   style="text-align:right;">
+        </div>
+
+        <div class="form-group col-md-2">
+            <input class="input-checkbox"
+                   type="checkbox"
+                   id="isEcfAlreadyReconciled"
+                   formControlName="isEcfAlreadyReconciled"
+                   name="isEcfAlreadyReconciled" />
+            <label class="label-checkbox" for="isEcfAlreadyReconciled" style="margin-top: 28px; margin-bottom: 2px; float: left;"></label>
+            <label for="isEcfAlreadyReconciled" style="margin-top: 30px; margin-bottom: 0; margin-left: 10px">ECF Already Reconciled?</label>
+        </div>
+    </div>
+    <div class="row" *ngIf="true">
+        <div class="form-group col-md-2">
+            <label for="ledgerReference">Ledger Reference</label>
+            <error [errorText]="{ invalidOption: 'Invalid Option'}" [formCtrl]="ecfReconciliationFinancialTransForm.controls.financialLedgerId">
+                <autocomplete-dropdown id="ledgerReference"
+                                       formControlName="financialLedgerId"
+                                       *ngIf="ecfReconciliationFinancialTransForm"
+                                       [customDisplayMethod]="ledgerReferenceDisplay"
+                                       [myControl]="ecfReconciliationFinancialTransForm.get('financialLedgerId')"
+                                       [dataSource]="financialLedgerLookups$"
+                                       class="hide-invalid">
+                </autocomplete-dropdown>
+            </error>
+        </div>
+        <div class="form-group col-md-2">
+            <label for="binder">Binder</label>
+            <error [errorText]="{ invalidOption: 'Invalid Option'}" [formCtrl]="ecfReconciliationFinancialTransForm.controls.binderId">
+                <autocomplete-dropdown id="binder"
+                                       formControlName="binderId"
+                                       *ngIf="ecfReconciliationFinancialTransForm"
+                                       [customDisplayMethod]="binderDisplay"
+                                       [myControl]="ecfReconciliationFinancialTransForm.get('binderId')"
+                                       [dataSource]="binderLookups$"
+                                       class="hide-invalid">
+                </autocomplete-dropdown>
+            </error>
+        </div>
+        <div class="form-group col-md-2">
+            <label for="binderSection">Binder Section</label>
+            <error [errorText]="{ invalidOption: 'Invalid Option'}" [formCtrl]="ecfReconciliationFinancialTransForm.controls.sectionId">
+                <autocomplete-dropdown id="binderSection"
+                                       formControlName="sectionId"
+                                       *ngIf="ecfReconciliationFinancialTransForm"
+                                       [customDisplayMethod]="binderSectionDisplay"
+                                       [myControl]="ecfReconciliationFinancialTransForm.get('sectionId')"
+                                       [dataSource]="binderSectionLookups$"
+                                       class="hide-invalid">
+                </autocomplete-dropdown>
+            </error>
+        </div>
+        <div class="form-group col-md-1">
+            <label for="riskCode">Risk Code</label>
+            <error [errorText]="{  invalidOption: 'Invalid Option' }" [formCtrl]="ecfReconciliationFinancialTransForm.controls.riskCode">
+                <autocomplete-dropdown id="riskCode"
+                                       formControlName="riskCode"
+                                       *ngIf="ecfReconciliationFinancialTransForm"
+                                       [myControl]="ecfReconciliationFinancialTransForm.get('riskCode')"
+                                       [dataSource]="riskCodeLookups$"
+                                       class="hide-invalid">
+                </autocomplete-dropdown>
+            </error>
+        </div>
+        <div class="form-group col-md-2">
+            <label for="financialTransactionTags">Tags</label>
+            <tag-input formControlName="tags" name="financialTransactionTags" allCaps="true" smallWidth="true" placeholder="CLF, or OLF, or MMMYY"
+                       [multiRegex]="multiTagRegex" [singleRegex]="singleTagRegex"></tag-input>
+        </div>
+        <div class="col-md-1">
+            <button type="button" id="fetchButton" class="btn btn-primary pull-right" style="margin-top: 24px; margin-bottom: 6px;" (click)="fetchEcfs()">
+                Fetch
+            </button>
+        </div>
+        <div class="col-md-2">
+            <button type="button" class="btn btn-primary pull-right" style="margin-top: 24px; margin-bottom: 6px;" (click)="clearFilters()">Reset Grid Filters</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div>
+                <ag-grid-angular #agGrid
+                                 style="width: 100%; height: 590px;"
+                                 class="ag-theme-bootstrap"
+                                 headerHeight="66"
+                                 rowHeight="48"
+                                 rowClass="ag-row-align"
+                                 [getRowStyle]="getRowStyle"
+                                 [enableSorting]="true"
+                                 [enableFilter]="true"
+                                 [enableColResize]="true"
+                                 rowMultiSelectWithClick="true"
+                                 rowSelection="multiple"
+                                 [suppressRowClickSelection]="true"
+                                 [rowData]="ecfReconciliationFinancialTrans"
+                                 [columnDefs]="ecfReconciliationFinancialTransGridColumns"
+                                 [defaultColDef]="defaultColumnDef"
+                                 [frameworkComponents]="frameworkComponents"
+                                 (gridReady)="onGridReady($event)"
+                                 (filterModified)="setPinnedBottomRowData()"
+                                 (cellClicked)="setPinnedBottomRowData()">
+                </ag-grid-angular>
+            </div>
+            <div *ngIf="gridApi" style="position: absolute; bottom: 0; right: 0;">
+                <button type="button"
+                        id="reconcileButton"
+                        class="btn btn-primary"
+                        style="margin-top: 6px; margin-bottom: 6px;"
+                        *ngIf="hasChangedEcfReconciliations && !isEcfAlreadyReconciled"
+                        (click)="onReconcile()">
+                    Reconcile
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

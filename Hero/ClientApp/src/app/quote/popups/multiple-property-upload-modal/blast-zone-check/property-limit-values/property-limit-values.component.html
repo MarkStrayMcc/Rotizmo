@@ -1,0 +1,54 @@
+<div class="tw-my-3 tw-grid tw-grid-cols-3 tw-gap-4 tw-items-end tw-text-font-size-h5">
+    <div class="tw-flex tw-flex-col">
+        <label class="tw-font-bold tw-text-cfc-navy-blue tw-text-font-size-h6" for="lossOfRentLimit">
+            Loss of Rent Sum Insured
+        </label>
+        <currency class="tw-rounded-md" [(value)]="propertyLimit.lossOfRentLimit" id="lossOfRentLimit" [decimals]="true"
+            [negatives]="false">
+        </currency>
+    </div>
+    <div class="tw-flex tw-flex-col">
+        <label class="tw-font-bold tw-text-cfc-navy-blue tw-text-font-size-h6" for="increasedCostOfWorkingLimit">
+            ICOW Sum Insured
+        </label>
+        <currency [(value)]="propertyLimit.increasedCostOfWorkingLimit" id="increasedCostOfWorkingLimit"
+            [decimals]="true" [negatives]="false">
+        </currency>
+    </div>
+
+    <div class="tw-flex tw-flex-col">
+        <label class="tw-font-bold tw-text-cfc-navy-blue tw-text-font-size-h6" for="propertyDamageLimit">
+            Property Declared Value
+        </label>
+        <currency [(value)]="propertyLimit.propertyDamageLimit" id="propertyDamageLimit" [decimals]="true"
+            [negatives]="false">
+        </currency>
+    </div>
+
+    <div class="tw-flex tw-flex-col">
+        <label class="tw-font-bold tw-text-cfc-navy-blue tw-text-font-size-h6" for="contentsDamageLimit">
+            Contents Damage Sum Insured
+        </label>
+        <currency [(value)]="propertyLimit.contentsDamageLimit" id="contentsDamageLimit" [decimals]="true"
+            [negatives]="false">
+        </currency>
+    </div>
+
+    <div class="tw-flex tw-flex-col">
+        <label class="tw-font-bold tw-text-cfc-navy-blue tw-text-font-size-h6" for="actualLossSustainedLimit">
+            Loss Sustained Sum Insured
+        </label>
+        <currency [(value)]="propertyLimit.actualLossSustainedLimit" id="actualLossSustainedLimit" [decimals]="true"
+            [negatives]="false">
+        </currency>
+    </div>
+
+    <div class="tw-flex tw-flex-col">
+        <label class="tw-font-bold tw-text-cfc-navy-blue tw-text-font-size-h6" for="alternativeAccommodationLimit">
+            Alternative Accommodation Sum Insured
+        </label>
+        <currency [(value)]="propertyLimit.alternativeAccommodationLimit" id="alternativeAccommodationLimit"
+            [decimals]="true" [negatives]="false">
+        </currency>
+    </div>
+</div>

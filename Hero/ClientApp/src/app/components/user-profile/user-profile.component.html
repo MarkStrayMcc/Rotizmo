@@ -1,0 +1,27 @@
+﻿<header>
+    <nav>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8">
+                    <img class="logo float-left" src="./img/logo.png" />
+                </div>
+                <div class="col-md-1"></div>
+                <div class="col-md-3">
+                    <div class="profileContainer">
+                        <div class="profilePhoto" [ngStyle]="{ 'background-image': this.backgroundImageString }"></div>
+                        <span class="profileName">{{ contact?.name }}</span>
+                        <span>
+                            <form [formGroup]="this.form">
+                                <input type="text" placeholder="Enter your status here"
+                                       formControlName="message"
+                                       class="txtProfileStatus"
+                                       [ngClass]="{unapproved: !isApproved}"
+                                       maxlength="40">
+                            </form>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+</header>

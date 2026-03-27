@@ -1,0 +1,8 @@
+<input type="text"
+        class="form-control hide-invalid" 
+        largeNumber
+        allowDecimals="false" 
+        [formControl]="this.formControl"
+        [id]="this.riskQuestion.tag"
+        (onValueChanged)="this.onChangeEvent($event)"
+        (blur)="this.onTouchEvent()" />

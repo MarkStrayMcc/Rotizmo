@@ -1,0 +1,49 @@
+<div class="tw-bg-hero-grey-50 tw-my-6 tw-rounded-xl tw-flex tw-flex-col tw-px-5 tw-pb-5 tw-pt-8 tw-gap-4">
+    <div class="tw-flex tw-flex-col">
+        <label class="tw-font-bold tw-text-cfc-navy-blue tw-text-font-size-h8" for="firstLossLimit">
+            First Loss Limit
+        </label>
+        <warning [hasWarning]="hasWarning" [warningText]="warningMessage">
+            <currency [(value)]="firstLossLimit" id="firstLossLimit" (valueChange)="onFirstLimitChange($event)" [decimals]="true" [negatives]="false">
+            </currency>
+        </warning>
+    </div>
+    <span class="tw-text-font-size-h8 tw-font-bold tw-text-cfc-navy-blue">Floating Values</span>
+    <div class="tw-flex tw-flex-col tw-gap-3">
+        <div class="tw-flex tw-flex-col">
+            <label class="tw-font-bold tw-text-cfc-navy-blue tw-text-font-size-h6" for="contentsDamageSum">
+                Content Damage Sum Insured
+            </label>
+            <currency [(value)]="floatingValues.contentsDamageLimit" id="contentsDamageSum" (valueChange)="onFloatingValueChange()" [decimals]="true" [negatives]="false">
+            </currency>
+        </div>
+        <div class="tw-flex tw-flex-col">
+            <label class="tw-font-bold tw-text-cfc-navy-blue tw-text-font-size-h6" for="actualLossSustained">
+                Actual Loss Sustained Sum Insured
+            </label>
+            <currency [(value)]="floatingValues.actualLossSustainedLimit" id="actualLossSustained" (valueChange)="onFloatingValueChange()" [decimals]="true" [negatives]="false">
+            </currency>
+        </div>
+        <div class="tw-flex tw-flex-col">
+            <label class="tw-font-bold tw-text-cfc-navy-blue tw-text-font-size-h6" for="icowSumInsured">
+                ICOW Sum Insured
+            </label>
+            <currency [(value)]="floatingValues.increasedCostOfWorkingLimit" id="icowSumInsured" (valueChange)="onFloatingValueChange()" [decimals]="true" [negatives]="false">
+            </currency>
+        </div>
+        <div class="tw-flex tw-flex-col">
+            <label class="tw-font-bold tw-text-cfc-navy-blue tw-text-font-size-h6" for="lossRentSum">
+                Loss of Rent Sum Insured
+            </label>
+            <currency [(value)]="floatingValues.lossOfRentLimit" id="lossRentSum" (valueChange)="onFloatingValueChange()" [decimals]="true" [negatives]="false">
+            </currency>
+        </div>
+        <div class="tw-flex tw-flex-col">
+            <label class="tw-font-bold tw-text-cfc-navy-blue tw-text-font-size-h6" for="alternativeAccommodationLimit">
+                Alternative Accommodation Sum Insured
+            </label>
+            <currency [(value)]="floatingValues.alternativeAccommodationLimit" id="alternativeAccommodationLimit" (valueChange)="onFloatingValueChange()" [decimals]="true" [negatives]="false">
+            </currency>
+        </div>
+    </div>
+</div>

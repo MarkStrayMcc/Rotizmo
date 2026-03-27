@@ -1,0 +1,134 @@
+<div [formGroup]="formGroup" class="hide-invalid">
+    <div *ngIf="(isPaymentPeriodVisible$ | async) || (isDirectBillingVisible$ | async) " class="pricing-business-line md-m2">
+        <div class="col-md-12">
+            <a class="accordion-header">
+                <h3>Billing</h3>
+            </a>
+        </div>
+
+        <div *ngIf="isDirectBillingVisible$ | async"  class="md-p2">
+            <div class="row md-p1">
+                <div class="col-md-3 md-p1">
+                    <label class="float-right">Type</label>
+                </div>
+                <div class="col-md-9">
+                    <field-message [isMessageVisible]="isMaxLimitExceeded$ | async" type="info"
+                        message="Direct billing unavailable as country's maximum value exceeded.">
+                        <select formControlName="isDirectBilling" placeholder="Type">
+                            <option [ngValue]="false">Agency Billing</option>
+                            <option [ngValue]="true">Direct Billing</option>
+                        </select>
+                    </field-message>
+                </div>
+            </div>
+        </div>
+        <ng-container *ngIf="isDirectBillingEnabled$ | async" [formGroup]="contactFormGroup">
+            <div class="row md-m0 md-mb3">
+                <div class="col-md-3 md-p1">
+                    <label class="float-right">First Name</label>
+                </div>
+
+                <div class="col-md-9">
+                    <error [errorText]="{ required: 'Required' }" [formCtrl]="contactFormGroup.controls.firstName">
+                        <input formControlName="firstName" name="firstName" class="hide-invalid" />
+                    </error>
+                </div>
+            </div>
+
+            <div class="row md-m0 md-mb3">
+                <div class="col-md-3 md-p1">
+                    <label class="float-right">Last Name</label>
+                </div>
+
+                <div class="col-md-9">
+                    <error [errorText]="{ required: 'Required' }" [formCtrl]="contactFormGroup.controls.lastName">
+                        <input formControlName="lastName" name="lastName" class="hide-invalid" />
+                    </error>
+                </div>
+            </div>
+
+            <div class="row md-m0 md-mb3">
+                <div class="col-md-3 md-p1">
+                    <label class="float-right">E-mail</label>
+                </div>
+
+                <div class="col-md-9">
+                    <error [formCtrl]="contactFormGroup.controls.email"
+                        [errorText]="{ required: 'Required', email: 'Invalid email address' }">
+                        <input type="email" email formControlName="email" name="email" class="hide-invalid" />
+                    </error>
+                </div>
+            </div>
+        </ng-container>
+        <div *ngIf="isPaymentPeriodVisible$ | async" class="md-p2" > 
+            <div class="row md-p1">
+                <div class="col-md-3 md-p1">
+                    <label class="float-right">Frequency</label>
+                </div>
+                <div class="col-md-9">
+                    <select class="form-control" formControlName="paymentPeriod">
+                        <option *ngFor="let paymentPeriod of paymentPeriods | keyvalue" [ngValue]="paymentPeriod.value">{{paymentPeriod.value}}</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <ng-container *ngIf="!isCalculating; else loadingPricing">
+        <div formArrayName="businessCategories"
+            *ngFor="let businessCategory of businessCategoriesFormArray.controls; let i = index;" class="hide-invalid">
+            <div [formGroupName]="i" class="pricing-business-line md-m2 hide-invalid">
+                <div class="col-md-12">
+                    <a class="accordion-header">
+                        <h3>
+                            {{ businessCategory.get('description').value }}
+                        </h3>
+                    </a>
+                </div>
+                <div class="md-p2">
+                    <div class="row md-p1">
+                        <div class="col-md-2 md-p1">
+                            <label class="float-right">Model</label>
+                        </div>
+                        <div class="col-md-4">
+                            <currency formControlName="model" [decimals]="true" [currency]="currency" [readonly]="true">
+                            </currency>
+                        </div>
+                        <div class="col-md-2 md-p1">
+                            <label class="float-right">Quoted</label>
+                        </div>
+                        <div class="col-md-4">
+                            <div [class.ng-invalid]="businessCategory.get('quoted').errors?.required">
+                                <currency formControlName="quoted" #component [decimals]="true" [currency]="currency"
+                                    [readonly]="false">
+                                </currency>
+                            </div>
+                            <div *ngIf="businessCategory.get('quoted').errors && businessCategory.get('quoted').touched"
+                                class="help-block with-errors">
+                                <ul class="list-unstyled">
+                                    <li *ngIf="businessCategory.get('quoted').errors.required">
+                                        Required
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="pricing-business-line md-m2 row">
+            <div class="col-md-8 md-pt1">
+                <a class="accordion-header">
+                    <h3>Total premium</h3>
+                </a>
+            </div>
+            <div class="col-md-4 md-p2">
+                <currency [value]="totalPremium$ | async" [decimals]="true" [currency]="currency" [readonly]="true">
+                </currency>
+            </div>
+        </div>
+    </ng-container>
+    <ng-template #loadingPricing>
+        <loading-spinner></loading-spinner>
+    </ng-template>
+</div>

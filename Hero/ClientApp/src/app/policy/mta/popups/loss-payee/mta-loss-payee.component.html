@@ -1,0 +1,69 @@
+<div id="modalLossPayee" role="dialog">
+    <div role="document">
+        <div mat-dialog-title>
+            <h1>Loss Payee MTA</h1>
+            <div class="close" aria-label="Close" mat-dialog-close>&times;</div>
+        </div>
+
+        <message #formMessageList></message>
+
+        <div mat-dialog-content #formComponent>
+            <div class="row rowField md-ml1">
+                <div class="col-md-8 effective-date" [formGroup]="effectiveDateForm">
+                    <label for="effectiveDate">Effective Date</label>
+                    <error *ngIf="effectiveDateForm.controls.effectiveDate"
+                           [errorText]="{ required: 'Required' }"
+                           [formCtrl]="effectiveDateForm.controls.effectiveDate">
+                        <datepicker *ngIf="effectiveDateForm" formControlName="effectiveDate"></datepicker>
+                    </error>
+                </div>
+            </div>
+            <hr />
+            <div class="row block-list" *ngFor="let lossPayeeDetail of lossPayeeDetails">
+                <div class="col-md-10">
+                    <div class="entity lp-name" *ngIf="!lossPayeeDetail.isVisible">{{lossPayeeDetail.lossPayee.entityName}}</div>
+                    <div class="entity lp-address" *ngIf="!lossPayeeDetail.isVisible">{{lossPayeeDetail.lossPayee.addressLine1}} {{lossPayeeDetail.lossPayee.addressLine2}} {{lossPayeeDetail.lossPayee.addressLine3}}</div>
+                </div>
+                <div class="col-md-2 text-right">
+                    <a class="edit" *ngIf="!isSaved && !lossPayeeDetail.isVisible && !isSaving" (click)="editLossPayee(lossPayeeDetail.id)">Edit</a><br />
+                    <a class="delete" *ngIf="!isSaved && !lossPayeeDetail.isVisible && !isSaving" (click)="deleteLossPayee(lossPayeeDetail.id)">Delete</a>
+                    <a class="cancel-edit" *ngIf="lossPayeeDetail.isVisible && formModalConfig && actionType === 1" (click)="cancelEditing(lossPayeeDetail)">Cancel Editing</a>
+                </div>
+                <div class="col-md-12">
+                    <shared-form-creator *ngIf="lossPayeeDetail.isVisible && formModalConfig && actionType === 1"
+                                         [config]="formModalConfig"
+                                         [item]="lossPayeeForEditing"
+                                         (validForm)="updateListItem($event, lossPayeeDetail)">
+                    </shared-form-creator>
+                </div>
+            </div>
+            <div class="form" *ngIf="formModalConfig && actionType === 0">
+                <a class="cancel-add" *ngIf="formModalConfig && actionType === 0" (click)="cancelEditing()">Cancel Adding</a>
+                <div class="row md-mr2 md-ml1">
+                    <div class="col-md-12">
+                        <shared-form-creator *ngIf="formModalConfig && actionType === 0"
+                                             [config]="formModalConfig"
+                                             [item]=""
+                                             (validForm)="addToList($event)">
+                        </shared-form-creator>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="!isSaved" class="add-loss-payee-box">
+                <p class="add-loss-payee-title" (click)="addLossPayee()">Add Loss Payee</p>
+            </div>
+        </div>
+
+        <div mat-dialog-actions align="end">
+            <button type="submit" (click)="save()" [disabled]="isSaveDisabled" class="btn-primary loss-payee-submit">
+                Save
+                <mat-spinner *ngIf="isSaving" strokeWidth="3" [diameter]="20"></mat-spinner>
+            </button>
+
+            <button type="button" (click)="openSendEmailModal()" [disabled]="isSendDisabled" class="btn-primary loss-payee-send">
+                Send
+                <mat-spinner *ngIf="isSending" strokeWidth="3" [diameter]="20"></mat-spinner>
+            </button>
+        </div>
+    </div>
+</div>

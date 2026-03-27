@@ -1,0 +1,10 @@
+<div [formGroup]="formGroup">
+    <mat-spinner *ngIf="!currency" strokeWidth="3" [diameter]="20"></mat-spinner>
+    <currency *ngIf="currency"
+      [formControlName]="config.property" 
+      [id]="config.property" 
+      [decimals]="true" 
+      [negatives]="true"
+      [currency]="currency">
+    </currency>
+</div>

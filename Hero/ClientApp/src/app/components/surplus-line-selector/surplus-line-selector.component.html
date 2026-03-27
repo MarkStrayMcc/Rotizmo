@@ -1,0 +1,26 @@
+<div class="float-left autocomplete-dropdown">
+    <error
+        [errorText]="{ invalidOption: 'Please select a valid option' }"
+        [formCtrl]="control">
+        <autocomplete-dropdown
+            class="hide-invalid"
+            [matTooltip]="surplusLineAddressToolTip"
+            [myControl]="control"
+            [dataSource]="surplusLines$"
+            [customDisplayMethod]="surplusLineDisplay"
+            [(selectedValue)]="control"
+            (onFocusOutEvent)="autocompleteTouchHandler()">
+        </autocomplete-dropdown>
+    </error>
+</div>
+<div class="float-left add-new">
+    <a alt="Add new"
+        title="Add new"
+        data-toggle="modal"
+        data-target="#modalSurplusLinesBroker"
+        (click)="openSurplusLinesBrokerDialog()"
+        *ngIf="enableNewSurplusLines">
+        <i class="material-icons bold" [class.disabled]="control.disabled">add</i>
+    </a>
+</div>
+<div class="clearfix"></div>

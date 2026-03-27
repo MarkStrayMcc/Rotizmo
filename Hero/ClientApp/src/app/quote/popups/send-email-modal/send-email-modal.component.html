@@ -1,0 +1,134 @@
+<div role="dialog">
+    <div role="document">
+        <div mat-dialog-title>
+            <h1>{{ title }}</h1>
+            <div class="close" aria-label="Close" (click)="onCloseModal()">&times;</div>
+        </div>
+
+        <mat-progress-spinner mode="indeterminate" style="margin-left: 45%;" mat-diameter="96"
+            class="mat-info mat-hue-3" *ngIf="isLoading">
+        </mat-progress-spinner>
+
+        <form [formGroup]="form" (ngSubmit)="send()" *ngIf="!isLoading && form">
+            <div class="col-md-12">
+                <message></message>
+            </div>
+
+            <div mat-dialog-content>
+                <div class="row rowField">
+                    <div class="col-md-3"><label>To</label></div>
+                    <div class="col-md-9">
+                        <error [errorText]="{ required: 'Required', invalidOption: 'Please select a valid email address' }"
+                                [formCtrl]="form.controls.to">
+                            <autocomplete-multiselect [formCtrl]="form.controls.to" formControlName="to" autoShowOnFocus="false"
+                                    [options]="contactOptions" [displayName]="displayName"
+                                    [dropDownDisplay]="dropDownDisplay">
+                            </autocomplete-multiselect>
+                        </error>    
+                    </div>
+                </div>
+
+                <div class="row rowField">
+                    <div class="col-md-3"><label>CC</label></div>                       
+                    <div class="col-md-9">
+                            <error [errorText]="{invalidOption: 'Please select a valid email address' }"
+                                    [formCtrl]="form.controls.cc">
+                                <autocomplete-multiselect [formCtrl]="form.controls.cc" formControlName="cc" autoShowOnFocus="true"
+                                    [options]="contactOptions" [displayName]="displayName"
+                                    [dropDownDisplay]="dropDownDisplay">
+                                </autocomplete-multiselect>
+                            </error>                            
+                    </div>
+                </div>
+
+                <div class="row rowField">
+                    <div class="col-md-3"><label>BCC</label></div>
+                    <div class="col-md-9">
+                            <error [errorText]="{invalidOption: 'Please select a valid email address' }"
+                                    [formCtrl]="form.controls.bcc">
+                                <autocomplete-multiselect [formCtrl]="form.controls.bcc" formControlName="bcc" autoShowOnFocus="true"
+                                    [options]="contactOptions" [displayName]="displayName"
+                                    [dropDownDisplay]="dropDownDisplay">
+                                </autocomplete-multiselect>
+                            </error>
+                    </div>
+                </div>
+
+                <div class="row rowField" *ngIf="showQuoteSelector && !quoteIsPublished">
+                    <div class="col-md-3"><label>Additional Quotes</label></div>
+                    <div class="col-md-9">
+                        <quote-selector formControlName="quoteIds" [quoteIds]="quoteIds"
+                            [primaryQuoteId]="quote.quoteReference"></quote-selector>
+                    </div>
+                </div>
+
+                <div class="row rowField">
+                    <div class="col-md-3"><label>Subject</label></div>
+                    <div class="form-group">
+                        <div class="col-md-9">
+                            <input class="input-padding-fix" type="text" formControlName="subject" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row rowField">
+                    <div class="col-md-3"><label>Attachments</label></div>
+                    <div class="form-group">
+                        <div class="col-md-9">
+                            <mat-form-field appearance="outline">
+                                <input-file [formCtrl]="form.controls.dataAttachments" [defaultAttachments]="form.controls.serverSideAttachments.value" 
+                                        formControlName="dataAttachments" [fileTypes]="validFileTypes" multiple></input-file>
+                            </mat-form-field>
+                            <div *ngIf="form.controls.dataAttachments.invalid && form.controls.dataAttachments.touched" class="help-block with-errors">
+                                <ul class="list-unstyled">
+                                    <li *ngIf="form.controls.dataAttachments.errors.maxFileCount">
+                                        Too many files, maximum allowed: {{form.controls.dataAttachments.errors.maxFileCount.max}}, current number: {{form.controls.dataAttachments.errors.maxFileCount.number}}
+                                    </li>
+                                    <li *ngIf="form.controls.dataAttachments.errors.maxContentSize">
+                                        The total size of all attachments exceeds maximum allowed (Max allowed is {{((form.controls.dataAttachments.errors.maxContentSize.maxSize / 1024) / 1024) | number:'1.2'}}MB,
+                                        currently attached is {{((form.controls.dataAttachments.errors.maxContentSize.actualSize/ 1024) / 1024) | number:'1.2'}}MB).
+                                    </li>
+                                    <li *ngFor="let error of form.controls.dataAttachments.errors.fileErrors">
+                                        "{{error.maxContentSize.name}}" File size ({{error.maxContentSize.actualSize | number:'1.2'}}MB) is too large
+                                    </li>
+                                    <li *ngIf="form.controls.dataAttachments.errors.fileErrors">
+                                        Maximum file size is {{((maxFileSize / 1024) / 1024) | number:'1.2'}}MB
+                                    </li>
+                                    <li *ngFor="let error of form.controls.dataAttachments.errors.wrongFileTypes">
+                                        "{{error.wrongFileType.name}}" File type is not allowed
+                                    </li>
+                                    <li *ngIf="form.controls.dataAttachments.errors.wrongFileTypes">
+                                        Allowed file types: {{validFileTypes}}
+                                    </li>
+                                    <li *ngFor="let error of form.controls.dataAttachments.errors.duplicateFiles">
+                                        "{{error.duplicateFile.name}}" File is duplicated more than once
+                                    </li>
+
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row rowField">
+                    <div class="col-md-3"><label>Email Body</label></div>
+                    <div class="form-group">
+                        <div class="col-md-9">
+                            <mat-form-field appearance="outline">
+                                <textarea matInput class="textarea full-width" formControlName="emailBody" rows="8"></textarea>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div mat-dialog-actions align="end">
+                <button type="submit" class="btn btn-primary" [disabled]="form.invalid || sendingEmail">
+                    Send
+                    <mat-spinner *ngIf="sendingEmail" strokeWidth="3" [diameter]="20"> </mat-spinner>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

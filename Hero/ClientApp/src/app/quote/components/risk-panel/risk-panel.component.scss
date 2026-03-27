@@ -1,0 +1,50 @@
+@import '../../../styles/utils/variables.scss';
+
+.tooltipicon {
+    margin-top: 0;
+}
+
+h5 {
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+.help-block {
+    display: block;
+}
+
+.riskquestion {
+    display: block;
+}
+
+.percentage-question + .help-block {
+    display: block;
+    width: 33.33333333%;
+}
+
+datequestion + .help-block {
+    width: 174px;
+}
+
+retrodate + .help-block {
+    width: 250px;
+}
+
+%label-shared {
+    font-family: $font-family;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    color: $cfc-font-black;
+}
+
+.fieldname {
+    @extend %label-shared;
+    font-size: $font-size-h5;
+    font-weight: 600;
+
+    &.right {
+        text-align: right;
+    }
+}

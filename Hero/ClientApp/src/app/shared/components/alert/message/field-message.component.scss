@@ -1,0 +1,16 @@
+:host {
+    .info {
+        ::ng-deep {
+            select,
+            input,
+            textarea {
+                border-color: #bce8f1;
+            }
+        }
+
+        .help-block {
+            background-color: #d9edf7;
+            color: #31708f;
+        }
+    }
+}

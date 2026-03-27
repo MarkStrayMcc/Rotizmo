@@ -1,0 +1,64 @@
+﻿<div class="form-group row" [formGroup]="form" *ngIf="form">
+    <div class="accordion-panel">
+        <div class="accordion-title">
+            <div class="col-md-9">
+                <div class="col-sm-8">
+                    <label><span [class.readonly]="readonly">{{pricingGroupInfo.title}}</span></label>
+                </div>
+            </div>
+            <div class="col-md-3 left-10">
+                <label class="selectAllLabel" [for]="'checkbox' + index"><span [class.readonly]="readonly">Editable</span></label>
+                <input class="input-checkbox form-control"
+                       type="checkbox"
+                       [id]="'checkbox' + index"
+                       formControlName="isEditable"
+                       [checked]="!readonly" />
+                <label class="label-checkbox" [for]="'checkbox' + index"></label>
+            </div>
+        </div>
+        <div class="col-md-12 accordion-title">
+            <div class="col-sm-5">
+                <currency-slider *ngIf="showLimitSlider" 
+                                 formControlName="minMaxLimit" 
+                                 [currency]="currency" 
+                                 [steps]="pricingGroupInfo.pricingGroupLimitSteps" 
+                                 [minimum]="pricingGroupInfo.minLimit" 
+                                 [maximum]="pricingGroupInfo.maxLimit" 
+                                 [defaultMin]="pricingGroupInfo.defaultMinLimit" 
+                                 [defaultMax]="pricingGroupInfo.defaultMaxLimit" 
+                                 [mandatoryStep]="leadLimitValue" >
+                </currency-slider>
+                <h6 *ngIf="showLimitSlider">Limit</h6>
+            </div>
+            <div class="col-sm-1"></div>
+            <div class="col-sm-5">
+                <currency-slider *ngIf="showExcessSlider" 
+                                 formControlName="minMaxExcess" 
+                                 [currency]="currency" 
+                                 [steps]="pricingGroupInfo.pricingGroupExcessSteps" 
+                                 [minimum]="pricingGroupInfo.minExcess" 
+                                 [maximum]="pricingGroupInfo.maxExcess" 
+                                 [defaultMin]="pricingGroupInfo.defaultMinExcess" 
+                                 [defaultMax]="pricingGroupInfo.defaultMaxExcess"
+                                 [mandatoryStep]="leadExcessValue">
+                </currency-slider>
+                <h6 *ngIf="showExcessSlider">Deductible</h6>
+            </div>
+        </div>
+        <div class="col-md-12 accordion-title">
+            <div *ngIf="pricingGroupInfo.increasedLimitFactors !== null && pricingGroupInfo.increasedLimitFactors !== undefined && pricingGroupInfo.increasedLimitFactors.length > 0">
+                <div class="col-sm-6"></div>
+                <div class="col-sm-3 no-right-pad">
+                    <label class="margin-bump" [class.readonly]="readonly">Pricing Curve</label>
+                </div>
+                <div class="col-sm-3 float-right right-pad-12">
+                    <select formControlName="increasedLimitFactor">
+                        <option *ngFor="let group of pricingGroupInfo.increasedLimitFactors" [value]="group">
+                            {{group}}
+                        </option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

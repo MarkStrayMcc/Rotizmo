@@ -1,0 +1,95 @@
+@import "utils/variables";
+@import 'base/base';
+
+$form-group-bg-color: #259ae2;
+
+.group{
+    margin: 1px;
+    margin-bottom: 5px;
+    border: 1px solid $form-group-bg-color;
+    border-radius: 4px;
+
+    .title{
+        padding: 0px;
+    }
+
+    h2{
+        background-color: $form-group-bg-color;
+        color: #ffffff;
+        margin: 0px;
+        font-size: 20px;
+        padding: 4px;
+    }
+    
+}
+
+h1 {
+    font-family: Montserrat;
+    font-size: 24px;
+    font-weight: 300;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    color: $cfc-bright-blue;
+    margin-top: 0px;
+    margin-bottom: 10px;
+}
+
+.mat-spinner {
+    float: left;
+    width: 2px;
+    height: 2px;
+    margin: 0px 5px 0px 0px;
+    color: #ffffff;
+    stroke: #ffffff;
+}
+
+%label-shared {
+    font-family: $font-family;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    color: $cfc-font-black;
+}
+
+:host ::ng-deep .fieldname {
+    @extend %label-shared;
+    font-size: $font-size-h5;
+    font-weight: 600;
+    text-align: right;
+}
+
+:host ::ng-deep .readonly-fieldvalue {
+    @extend %label-shared;
+    font-size: $font-size-h5;
+    font-weight: normal;
+}
+
+@media only screen and (max-width: $tablet-width) {
+    :host ::ng-deep .text-right {
+        text-align: left;
+    }
+
+    :host ::ng-deep .fieldname {
+        @extend %label-shared;
+        font-size: $font-size-h5;
+        font-weight: 600;
+        text-align: left;
+    }
+
+    :host ::ng-deep .readonly-fieldvalue {
+        @extend %label-shared;
+        font-size: $font-size-h5;
+        font-weight: normal;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .xs-mt2 {
+        margin-top: 10px;
+    }
+}

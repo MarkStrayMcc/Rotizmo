@@ -1,0 +1,55 @@
+@import "utils/variables";
+
+.accordion-panel {
+    border: 2px solid #ececec;
+    float: left;
+    width: 100%;
+    margin-bottom: 16px;
+}
+
+.accordion-header {
+    cursor: pointer;
+}
+
+.accordion-header {
+    padding: 0px 0px 0px 0px;
+    margin: 0px;
+    cursor: pointer;
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none;
+    float: left;
+}
+
+.accordion-header h3 {
+    font-size: 14px;
+    color: #9b9c9d;
+    font-weight: 600;
+    float: left;
+    margin-top: 16px;
+    margin-bottom: 16px;
+}
+
+.accordion-control {
+    width: 24px;
+    display: inline-block;
+    font-size: 33px;
+    height: 24px;
+    font-weight: 700;
+    float: left;
+    color: $cfc-light-blue;
+    margin: 0px 3px 0px -4px;
+    text-align: center;
+}
+
+.limit-field-title {
+    vertical-align: middle;
+    padding-left: 0;
+
+    &.right {
+        text-align: right;
+    }
+}

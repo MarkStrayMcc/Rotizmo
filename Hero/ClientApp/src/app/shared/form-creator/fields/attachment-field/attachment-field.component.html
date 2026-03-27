@@ -1,0 +1,43 @@
+<ng-container [formGroup]="formGroup">
+  <div class="{{config?.cssClass}}">
+    <mat-form-field appearance="outline">
+      <input-file 
+        [formCtrl]="attachmentFormControl"
+        [defaultAttachments]="formGroup.get(config.serverSideField).value"
+        [formControlName]="config.property"
+        [fileTypes]="validFileTypes" 
+        multiple>
+      </input-file>
+    </mat-form-field>
+    <div *ngIf="attachmentFormControl.invalid && attachmentFormControl.touched"
+      class="help-block with-errors">
+      <ul class="list-unstyled">
+        <li *ngIf="attachmentFormControl.errors.maxFileCount">
+          Too many files, maximum allowed: {{attachmentFormControl.errors.maxFileCount.max}}, current number:
+          {{attachmentFormControl.errors.maxFileCount.number}}
+        </li>
+        <li *ngIf="attachmentFormControl.errors.maxContentSize">
+          The total size of all attachments exceeds maximum allowed (Max allowed is
+          {{((attachmentFormControl.errors.maxContentSize.maxSize / 1024) / 1024) | number:'1.2'}}MB,
+          currently attached is
+          {{((attachmentFormControl.errors.maxContentSize.actualSize/ 1024) / 1024) | number:'1.2'}}MB).
+        </li>
+        <li *ngFor="let error of attachmentFormControl.errors.fileErrors">
+          "{{error.maxContentSize.name}}" File size ({{error.maxContentSize.actualSize | number:'1.2'}}MB) is too large
+        </li>
+        <li *ngIf="attachmentFormControl.errors.fileErrors">
+          Maximum file size is {{((maxFileSize / 1024) / 1024) | number:'1.2'}}MB
+        </li>
+        <li *ngFor="let error of attachmentFormControl.errors.wrongFileTypes">
+          "{{error.wrongFileType.name}}" File type is not allowed
+        </li>
+        <li *ngIf="attachmentFormControl.errors.wrongFileTypes">
+          Allowed file types: {{validFileTypes}}
+        </li>
+        <li *ngFor="let error of attachmentFormControl.errors.duplicateFiles">
+          "{{error.duplicateFile.name}}" File is duplicated more than once
+        </li>
+      </ul>
+    </div>
+  </div>
+</ng-container>

@@ -1,0 +1,26 @@
+﻿<mat-form-field [class.ng-invalid]="!valid" 
+                [class.hide-invalid-focus]="showingDropdown || inFocus" 
+                appearance="outline">
+    <input matInput type="text" 
+           [disabled]="disabled" 
+           class="hide-invalid" 
+           placeholder="{{placeholderText}}" 
+           [formControl]="myControl" 
+           [matAutocomplete]="auto" 
+           (focus)="onFocus()" 
+           (focusout)="onFocusOut()" 
+           (click)="onClick()">
+           <mat-spinner *ngIf="isLoadingData" strokeWidth="3" [diameter]="20"></mat-spinner>
+    <mat-icon matSuffix>search</mat-icon>
+</mat-form-field>
+
+<mat-autocomplete class="mat-elevation-z8" #auto="matAutocomplete" [displayWith]="customDisplayMethod">
+    <mat-option *ngFor="let option of filteredOptions | async"
+                [value]="option"
+                [title]="customDisplayMethod(option)"
+                (mousedown)="onMouseDown()"
+                (mouseup)="onMouseUp()">
+        <img class="mat-autocomplete-icon" *ngIf="option.img" [src]="option.img" />
+        {{ customDisplayMethod(option) }}
+    </mat-option>
+</mat-autocomplete>

@@ -1,0 +1,24 @@
+@import "utils/variables";
+
+.splitter-line {
+    margin-top: 15px;
+}
+
+.endorsement-add-button {
+    margin-left: 91px;
+}
+
+.table tbody tr td.icon-padding {
+    padding: 7px 5px 3px 5px;
+}
+
+@media only screen and (max-width: $tablet-width) {
+    .endorsement-add-button {
+        margin-left: 70px;
+    }
+
+    }
+    risk-panel {
+        left: -15px;
+        position: relative;
+    }

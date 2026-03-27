@@ -1,0 +1,10 @@
+﻿<div *ngIf="formCtrl" class="error-wrapper" [class.ng-invalid]="!formCtrl.valid && (formCtrl.touched || formCtrl.dirty) && formCtrl.errors">
+    <ng-content></ng-content>
+    <div *ngIf="!formCtrl.valid && (formCtrl.touched || formCtrl.dirty) && formCtrl.errors" class="help-block with-errors">
+        <ul class="list-unstyled">
+            <li *ngFor="let error of objectKeys(formCtrl.errors)">
+                {{ getErrorText(error) }}
+            </li>
+        </ul>
+    </div>
+</div>

@@ -1,0 +1,59 @@
+/* Branding Colors */
+$cfc-navy-blue: #01416D;
+$cfc-bright-blue: #149BD7;
+$cfc-light-blue: #6DC5E1;
+
+$cfc-green: #A8EC00;
+$cfc-yellow: #FFC800;
+$cfc-orange: #FF7300;
+$cfc-red: #D81159;
+$cfc-mauve: #A87FFF;
+$cfc-grey: #575756;
+$cfc-dark-grey: #666666;
+$cfc-black: #002b48;
+$cfc-white: #fff;
+/*color: #4a4a4a;*/
+$cfc-font-black: #333333;
+
+/* HERO Colors */
+
+$warningColour: #ff7300;
+$errorColour: $cfc-red;
+$light-grey: #dadada;
+$grey: #4a4a4a;
+$grey-57: rgba(74, 74, 74, 0.57);
+$grey-200: #eeeeee;
+$medium-grey: #9b9c9d;
+$error-warning: #a12027;
+$grid-padding-left: 13px;
+$link-colour: $cfc-bright-blue;
+$link-hover-colour: #0c6db0;
+$modal-white: #FFF;
+
+/* device width*/
+$tablet-width: 640px;
+$desktop-width: 1024px;
+
+/* Font Size */
+$font-base-size: 14px !default;
+$font-size-large: ceil(($font-base-size * 1.25)) !default; // ~18px
+$font-size-small: ceil(($font-base-size * .85)) !default; // ~12px
+
+$font-size-h1: floor(($font-base-size * 2.6)) !default; // ~36px
+$font-size-h2: floor(($font-base-size * 2.15)) !default; // ~30px
+$font-size-h3: ceil(($font-base-size * 1.7)) !default; // ~24px
+$font-size-h4: ceil(($font-base-size * 1.25)) !default; // ~18px
+$font-size-h5: $font-base-size !default;
+$font-size-h6: ceil(($font-base-size * .85)) !default; // ~12px
+
+/*Font-Family*/
+$font-family: Montserrat;
+
+/* Images */
+$root-path:"./img/";
+
+
+/*Field */
+$field-title-colour:#333333;
+$field-value-colour: $field-title-colour;
+

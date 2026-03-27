@@ -1,0 +1,145 @@
+<div id="modalAddAddress" role="dialog" class="h-100">
+    <form role="document" novalidate (ngSubmit)="onSubmit(addressForm, $event)" [formGroup]="addressForm" class="d-flex flex-column h-100">
+        <div mat-dialog-title>
+            <h1 *ngIf="dialogModel">Change client address</h1>
+            <div class="close" aria-label="Close" mat-dialog-close>&times;</div>
+        </div>
+
+        <div class="col-md-12 md-mp4 error-message">
+            <message></message>
+        </div>
+        
+        <div mat-dialog-content class="flex-grow-1">
+            <div class="form-group row">
+                <div class="col-xs-12 col-md-4 md-mt1 text-right">
+                    <label class="fieldname">Change type</label>
+                </div>
+                <div class="col-xs-12 col-md-8 change-type">
+                    <select class="form-control" [formControl]="addressForm.controls.changeType">
+                        <option *ngFor="let mtaChangeTypeItem of objectKeys(mtaChangeTypeEnum)"
+                                [ngValue]="mtaChangeTypeItem">{{mtaChangeTypeEnum[mtaChangeTypeItem]}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-xs-12 col-md-4 md-mt1 text-right">
+                    <label class="fieldname">Effective date</label>
+                </div>
+                <div class="col-xs-12 col-md-8 effective-date">
+                    <error *ngIf="addressForm.controls.effectiveDate"
+                    [errorText]="{ invalidDate: 'Invalid Date', required: 'Required' }"
+                    [formCtrl]="addressForm.controls.effectiveDate">
+                        <datepicker *ngIf="addressForm" [formControl]="addressForm.get('effectiveDate')" [readonly]="isPolicyReissue()"></datepicker>
+                    </error>
+                </div>
+            </div>
+            <hr/>
+            <div class="form-group row">
+                <div class="col-xs-12 col-md-4 md-mt1 text-right">
+                    <label class="fieldname">Address line 1</label>
+                </div>
+                <div class="col-xs-12 col-md-8">
+                    <error
+                        [errorText]="{ required: 'Required', maxlength: 'Cannot be more than 100 characters long' }"
+                        [formCtrl]="addressForm.controls.addressLine1">
+                        <mat-form-field appearance="outline">
+                            <input matInput formControlName="addressLine1">
+                        </mat-form-field>
+                    </error>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-xs-12 col-md-4 md-mt1 text-right">
+                    <label class="fieldname">Address line 2 </label>
+                </div>
+                <div class="col-xs-12 col-md-8">
+                    <error [errorText]="{ maxlength: 'Cannot be more than 100 characters long' }"
+                        [formCtrl]="addressForm.controls.addressLine2">
+                        <mat-form-field appearance="outline">
+                            <input matInput formControlName="addressLine2">
+                        </mat-form-field>
+                    </error>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-xs-12 col-md-4 md-mt1 text-right">
+                    <label class="fieldname">Address line 3 </label>
+                </div>
+                <div class="col-xs-12 col-md-8">
+                    <error [errorText]="{ maxlength: 'Cannot be more than 100 characters long' }"
+                        [formCtrl]="addressForm.controls.addressLine3">
+                        <mat-form-field appearance="outline">
+                            <input matInput formControlName="addressLine3">
+                        </mat-form-field>
+                    </error>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-xs-12 col-md-4 md-mt1 text-right">
+                    <label class="fieldname">City</label>
+                </div>
+                <div class="col-xs-12 col-md-8">
+                    <error [errorText]="{ required: 'Required' }" [formCtrl]="addressForm.controls.city">
+                        <mat-form-field appearance="outline">
+                            <input matInput formControlName="city">
+                        </mat-form-field>
+                    </error>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-xs-12 col-md-4 md-mt1 text-right">
+                    <label class="fieldname">County</label>
+                </div>
+                <div class="col-xs-12 col-md-8">
+                    <mat-form-field appearance="outline">
+                        <input matInput formControlName="county">
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-xs-12 col-md-4 md-mt1 text-right">
+                    <label class="fieldname">State</label>
+                </div>
+                <div class="col-xs-12 col-md-8">
+                    <error [errorText]="{ maxlength: 'Cannot be more than 100 characters long' }"
+                        [formCtrl]="addressForm.controls.stateProvince">
+                        <mat-form-field appearance="outline">
+                            <input matInput formControlName="stateProvince">
+                        </mat-form-field>
+                    </error>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-xs-12 col-md-4 md-mt1 text-right">
+                    <label class="fieldname">Postcode/Zip code </label>
+                </div>
+                <div class="col-xs-12 col-md-8">
+                    <error [errorText]="{ required: 'Required' }" [formCtrl]="addressForm.controls.postCode">
+                        <mat-form-field appearance="outline">
+                            <input matInput formControlName="postCode">
+                        </mat-form-field>
+                    </error>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-xs-12 col-md-4 md-mt1 text-right">
+                    <label class="fieldname">Country</label>
+                </div>
+                <div class="col-xs-12 col-md-8">
+                    <input readonly="readonly" [value]="country">
+                </div>
+            </div>
+        </div>
+
+        <div mat-dialog-actions align="end">
+            <button type="submit" class="btn-primary btnSaveAddress" [disabled]="isSavingOrSaved()">
+                {{dialogModel.modalBtnTitle}}
+                <mat-spinner *ngIf="isSaving" strokeWidth="3" [diameter]="20"></mat-spinner>
+            </button>
+
+            <button type="button" class="btn-primary btnSendAddress" [disabled]="!isSaved()" (click)="openAddressChangeSendEmailModal()">
+                Send
+            </button>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,3 @@
+<a [class.float-left]="isPrevious" [class.float-right]="!isPrevious" [class.disabled-link]="isDisabled" (click)="skipToClicked()">
+    <span *ngIf="isPrevious" class="arrow-left"></span>{{skipToDirection}}<span *ngIf="!isPrevious" class="arrow-right"></span>
+</a>

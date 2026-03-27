@@ -1,0 +1,64 @@
+<section class="section-content" [formGroup]="stepForm" novalidate>
+    <div *ngIf="this.isLoaded()">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3 md-p0">
+                    <h2 class="coverageType">CORE COVERAGES</h2>
+                </div>
+            </div>
+            <coverage-multiple-locations-upload *ngIf="isMultipleProperty"
+                [binderSectionId]="terrorismBinderSectionId"
+                (setPropertyLimitsWithFloatingValues)="setPropertyLimitsWithFloatingValues($event)" >
+            </coverage-multiple-locations-upload>
+            <div class="row">
+                <div class="col-md-6">
+                    <div *ngIf="isTouched && this.selectedCoreCoverages().length === 0"
+                        class="help-block with-errors noCoverageError">
+                        Please select a coverage
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="selectAllPanel">
+                        <div class="styledCheckbox">
+                            <input class="input-checkbox" type="checkbox" id="selectAll" name="checkbox"
+                                (click)="!readonly && toggleSelectAll()" [checked]="areAllCoveragesSelected()"
+                                [disabled]="readonly" />
+                            <label class="label-checkbox" for="selectAll"></label>
+                        </div>
+                        <label class="selectAllLabel">Select all</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-8 md-p0">
+                    <coverage *ngFor="let coverageItem of coreCoverageItems" #coverageComponent
+                        [coverageItem]="coverageItem" [(isSelected)]="coverageItem.isSelected"
+                        [isFirstLoad]="isFirstLoad" [currency]="vm.currency" (onSelection)="onSelection($event)"
+                        (onDeselection)="onDeselection($event)" (onChildOptionSelection)="onOptionSelection($event)"
+                        (onChildOptionDeselection)="onOptionDeselection($event)" (onChange)="setChange()"
+                        (setForm)="addSubFormGroup('coverageItem'+coverageItem.coverage.coverageType.id, $event)"
+                        [readonly]="readonly">
+                    </coverage>
+                </div>
+            </div>
+            <div *ngIf="additionalCoverageItems && additionalCoverageItems.length > 0">
+                <div class="row">
+                    <div class="col-md-8">
+                        <h2 class="coverageType">ADDITIONAL COVERAGES</h2>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-8">
+                        <coverage *ngFor="let coverageItem of additionalCoverageItems" #coverageComponent
+                            [coverageItem]="coverageItem" [isFirstLoad]="isFirstLoad"
+                            [(isSelected)]="coverageItem.isSelected" [currency]="vm.currency"
+                            (onSelection)="onSelection($event)" (onDeselection)="onDeselection($event)"
+                            (setForm)="addSubFormGroup('coverageItem'+coverageItem.coverage.coverageType.id, $event)"
+                            [readonly]="readonly">
+                        </coverage>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,31 @@
+<div [formGroup]="formGroup" class="maxWidth174px input-group hide-invalid date datepicker" [class.disabled-picker]="formGroup.disabled">
+    <input type="text"
+            formControlName="date"
+            [matDatepicker]="picker"
+            tabindex="-1"
+            class="hidden-input" />
+
+    <input  [id]="riskQuestion.tag"
+            type="text"
+            formControlName="autocomplete"
+            [matAutocomplete]="auto"
+            [attr.disabled]="formGroup.disabled ? true : null"
+            (blur)="autoCompleteChangeHandler()"
+            class="form-control hide-invalid hide-invalid-focus"/>
+
+    <span class="input-group-addon input-group-addon-calendar">
+        <i class="material-icons ico-cal" (click)="picker.open()">date_range</i>
+    </span>
+
+    <mat-autocomplete #auto="matAutocomplete"
+                        [displayWith]="displayFn">
+        <mat-option *ngFor="let option of filteredOptions | async"
+                    [value]="option"
+                    [title]="option.text"
+                    (click)="autoCompleteChangeHandler()">
+        {{ option.text }}
+        </mat-option>
+    </mat-autocomplete>
+
+    <mat-datepicker #picker [calendarHeaderComponent]="datepickerHeader"></mat-datepicker>
+</div>

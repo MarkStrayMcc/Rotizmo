@@ -1,0 +1,16 @@
+<select class="form-control hide-invalid"
+        [formControl]="formControl"
+        [id]="riskQuestion.tag"
+        (blur)="this.onTouchEvent()">
+    <option *ngIf="riskQuestion.isMandatory"
+            [value]="null"
+            [ngClass]="{ 'hidden' : formControl.value }"
+            selected
+            hidden >
+    </option>
+    <option *ngIf="!riskQuestion.isMandatory" value=""></option>
+    <option *ngFor="let option of riskQuestion.options" 
+        [value]="option.uid">
+        {{ option.text }}
+    </option>
+</select>

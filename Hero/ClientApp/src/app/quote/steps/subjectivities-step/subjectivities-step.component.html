@@ -1,0 +1,112 @@
+<section class="section-content" id="section-subjectivies" data-content="5" [formGroup]="stepForm">
+
+        <div *ngIf="initialised">
+                <div class="form-group row">
+                    <div class="col-md-4  text-right"><label class="fieldname">Add Subjectivities</label></div>
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <autocomplete-dropdown [isValid]="formErrors.subjectivity.length === 0" [dataSource]="selectList" [myControl]="stepForm.get('selectedValue')"
+                                                   class="subjectivitySelect"></autocomplete-dropdown>
+                            <div *ngIf="formErrors.subjectivity.length > 0" class="help-block with-errors">
+                                <ul class="list-unstyled">
+                                    <li *ngFor="let error of formErrors.subjectivity">{{ error }}</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>            
+            <div class="form-group row rowSubjectivityAdd md-mt0">
+                <div class="col-xs-12 col-md-4">
+                </div>
+                <div class="col-xs-3 col-md-2">
+                    <ul class="ul-checkbox float-left">
+                        <!-- TODO: extract below element as component -->
+                        <li>
+                            <div>
+                                <div>
+                                    <input class="input-radio user-success" type="radio" value="{{priorDescription}}" id="chk2" (change)="chkChange(priorDescription)"
+                                            [checked]=" (currentDirection === priorDescription)" [disabled]="readonly">
+                                    <label class="label-radio" for="chk2" [ngClass]="{'radio-active': currentDirection === priorDescription }"></label>
+                                    <label class="chkRadio" [ngClass]="{'radio-label-active': currentDirection === priorDescription }" (click)="chkChange(priorDescription)">{{priorDescription}} </label>
+                                </div>
+                                <div *ngIf="formErrors.postprior.length > 0" class="help-block with-errors radioerror">
+                                    <ul class="list-unstyled">
+                                        <li *ngFor="let error of formErrors.postprior">{{ error }}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>                    
+                </div>
+                <div class="col-xs-3 col-md-2">
+                    <ul class="ul-checkbox float-left">
+                        <!-- TODO: extract below element as component -->
+                        <li class="li-radio">
+                            <div>
+                                <input class="input-radio user-success" type="radio" value="{{postDescription}}" id="chk1" (change)="chkChange(postDescription)"
+                                       [checked]=" (currentDirection === postDescription)" [disabled]="readonly">
+                                <label class="label-radio" for="chk1" [ngClass]="{'radio-active': currentDirection === postDescription }"></label>
+                                <label class="chkRadio" [ngClass]="{'radio-label-active': currentDirection === postDescription }" (click)="chkChange(postDescription)">{{postDescription}} </label>
+                                <div *ngIf="formErrors.postprior.length > 0" class="help-block with-errors radioerror">
+                                    <ul class="list-unstyled">
+                                        <li *ngFor="let error of formErrors.postprior">{{ error }}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-xs-3 col-md-2">
+                    <div class="input-group subjectivity-days-input" [class.ng-invalid]="checkDaysFieldValidity()">
+                        <input type="text" min="1" step="1" number-only class="hide-invalid" [(ngModel)]='days' formControlName='days' [attr.disabled]="currentDirection === priorDescription ? '' : null"
+                            [ngClass]="{'hide-text' : currentDirection === priorDescription}" [readonly]="readonly" class="form-control">
+                        <span class="input-group-addon">Days</span>
+                    </div>
+                    <div *ngIf="checkDaysFieldValidity()" class="help-block with-errors subjectivity-days-input">
+                        <ul class="list-unstyled">
+                            <li *ngFor="let error of formErrors.days">{{ error }}</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-xs-1 col-md-2 md-ml0">
+                    <a class="btn btn-secondary btnSubjectivityAdd md-mt1" [ngClass]="{'disabled':!stepForm.value.selectedValue || (formErrors.days.length > 0 && currentDirection !== priorDescription)}"
+                        (click)="addSubjectivity()">Add</a>
+                </div>
+            </div>
+        </div>
+        <!--</form>-->
+        <div>
+            <div class="form-group row">
+                <div class="col-md-4  text-right"><label class="fieldname">Subjectivities</label></div>
+                <div class="col-md-8">
+                    <table class="table table-striped containerSubjectivities">
+                        <tbody>
+                            <tr class="rowSubjectivity" data-toggle="tooltip" data-placement="top" title="" data-original-title="">
+                                <td class="width90">
+                                    <p>
+                                        <span class="txtRowSubjectivity"></span>
+                                    </p>
+                                </td>
+                                <td class="width10 text-right">
+                                    <a class="tableaction btnRemoveSubjectivity">Remove</a>
+                                </td>
+                            </tr>
+
+                            <tr *ngFor="let sub of vm.subjectivities; let i = index" class="rowSubjectivity" data-toggle="tooltip" data-placement="top" title="" data-original-title="">
+                                <td class="width90">
+                                    <p>
+                                        <span class="txtRowSubjectivity">{{subjectivityService.formatSubjectivityDisplayText(sub)}}</span>
+                                    </p>
+                                </td>
+                                <td class="width10 icon-padding text-right">
+                                    <a class="btnRemoveSubjectivity" (click)="!readonly && removeSubjectivity(i)">
+                                        <i class="material-icons" [ngClass]="{'disabled': readonly}">delete</i>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+</section>

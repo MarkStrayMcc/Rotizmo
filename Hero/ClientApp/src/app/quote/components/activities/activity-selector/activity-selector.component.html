@@ -1,0 +1,13 @@
+<form novalidate [formGroup]="activityForm">
+    <div class="row rowMargins" *ngIf="thisActivity.availableActivities.length > 0">
+        <div *ngIf="thisActivity.level <= 1" class="col-md-4 text-right">
+            <label class="fieldname">Activity Breakdown</label>            
+        </div>
+        <div *ngIf="thisActivity.level > 1" class="col-md-4 text-right">            
+            <label></label>
+        </div>
+        <div class="col-md-7">
+            <autocomplete-dropdown [dataSource]="selectList" [myControl]="activityForm.get('selectedValue')"></autocomplete-dropdown>
+        </div>
+    </div>
+</form>

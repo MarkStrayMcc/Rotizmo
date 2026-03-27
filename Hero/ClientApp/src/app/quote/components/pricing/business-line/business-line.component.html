@@ -1,0 +1,121 @@
+<div class="accordion-panel hide-invalid" [formGroup]="form">
+    <div class="col-xs-12 col-md-12">
+        <a class="accordion-header" (click)="toggleExpansion()">
+            <span class="accordion-control" [innerText]="form.controls.isExpanded.value ? '-' : '+'"></span>
+            <h3 [innerText]="name()"></h3>
+        </a>
+    </div>
+    <div class="col-md-3 md-p3" *ngIf="form.controls.quoted.value && !form.controls.isExpanded.value">
+        <label class="float-right bold">{{ currency.symbol }}{{ form.value.quoted | number:'1.2' }}</label>
+    </div>
+    <div [class.hide]="!form.controls.isExpanded.value" class="md-p3">
+        <div class="row md-p1 md-mb1">
+            <div class="col-xs-12 col-md-3 md-pl3" *ngIf="isFiledPremiumAndDiscountAvailable">
+                <label class="text-right">Filed</label>
+                <div class="float-right">
+                    <div [class.ng-invalid]="form.controls.filedPremium.errors">
+                        <currency formControlName="filedPremium" #component [decimals]="true" [currency]="currency"
+                            [readonly]="true">
+                        </currency>
+                    </div>
+                    <div class="help-block with-errors no-bottom-margin"
+                        *ngIf="form.controls.filedPremium.errors?.required">
+                        Required
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12"
+                [ngClass]="isFiledPremiumAndDiscountAvailable ? 'col-md-3 md-pl1' : 'col-md-4  md-pl3'">
+                <label class="text-right">Model</label>
+                <div class="float-right">
+                    <div [class.ng-invalid]="form.controls.model.errors">
+                        <currency formControlName="model" #component [decimals]="true" [currency]="currency"
+                            (focus)="discountChanged($event)" [readonly]="!isPremiumEditable">
+                        </currency>
+                    </div>
+                    <div class="help-block with-errors no-bottom-margin" *ngIf="form.controls.model.errors?.required">
+                        Required
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 md-pl1" [ngClass]="isFiledPremiumAndDiscountAvailable ? 'col-md-3' : 'col-md-4'">
+                <label class="text-right">Suggested</label>
+                <div class="float-right">
+                    <div [class.ng-invalid]="form.controls.suggested.errors">
+                        <currency formControlName="suggested" #component [decimals]="true" [currency]="currency"
+                            [readonly]="!isPremiumEditable">
+                        </currency>
+                    </div>
+                    <div class="help-block with-errors no-bottom-margin"
+                        *ngIf="form.controls.suggested.errors?.required">
+                        Required
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 md-pl1" [ngClass]="isFiledPremiumAndDiscountAvailable ? 'col-md-3' : 'col-md-4'">
+                <label class="text-right">Quoted</label>
+                <div class="float-right">
+                    <div [class.ng-invalid]="form.controls.quoted.errors">
+                        <currency formControlName="quoted" #component [decimals]="true" [currency]="currency"
+                            (focus)="quotedChanged($event)" [readonly]="readonly">
+                        </currency>
+                    </div>
+                    <div class="help-block with-errors no-bottom-margin"
+                        *ngIf="form.controls.quoted?.errors && form.controls.quoted.errors?.required">
+                        Required
+                    </div>
+                    <div class="help-block with-errors no-bottom-margin"
+                        *ngIf="form.controls.quoted?.errors && form.controls.quoted.errors?.quotedBelowMinimumPremium && !form.controls.quoted.errors?.required">
+                        Below allowed minimum premium
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row md-p1">
+            <div class="col-xs-12 col-md-3 md-pl3" *ngIf="isFiledPremiumAndDiscountAvailable">
+                <label class="text-right">Filed Discount</label>
+                <div class="float-right">
+                    <percentage-input formControlName="filedDiscount" [defaultValue]="filedDiscount"
+                        [isRequired]="isFiledDiscountRequired" [allowNegative]="true" [allowDecimal]="true"
+                        [minValue]="null" [maxValue]="100" [readonly]="readonly || !isFiledDiscountRequired">
+                    </percentage-input>
+                </div>
+            </div>
+            <div class="col-xs-12"
+                [ngClass]="isFiledPremiumAndDiscountAvailable ? 'col-md-3  md-pl1' : 'col-md-4 md-pl3'">
+                <label class="text-right">Model Discount</label>
+                <div class="float-right">
+                    <warning [hasWarning]="hasWarning()" [warningText]="maxDiscountWarning">
+                        <percentage-input formControlName="discount" [defaultValue]="discount" [isRequired]="true"
+                            [allowNegative]="true" [allowDecimal]="true" [minValue]="null" [maxValue]="100"
+                            [readonly]="readonly" (focus)="discountChanged($event)">
+                        </percentage-input>
+                        <input formControlName="suggestedDiscount" [defaultValue]="suggestedDiscount" type="hidden" />
+                    </warning>
+                </div>
+            </div>
+            <div class="col-xs-12 md-pl1" [ngClass]="isFiledPremiumAndDiscountAvailable ? 'col-md-3' : 'col-md-4'">
+                <label class="text-right">Suggested Discount</label>
+                <div class="float-right">
+                    <warning [hasWarning]="suggestedDiscountWarning()" [warningText]="maxSuggestedDiscountWarning">
+                        <percentage-input formControlName="suggestedDiscountPercentage"
+                            [defaultValue]="suggestedDiscountPercentage" [isRequired]="true" [allowNegative]="true"
+                            [allowDecimal]="true" [minValue]="null" [maxValue]="100"
+                            [readonly]="readonly || !isSuggestedDiscountPercentageRequired">
+                        </percentage-input>
+                    </warning>
+                </div>
+            </div>
+            <div class="col-xs-12 md-pl1" [ngClass]="isFiledPremiumAndDiscountAvailable ? 'col-md-3' : 'col-md-4'">
+                <label class="text-right">Rate Change</label>
+                <div class="float-right">
+                    <percentage-input formControlName="rateChangePercentage" [defaultValue]="rateChangePercentage"
+                        [allowNegative]="true" [allowDecimal]="true" [decimalPlaces]="3"
+                        [isRequired]="isRateChangePercentageRequired" [minValue]="null" [maxValue]="null"
+                        [readonly]="readonly || !isRateChangePercentageRequired">
+                    </percentage-input>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

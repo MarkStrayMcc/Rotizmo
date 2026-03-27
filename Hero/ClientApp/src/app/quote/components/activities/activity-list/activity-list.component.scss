@@ -1,0 +1,40 @@
+﻿.totals-row {
+    color: #f9f9f9;
+    background-color: #818182 !important;
+    height:3em;
+}
+
+.table > tbody > tr > td.vertical-align {
+    height: 100%;
+    position: relative;
+}
+
+td.vertical-align > span,
+td.vertical-align > a {
+    transform: translateY(-50%);
+    top: 50%;
+    position: absolute;
+    right: 5px;
+}
+
+.rowActivities {
+    position:relative;
+}
+
+.width80 {
+    width:80%;
+}
+
+.overflow-hidden {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.warning-border {
+    margin-bottom:0px;
+}
+
+.help-block.with-warnings {
+    width:100%;
+}

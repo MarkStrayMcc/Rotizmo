@@ -1,0 +1,77 @@
+@import "utils/variables";
+
+a {
+    outline: 0;
+    border: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+    a:hover {
+        text-decoration: none;
+    }
+
+.arrow-left {
+    display: inline-block;
+    width: 35px;
+    height: 35px;
+    border: 0.2em solid $cfc-bright-blue;
+    border-radius: 50%;
+    margin-right: 1.5em;
+    background-color: $cfc-bright-blue;
+}
+
+    .arrow-left:after {
+        content: '';
+        display: inline-block;
+        margin-top: 10px;
+        margin-left: 11px;
+        width: 10px;
+        height: 10px;
+        border-top: 0.2em solid #fff;
+        border-right: 0.2em solid #fff;
+        -moz-transform: rotate(-135deg);
+        -webkit-transform: rotate(-135deg);
+        transform: rotate(-135deg);
+    }
+
+.arrow-right {
+    display: inline-block;
+    width: 35px;
+    height: 35px;
+    border: 0.2em solid $cfc-bright-blue;
+    border-radius: 50%;
+    margin-left: 1.5em;
+    background-color: $cfc-bright-blue;
+}
+
+    .arrow-right:after {
+        content: '';
+        display: inline-block;
+        margin-top: 10px;
+        margin-left: 8px;
+        width: 10px;
+        height: 10px;
+        border-top: 0.2em solid #fff;
+        border-right: 0.2em solid #fff;
+        -moz-transform: rotate(45deg);
+        -webkit-transform: rotate(45deg);
+        transform: rotate(45deg);
+    }
+
+.disabled-link {
+    cursor: default;
+    color: #9b9c9d;
+}
+
+    .disabled-link .arrow-left {
+        border: 0.2em solid #9b9c9d;
+        background-color: #9b9c9d;
+    }
+
+    .disabled-link .arrow-right {
+        border: 0.2em solid #9b9c9d;
+        background-color: #9b9c9d;
+    }

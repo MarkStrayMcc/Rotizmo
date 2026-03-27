@@ -1,0 +1,35 @@
+:host {
+    .entity {
+        border: solid 1px #e5e5e5;
+        margin: 10px 1px;
+
+        .summary {
+            display: inline-block;
+            vertical-align: middle;
+            margin: 12px 5px 0 0;
+        
+            &.primary {
+                color: #9b9c9d;
+                font-weight: bold; 
+            }
+        }
+
+        .edit {
+            margin-top: 5px;
+            display: inline-flex;
+        }
+
+        .cancel {
+            float: right;
+            color: #00c6e3;
+            margin: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        label {
+            font-size: 14px;
+            font-weight: 600;
+        }
+    }
+}

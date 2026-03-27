@@ -1,0 +1,16 @@
+<mat-dialog-content>
+    <div class="row">
+        <div class="col-md-10">
+            <h3 class="md-mt0">Are you sure you wish to delete this Outstanding Fund?</h3>
+        </div>
+    </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button type="button" class="btn btn-link" (click)="closeModal(false)">
+        Cancel
+    </button>
+    <button type="button" class="btn btn-primary" (click)="closeModal(true)">
+        OK
+    </button>
+</mat-dialog-actions>

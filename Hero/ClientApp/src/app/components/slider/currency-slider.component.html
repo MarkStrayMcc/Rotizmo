@@ -1,0 +1,12 @@
+﻿<div class="slider" *ngIf="this.minimum !== null && 
+     this.minimum !== undefined && 
+     this.maximum !== null && 
+     this.maximum !== undefined &&
+     this.maximum !== this.minimum">
+<nouislider #slider 
+            behaviour="drag"
+            (start)="onSliderStartEvent()"
+            [config]="getSliderConfig()"
+            [formControl]="rangeControl">
+</nouislider>
+ </div>

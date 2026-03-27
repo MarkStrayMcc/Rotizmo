@@ -1,0 +1,54 @@
+@import '../../../styles/utils/variables.scss';
+@import '../../../styles/base/typography.scss';
+
+.no-margin {
+    margin: 0 !important;
+}
+
+.left-padding {
+    padding-left: 5px;
+}
+
+.small-top-margin {
+    margin-top: 5px;
+}
+
+.small-bottom-margin {
+    margin-bottom: 5px;
+}
+
+.add-new {
+    padding: 4px 0px 0px 0px;
+    margin-left: -5px;
+}
+
+.styledCheckbox {
+    margin-top: 0;
+}
+
+.label-checkbox {
+    margin-top: 5px;
+    padding-top: 8px;
+}
+
+.col-md-1 {
+    width: auto;
+}
+
+label {
+    @include normal-montserrat-font;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.mat-form-field-prefix .mat-icon,
+.mat-form-field-suffix .mat-icon {
+    color: $cfc-bright-blue;
+}
+
+.edit-broker{
+    position: absolute;
+    bottom: 3px;
+    margin-left:5px;
+}

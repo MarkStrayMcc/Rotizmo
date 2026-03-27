@@ -1,0 +1,21 @@
+﻿<div role="dialog">
+    <div mat-dialog-title>
+        <h1>Which product would you like to quote?</h1>
+        <div *ngIf="isOutsideProductSelected" class="close" aria-label="Close" mat-dialog-close>&times;</div>
+    </div>
+
+    <div mat-dialog-content class="d-flex">
+        <form novalidate [formGroup]="productForm" class="flex-grow-1">
+            <autocomplete-dropdown [placeholder]="'Please type a product name'"
+                [dataSource]="products"
+                [myControl]="productForm.get('product')"
+                (change)="onProductChange($event)">
+            </autocomplete-dropdown>
+        </form>
+
+        <div class="confirm-button">
+            <button class="btn-primary md-ml4" (click)="confirmProduct(productForm)" [disabled]="!isProductSelected">Confirm</button>
+        </div>
+    </div>
+</div>
+

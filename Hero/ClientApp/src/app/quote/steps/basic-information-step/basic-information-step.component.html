@@ -1,0 +1,293 @@
+<section class="section-content" id="section-basic-info" data-content="0" [formGroup]="stepForm">
+    <div class="form-group row col-form-label">
+        <div class="text-right col-md-4">
+            <label class="fieldname">Client</label>
+        </div>
+        <div class="col-md-8">
+            <label class="readonly-fieldvalue" *ngIf="vm.client && vm.client.companyName" id="client">
+                {{ vm.client.companyName }}
+            </label>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="text-right col-md-4"><label class="fieldname">Broker</label></div>
+        <div class="col-md-8">
+            <label class="readonly-fieldvalue" *ngIf="vm" id="broker"
+                [innerText]="getBrokerTeamName(vm.brokerTeam)"></label>
+            <a (click)="openBrokerSelectorDialog()" *ngIf="isBrokerEditingAvailable()" alt="Edit Broker"
+                class="no-underline md-mr2" id="edit-broker-link" title="Edit Broker">
+                <i class="material-icons edit-broker">edit</i>
+            </a>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="text-right col-md-4"><label class="fieldname">Broker contact</label></div>
+        <div class="col-md-8">
+            <label class="readonly-fieldvalue" *ngIf="vm?.brokerContact" id="brokerContact">
+                {{ vm.brokerContact?.firstName + ' ' + vm.brokerContact?.lastName }}
+            </label>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="text-right col-md-4"><label class="fieldname">Broker group</label></div>
+        <div class="col-md-8">
+            <label class="readonly-fieldvalue" *ngIf="vm?.brokerGroup" id="brokerGroup">
+                {{ vm.brokerGroup?.brokerGroupName }}
+            </label>
+        </div>
+    </div>
+    <div class="form-group row" *ngIf="showSurplusLinesBroker">
+        <div class="text-right col-md-4 md-mt1"><label class="fieldname">Surplus lines broker</label></div>
+        <div class="col-md-7">
+            <surplus-line-selector [formControl]="stepForm.controls.surplusLinesBroker"
+                [state]="this.vm.client.primaryLocation.stateProvinceCode" [brokerTeamId]="vm.brokerTeam.id"
+                [enableNewSurplusLines]="true">
+            </surplus-line-selector>
+        </div>
+    </div>
+    <div class="form-group row" *ngIf="isLocalBrokerVisible">
+        <div class="text-right col-md-4 md-mt1">
+            <label class="fieldname">
+                <span *ngIf="isCanadianBrokerVisible">Canadian Broker</span>
+                <span *ngIf="isEeaBrokerVisible">EEA Broker</span>
+            </label>
+        </div>
+
+        <div class="col-md-6">
+            <local-brokers id="localBrokerAutocomplete" formControlName="localBroker"></local-brokers>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="text-right col-md-4 md-mt1"><label class="fieldname">Quote type</label></div>
+        <div class="col-md-6">
+            <error [errorText]="{ required: 'Required' }" [formCtrl]="stepForm.controls.quoteType">
+                <select placeholder="Quote Type" *ngIf="vm" formControlName="quoteType" class="hide-invalid">
+                    <option *ngFor="let type of quoteTypes" [value]="type.value">{{ type.text }}</option>
+                </select>
+            </error>
+
+        </div>
+    </div>
+    <div class="form-group row" *ngIf="vm && displayExpiringPolicyNumber()">
+        <div class="text-right col-md-4 md-mt1"><label class="fieldname">Expiring policy number</label></div>
+        <div class="col-md-6">
+            <error [errorText]="{ required: 'Required' }" [formCtrl]="stepForm.controls.expiringPolicyNumber">
+                <mat-form-field appearance="outline">
+                    <input matInput type="text" placeholder="Expiring Policy Number"
+                        formControlName="expiringPolicyNumber" class="hide-invalid" />
+                </mat-form-field>
+            </error>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="text-right col-md-4 md-mt1"><label class="fieldname">Insurance type</label></div>
+        <div class="col-md-6">
+            <select placeholder="Insurance Type" *ngIf="vm" [(ngModel)]="vm.insuranceTypeId"
+                [ngModelOptions]="{standalone: true}" [disabled]="readonly" (change)="insuranceTypeChange($event)"
+                [ngClass]="{'disabled': readonly}">
+                <option *ngFor="let type of insuranceTypes" [value]="type.value">{{ type.text }}</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="text-right col-md-4 md-mt1">
+            <label id="lblProduct" class="fieldname">Product</label>
+        </div>
+        <div class="col-md-8">
+            <label class="readonly-fieldvalue lblProduct" *ngIf="!(vm && vm.product)">unassigned</label>
+            <label class="readonly-fieldvalue lblProduct" *ngIf="vm && vm.product">
+                {{
+                vm.product.productDisplay
+                }}
+            </label>
+            <a class="md-ml2" (click)="openProductSelectorDialog()" [ngClass]="{'disabled': readonly}">Change</a>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="text-right col-md-4 md-mt1"><label class="fieldname">Assigned</label></div>
+        <div class="col-md-6">
+            <autocomplete-dropdown id="assignedContactAutocomplete" (onFocusEvent)="currentFocus = 'Assigned'"
+                (onFocusOutEvent)="currentFocus = ''" [dataSource]="cfccontacts"
+                [(selectedValue)]="stepForm.assignedContact" *ngIf="stepForm"
+                [myControl]="stepForm.get('assignedContact')">
+            </autocomplete-dropdown>
+            <div *ngIf="formErrors.assignedContact.length > 0 && currentFocus!=='Assigned'"
+                class="help-block with-errors">
+                <ul class="list-unstyled">
+                    <li *ngFor="let error of formErrors.assignedContact">{{ error }}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="text-right col-md-4 md-mt1"><label class="fieldname">Address</label></div>
+        <div class="col-md-6" *ngIf="vm && vm.client">
+            <warning [hasWarning]="!isAuthorisedLocation && vm.state < approvedState"
+                warningText="No authority to quote in this territory">
+                <div *ngIf="vm.client.primaryLocation"
+                    [class.left-padding]="!isAuthorisedLocation || !(vm.client.primaryLocation)"
+                    [class.has-error]="!(vm.client.primaryLocation) ||  (countryHasState && (!vm.client.primaryLocation.stateProvinceCode || vm.client.primaryLocation.stateProvinceCode === '0'))">
+                    <div *ngIf="vm.client.primaryLocation.address1">
+                        <label class="readonly-fieldvalue small-top-margin">
+                            {{
+                            vm.client.primaryLocation.address1
+                            }}
+                        </label>
+                    </div>
+                    <div *ngIf="vm.client.primaryLocation.address2">
+                        <label class="readonly-fieldvalue">{{ vm.client.primaryLocation.address2 }}</label>
+                    </div>
+                    <div *ngIf="vm.client.primaryLocation.address3">
+                        <label class="readonly-fieldvalue">{{ vm.client.primaryLocation.address3 }}</label>
+                    </div>
+                    <div *ngIf="vm.client.primaryLocation.city">
+                        <label class="readonly-fieldvalue">{{ vm.client.primaryLocation.city }}</label>
+                    </div>
+                    <div
+                        *ngIf="vm.client.primaryLocation.stateProvinceCode && vm.client.primaryLocation.stateProvinceCode !== '' && vm.client.primaryLocation.stateProvinceCode !== '0' ">
+                        <label class="readonly-fieldvalue" id="addressState">
+                            {{
+                            vm.client.primaryLocation.stateProvinceCode
+                            }}
+                        </label>
+                    </div>
+                    <div *ngIf="vm.client.primaryLocation.postcode">
+                        <label class="readonly-fieldvalue">{{ vm.client.primaryLocation.postcode }}</label>
+                    </div>
+                    <div *ngIf="vm.client.primaryLocation.country">
+                        <label class="readonly-fieldvalue small-bottom-margin" id="addressCountry">
+                            {{
+                            vm.client.primaryLocation.country.name
+                            }}
+                        </label>
+                    </div>
+                </div>
+                <div *ngIf="!(vm.client.primaryLocation)" class="help-block with-errors">
+                    Please add a primary location
+                </div>
+                <div *ngIf=" (countryHasState && (!vm.client.primaryLocation.stateProvinceCode || vm.client.primaryLocation.stateProvinceCode === '0'))"
+                    class="help-block with-errors">
+                    Please add a state to the primary location
+                </div>
+                <p class="md-pl1">
+                    <a tabindex="10" data-toggle="modal" data-target="#modalMap"
+                        (click)="openClientAddressMapDialog(0)">View on map</a> |
+                    <a tabindex="11" data-toggle="modal" data-target="#modalAddress"
+                        (click)="openClientAddressDialog()">{{ !readonly ? 'Change': 'Show Addresses'}}</a>
+                </p>
+            </warning>
+
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="text-right col-md-4 md-mt1"><label class="fieldname">Currency</label></div>
+        <div class="col-md-6">
+            <autocomplete-dropdown id="currencyAutocomplete" (onFocusEvent)="currentFocus = 'Currency'"
+                (onFocusOutEvent)="currentFocus = ''" *ngIf="stepForm" [myControl]="stepForm.get('currency')"
+                [dataSource]="currencies" (change)="currencyChange($event)">
+            </autocomplete-dropdown>
+            <div *ngIf="formErrors.currency.length > 0 && currentFocus !== 'Currency'" class="help-block with-errors">
+                <ul class="list-unstyled">
+                    <li *ngFor="let error of formErrors.currency">{{ error }}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="text-right col-md-4 md-mt1"><label class="fieldname">Target inception</label></div>
+        <div class="col-md-6 point5" [class.disabled-picker]="readonly">
+            <div
+                [class.ng-invalid]="stepForm.controls.inceptionDate.invalid && (stepForm.controls.inceptionDate.touched || stepForm.controls.inceptionDate.dirty)">
+                <datepicker class="maxWidth174px" *ngIf="stepForm" [formControl]="stepForm.get('inceptionDate')"
+                    [readonly]="readonly"></datepicker>
+                <div *ngIf="formErrors.inceptionDate.length > 0 && !isInceptionDateInFocus"
+                    class="help-block with-errors adjust-right no-margin">
+                    <ul class="list-unstyled">
+                        <li *ngFor="let error of formErrors.inceptionDate">{{ error }}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="text-right col-md-4 md-mt1"><label class="fieldname">Policy period</label></div>
+        <div class="col-md-6 point5">
+            <div class="input-group" [class.ng-invalid]="formErrors.policyPeriod.length > 0">
+                <input id="policyPeriodInput" type="text" class="hide-invalid" number-only tabindex="15"
+                    *ngIf="stepForm" [formControl]="stepForm.get('policyPeriod')" (change)="policyPeriodChanged()" />
+                <span class="input-group-addon">months</span>
+            </div>
+            <div *ngIf="formErrors.policyPeriod.length > 0" class="help-block with-errors adjust-right">
+                <ul class="list-unstyled">
+                    <li *ngFor="let error of formErrors.policyPeriod">{{ error }}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="text-right col-md-4 md-mt1"><label class="fieldname">Expiry date</label></div>
+        <div class="col-md-6">
+            <label class="readonly-fieldvalue" *ngIf="vm && vm.expiryDate" id="expiryDate">
+                {{
+                vm.expiryDate |
+                date:'dd/MM/y'
+                }}
+            </label>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="text-right col-md-4 md-mt1"><label class="fieldname">Insurance basis</label></div>
+        <div class="col-md-6">
+            <select *ngIf="vm" id="basis-type" formControlName="insuranceBasis" (change)="insuranceBasisChanged($event)"
+                [disabled]="isInsuranceBasisDisabled || readonly"
+                [ngClass]="{'disabled': isInsuranceBasisDisabled || readonly}">
+                <option *ngFor="let basis of (insuranceBasisDescriptions | keyvalue)" [value]="basis.key"
+                    [ngSelected]="stepForm.controls.insuranceBasis===basis.key">
+                    {{basis.value}}
+                </option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="text-right col-md-4 md-mt1"><label class="fieldname">Policy language</label></div>
+        <div class="col-md-6">
+            <select placeholder="Language" *ngIf="vm" [(ngModel)]="vm.languageId" (change)="languageChange($event)"
+                [ngModelOptions]="{standalone: true}" [disabled]="readonly" [ngClass]="{'disabled': readonly}"
+                id="policyLanguage">
+                <option *ngFor="let lang of languages" [ngValue]="lang.value">{{ lang.text }}</option>
+            </select>
+            <div *ngIf="formErrors.languages.length > 0" class="help-block with-errors">
+                <ul class="list-unstyled">
+                    <li *ngFor="let error of formErrors.languages">{{ error }}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="text-right col-md-4 md-mt1"><label class="fieldname">Wording version</label></div>
+        <div class="col-md-6">
+            <select placeholder="Wording Version" formControlName="wordingVersion"
+                *ngIf="vm && displayWordingVersionDropdown()" [(ngModel)]="vm.wordingVersionId"
+                (change)="wordingVersionChange($event)" [ngClass]="{'disabled': readonly}">
+                <option *ngFor="let version of wordingVersions" [ngValue]="version.value">{{ version.text }}</option>
+            </select>
+            <select placeholder="Wording Version" formControlName="excessWordingVersion"
+                *ngIf="vm && displayExcessWordingVersionDropdown()" [(ngModel)]="vm.excessWordingVersionId"
+                (change)="wordingVersionChange($event)" [ngClass]="{'disabled': readonly}">
+                <option *ngFor="let excessVersion of excessWordingVersions" [ngValue]="excessVersion.value">{{
+                    excessVersion.text }}</option>
+            </select>
+            <div *ngIf="formErrors.wordingVersion.length > 0" class="help-block with-errors">
+                <ul class="list-unstyled">
+                    <li *ngFor="let error of formErrors.wordingVersion">{{ error }}</li>
+                </ul>
+            </div>
+            <div *ngIf="formErrors.excessWordingVersion.length > 0" class="help-block with-errors">
+                <ul class="list-unstyled">
+                    <li *ngFor="let error of formErrors.excessWordingVersion">{{ error }}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>

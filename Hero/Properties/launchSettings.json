@@ -1,0 +1,80 @@
+{
+  "iisSettings": {
+    "windowsAuthentication": true,
+    "anonymousAuthentication": false,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:56918/",
+      "sslPort": 44374
+    }
+  },
+  "profiles": {
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "launchUrl": "policy/",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
+    "Hero": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "http://localhost:56920"
+    },
+    "Griffin": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "launchUrl": "quote?enquiryId=2385028",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Griffin"
+      },
+      "applicationUrl": "http://localhost:5000"
+    },
+    "Flux": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "launchUrl": "quote?enquiryId=3631126",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Flux"
+      },
+      "applicationUrl": "http://localhost:5000"
+    },
+    "Dragon": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "launchUrl": "policy",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Dragon"
+      },
+      "applicationUrl": "http://localhost:5000"
+    },
+    "Ada": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "launchUrl": "policy",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Ada"
+      }
+    },
+    "Vision": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "launchUrl": "policy",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Vision"
+      }
+    },
+    "Raven": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "launchUrl": "https://localhost:44374/quote?enquiryId=45767977",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Raven"
+      },
+      "applicationUrl": "http://localhost:5000"
+    }
+  }
+}

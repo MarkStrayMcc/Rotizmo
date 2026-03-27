@@ -1,0 +1,156 @@
+<div class="shadow panel-quote">
+    <div class="row rowQuote md-mt2">
+        <div class="col-md-12">
+            <h1 class="md-mt2 md-pt0">Quote</h1>
+        </div>
+    </div>
+    <div class="row rowQuote">
+        <div class="col-md-6">
+            <h6>Premium</h6>
+        </div>
+        <div class="text-right col-md-6">
+            <h6>{{vm?.currency?.symbol}}{{ ((showRecalculateBtn || isCalculating) ? 0.00 : vm?.premium) | accounting }}</h6>
+        </div>
+    </div>
+    <div class="row rowQuote" *ngIf="vm?.triaPremium > 0">
+        <div class="col-md-6">
+            <h6>TRIA Premium</h6>
+        </div>
+        <div class="text-right col-md-6">
+            <h6>{{vm?.currency?.symbol}}{{ ((showRecalculateBtn || isCalculating) ? 0.00 : vm?.triaPremium) | accounting }}</h6>
+        </div>
+    </div>
+    <div class="row rowQuote">
+        <div class="col-md-6">
+            <h6>CFC Fee</h6>
+        </div>
+        <div class="text-right col-md-6">
+            <h6 id="total-fee">{{vm?.currency?.symbol}}{{ ((showRecalculateBtn || isCalculating) ? 0.00 : vm?.commissionInformation?.fee) | accounting }}</h6>
+        </div>
+    </div>
+    <div class="row rowQuote" *ngIf="vm?.commissionInformation?.brokerFee || vm?.commissionInformation?.brokerFee == 0">
+        <div class="col-md-6">
+            <h6>Broker Fee</h6>
+        </div>
+        <div class="text-right col-md-6">
+            <h6 id="broker-fee">{{vm?.currency?.symbol}}{{ ((showRecalculateBtn || isCalculating) ? 0.00 : vm?.commissionInformation?.brokerFee) | accounting }}</h6>
+        </div>
+    </div>
+    <div class="row rowQuote">
+        <div class="col-md-6">
+            <h6>Tax</h6>
+        </div>
+        <div class="text-right col-md-6">
+            <h6>{{vm?.currency?.symbol}}{{ ((showRecalculateBtn || isCalculating) ? 0.00 : vm?.premium) * vm?.taxRate | accounting }}</h6>
+        </div>
+    </div>
+    <div class="row rowQuote" *ngIf="showGST">
+        <div class="col-md-6">
+            <h6>GST</h6>
+        </div>
+        <div class="text-right col-md-6">
+            <h6>{{vm?.currency?.symbol}}{{ ((showRecalculateBtn || isCalculating) ? 0.00: gst) | accounting }}</h6>
+        </div>
+    </div>
+    <div class="row rowQuote">
+        <div ngClass="col-md-6">
+            <h5 class="bold">Total due</h5>
+        </div>
+        <div class="text-right" ngClass="col-md-6">
+            <h5 class="bold" id="total-due">{{vm?.currency?.symbol}}{{ ((showRecalculateBtn || isCalculating) ? 0.00 : (vm?.totalDue + vm?.triaPremium + (vm?.commissionInformation?.brokerFee ?? 0))) | abs | accounting }}</h5>
+        </div>
+    </div>
+    <div class="row rowQuote">
+        <div class="text-center col-md-12 md-mt1 md-mb3">
+            <button class="btn btn-primary full-width md-mb1" *ngIf="vm?.state === quoteState.InProgress && !showRecalculateBtn" (click)="this.clickSaveQuote();"
+                    type="button" [disabled]="disabled || isSaving || isCalculating">
+                Save Quote
+                <mat-spinner *ngIf="isSaving" strokeWidth="3" [diameter]="20">
+                </mat-spinner>
+            </button>
+            <button id="recalculate-button" class="btn btn-primary full-width md-mb1" *ngIf="vm?.state === quoteState.InProgress && showRecalculateBtn" (click)="clickRecalculate();"
+                    type="button" [disabled]="isCalculating || !canRecalculatePricing">
+                Recalculate
+                <mat-spinner *ngIf="isCalculating" strokeWidth="3" [diameter]="20">
+                </mat-spinner>
+            </button>
+            <button class="btn btn-primary full-width md-mb1" *ngIf="showReferButton()" (click)="openUnderwriterReferralSelectorDialog()" type="button"
+                    [disabled]="vm?.error">
+                Refer Quote
+            </button>
+            <button class="btn btn-secondary full-width md-mb1" *ngIf="showSendAndBindAndPublishButtons()" (click)="clickSendQuote()" type="button"
+                    [disabled]="!areSendQuoteAndBindButtonsEnabled()">
+                Send Quote
+            </button>
+            <button id="bind-quote-button" class="btn btn-primary full-width md-mb1" *ngIf="showSendAndBindAndPublishButtons()" (click)="clickBind()"
+                    type="button" [disabled]="!areSendQuoteAndBindButtonsEnabled()">
+                Bind Quote
+            </button>
+            <button id="publishQuoteButton" class="btn btn-secondary full-width md-mb1"
+                    *ngIf="isPublishQuoteEnabled && showSendAndBindAndPublishButtons() && isPublishableWordingVersion" (click)="openPublishQuoteDialog()"
+                    type="button" [disabled]="vm?.isPublished || vm?.state === quoteState.Bound || !isPublishableQuote">
+                Publish Quote
+            </button>
+            <button class="btn btn-secondary full-width md-mb1" *ngIf="vm?.state >= quoteState.Bound" (click)="clickSendPolicy()" type="button">
+                Send Policy
+            </button>
+            <button class="btn btn-secondary full-width md-mb1" *ngIf="vm?.state > quoteState.InProgress && vm?.state < quoteState.Bound"
+                    (click)="clickUpdateQuote()" type="button"
+                    [disabled]="vm?.state < quoteState.Create || vm?.state > quoteState.Saved || vm?.isPublished || currentStep == quoteStep.Coverages || currentStep == quoteStep.Risk">
+                Update Quote
+            </button>
+            <button class="btn btn-secondary full-width md-mb1" *ngIf="vm?.state > quoteState.InProgress && vm?.state < quoteState.Bound"
+                    (click)="clickNewQuote()" type="button" [disabled]="currentStep == quoteStep.Coverages">
+                New Quote
+            </button>
+            <button class="btn btn-secondary full-width md-mb1" *ngIf="vm?.state < quoteState.Bound && isTerrorismProduct && hasBlastZoneCapacity() && showSendAndBindAndPublishButtons()"
+                    (click)="clickUnreserveCapacity()" id="unreserveCapacityButton" type="button">
+                Unreserve Capacity
+            </button>
+        </div>
+    </div>
+    <div class="row rowQuote">
+        <div class="col-md-12 md-mb3">
+            <div *ngIf="vm?.wordingVersionId">
+                <label class="bold md-mr2">Wording</label>
+                <a target="_self" href="{{wordingVersionUrl}}" id="previewWordingBtn"
+                   class="no-underline md-mr2" alt="download" title="Download" (click)="allowNavigation()">
+                    <i class="material-icons">get_app</i>
+                </a>
+                <a alt="preview" title="Preview" data-toggle="modal" data-target="#modalUnderwriterNotes" (click)="openPreviewDocumentDialog(this.previewTypes.wordingDocumentPreview)">
+                    <i class="material-icons">zoom_in</i>
+                </a>
+            </div>
+            <div *ngIf="showDownloadAndPreviewQuoteButtons()">
+                <label class="bold md-mr2">Quote Document</label>
+                <a target="_self" href="document/pdf/quote/{{vm?.quoteReference}}" class="no-underline md-mr2" alt="download" title="Download" (click)="allowNavigation()">
+                    <i class="material-icons">get_app</i>
+                </a>
+                <a alt="preview" title="Preview" data-toggle="modal" data-target="#modalUnderwriterNotes" (click)="openPreviewDocumentDialog(this.previewTypes.quoteDocumentPreview)">
+                    <i class="material-icons">zoom_in</i>
+                </a>
+            </div>
+            <div *ngIf="vm?.policyNumber">
+                <label class="bold md-mr2">Policy Document</label>
+                <a target="_self" href="document/pdf/policy/{{vm?.policyNumber}}" class="no-underline md-mr2" alt="download" title="Download" (click)="allowNavigation()">
+                    <i class="material-icons">get_app</i>
+                </a>
+                <a alt="preview" title="Preview" data-toggle="modal" data-target="#modalUnderwriterNotes" (click)="openPreviewDocumentDialog(this.previewTypes.policyDocumentPreview)">
+                    <i class="material-icons">zoom_in</i>
+                </a>
+            </div>
+            <div>
+                <label class="bold md-mr2">Underwriter Notes</label>
+                <a id="btnUnderWriterNotes" tabindex="20" data-toggle="modal" data-target="#modalUnderwriterNotes" alt="Underwriting Notes" title="Underwriting Notes" (click)="openUnderwriterNotesDialog()">
+                    <i class="material-icons">note_alt</i>
+                </a>
+            </div>
+            <div>
+                <label class="bold md-mr2">Underwriting File</label>
+                <a alt="Underwriting File" title="Underwriting File" (click)="openClientFolder()">
+                    <i class="material-icons">folder_open</i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

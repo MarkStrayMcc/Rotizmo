@@ -1,0 +1,138 @@
+@import "utils/variables";
+
+/*Tab stylings for Quote*/
+.menu-container {
+    width: 100%;
+    list-style: none;
+    position: relative !important;
+    top: 0;
+    right: 0;
+    padding-left: 0px;
+    background-color: $cfc-navy-blue;
+    z-index: 104;
+    /* height: 100%; */
+    -webkit-transform: translate(300px, 0px);
+    -moz-transform: translate(300px, 0px);
+    -o-transform: translate(300px, 0px);
+    transform: translate(300px, 0px);
+    display: block;
+    -webkit-transition: -webkit-transform 0.4s ease;
+    float: left;
+}
+
+.sub-menu-info {
+    float: left;
+    width: 0.01em;
+    text-align: left;
+    margin-top: -7px;
+    color: red;
+}
+
+.error-message {
+    text-align: center;
+    color: red;
+}
+
+.warning-spacing {
+    position: absolute;
+    right: 3px;
+    top: 3px;
+}
+h1 {
+    font-family: Montserrat;
+    font-size: 24px;
+    font-weight: 300;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    color: #01416e;
+    margin-top:10px;
+    margin-bottom:10px;
+}
+
+
+%label-shared {
+    font-family: $font-family;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    color: $cfc-font-black;
+}
+
+:host ::ng-deep .fieldname {
+    @extend %label-shared;
+    font-size: $font-size-h5;
+    font-weight: 600;
+    text-align: right;
+}
+
+:host ::ng-deep .readonly-fieldvalue {
+    @extend %label-shared;
+    font-size: $font-size-h5;
+    font-weight: normal;
+}
+
+@media only screen and (max-width: $desktop-width) {
+    .secondary-menu li > .inactive {
+        cursor: default;
+        width: 162px;
+    }
+}
+
+@media only screen and (max-width: $tablet-width) {
+
+    .sub-menu-step {
+        width: 20px;
+        margin-left: 9px;
+    }
+
+    .sub-menu-title {
+        display: none;
+    }
+
+    .sub-menu-desc {
+        display: none;
+    }
+
+    .secondary-menu li.inactive a {
+        width: 55px !important;
+    }
+
+    .secondary-menu li.active a {
+        width: 162px !important;
+    }
+
+    .secondary-menu li.active a .sub-menu-title {
+        display: block;
+    }
+
+    .secondary-menu li.active a .sub-menu-desc {
+        display: block;
+    }
+
+    :host ::ng-deep .text-right {
+        text-align: left;
+    }
+    :host ::ng-deep .fieldname {
+        @extend %label-shared;
+        font-size: $font-size-h5;
+        font-weight: 600;
+        text-align: left;
+    }
+
+    :host ::ng-deep .readonly-fieldvalue {
+        @extend %label-shared;
+        font-size: $font-size-h5;
+        font-weight: normal;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    footer{
+        width:90%
+    }
+}

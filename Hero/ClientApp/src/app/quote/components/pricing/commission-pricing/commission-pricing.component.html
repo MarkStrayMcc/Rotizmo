@@ -1,0 +1,60 @@
+<div class="col-md-8 hide-invalid" *ngIf="form" [formGroup]="form">
+    <div class="commission-panel md-p3">
+        <div class="row md-p1 md-mb1">
+            <div class="col-xs-12 col-md-4 md-pl3">
+                <label class="text-right">Standard Commission</label>
+                <div class="float-right">
+                    <percentage-input formControlName="originalGrossCommission" [isRequired]="true"
+                        [allowDecimal]="true" [minValue]="0" [maxValue]="99" [readonly]="true">
+                    </percentage-input>
+                </div>
+            </div>
+
+            <div class="col-xs-12 col-md-4 md-pl1">
+                <label class="text-right">Effective Commission</label>
+                <div class="float-right">
+                    <percentage-input formControlName="actualGrossCommission" [isRequired]="true" [allowDecimal]="true"
+                        [minValue]="0" [maxValue]="99" [readonly]="readonly">
+                    </percentage-input>
+                </div>
+            </div>
+
+            <div class="col-xs-12 col-md-4 md-pl1">
+                <label class="text-right">CFC Share</label>
+                <div class="float-right">
+                    <percentage-input formControlName="cfcShare" [isRequired]="true" [allowDecimal]="true"
+                        [minValue]="0" [maxValue]="100" [readonly]="readonly">
+                    </percentage-input>
+                </div>
+            </div>
+        </div>
+
+        <div class="row md-p1">
+            <div class="col-xs-12 col-md-4 md-pl3">
+                <label class="text-right">CFC Fee</label>
+                <div class="float-right">
+                    <error [errorText]="{
+                        required: 'Required',
+                        max: 'Above maximum fee allowed'
+                    }" [formCtrl]="form.controls.fee">
+                        <currency id="cfc-fee" formControlName="fee" [decimals]="true" [currency]="currency" [readonly]="readonly">
+                        </currency>
+                    </error>
+                </div>
+            </div>
+
+            <div class="col-xs-12 col-md-4 md-pl1" *ngIf="this.isBrokerFeeFieldEnabled()">
+                <label class="text-right">Broker Fee</label>
+                <div class="float-right">
+                    <error [errorText]="{
+                        required: 'Required',
+                        max: 'Above maximum fee allowed'
+                    }" [formCtrl]="form.controls.brokerFee">
+                        <currency formControlName="brokerFee" [decimals]="true" [currency]="currency" [readonly]="readonly">
+                        </currency>
+                    </error>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

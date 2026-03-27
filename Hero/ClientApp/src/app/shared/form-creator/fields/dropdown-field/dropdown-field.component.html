@@ -1,0 +1,21 @@
+<ng-container *ngIf="config.enum">
+  <div [formGroup]="formGroup">
+    <error [errorText]="fieldErrors" [formCtrl]="formGroup.get(config.property)">
+      <select class="form-control" class="{{config?.cssClass}}" [formControlName]="config.property">
+        <ng-container>
+          <option *ngFor="let enumProperty of objectKeys(config.enum)" [ngValue]="enumProperty">
+            {{config.enum[enumProperty]}}</option>
+        </ng-container>
+      </select>
+    </error>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="config.requestData">
+  <error [errorText]="fieldErrors" [formCtrl]="formGroup.get(config.property)">
+    <autocomplete-dropdown #ddlDropDownAutoComplete [serverFiltering]="config.serverFiltering"
+      [dataSource]="config.requestData" *ngIf="formGroup" [myControl]="formGroup.get(config.property)"
+      class="{{config?.cssClass}}">
+    </autocomplete-dropdown>
+  </error>
+</ng-container>

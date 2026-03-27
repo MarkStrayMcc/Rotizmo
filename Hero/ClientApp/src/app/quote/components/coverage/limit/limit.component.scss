@@ -1,0 +1,13 @@
+.limit {
+    float: left;
+    width: 100%;
+    margin: 0 0 10px 0;
+}
+
+.limit-field-title {
+    vertical-align: middle;
+    padding-left: 0;
+    &.right{
+        text-align:right;
+    }
+}
