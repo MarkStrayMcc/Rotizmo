@@ -1,0 +1,62 @@
+as a seperate ticket we have been told to add the product Life Sciences and this should mirror the Terrorism product pretty much, i have been told to see if we can reuse the coverage-multiple-locations-upload.component module, however we dont need the blast zone stuff included in that 
+
+  i can upload the wider solution, what we need is something like the TerrorismOrchestrator found in the Hero.Integration.Aspose.MultipleProperties.Terrorism namespace, we need something similar for Life Sciences, also we need to maybe have a base orchestration, floating values etc need to be specific for Life Sciences also if i am to upload the code in txt files, what size limit is there for each file?
+
+    Hero.Integration.Aspose.MultipleProperties.Terrorism.TerrorismOrchestrator
+
+Its responsibilities include:
+
+Combining multiple address/location sheets
+Applying property limit templates
+Managing floating values
+Handling blast zone reservation logic
+Selecting correct limit mappings
+Producing coverage input models for rating engine
+Returning a normalized set of PropertyLimit + floating values
+
+❗ Your Life Sciences product needs:
+
+The same multiple-locations ingestion
+The same limit template machinery
+BUT without Blast Zone logic
+AND with different floating value rules unique to Life Sciences
+
+So the architecture should look like:
+
+⭐ Recommended Architecture (Clean + Extensible)
+Base Orchestrator
+MultiplePropertiesBaseOrchestrator
+Responsible for generic logic:
+
+Load Excel file
+Convert rows → PropertyLimit
+Compute totals
+Handle floating values
+Map to shared PropertyLimitConfig
+Validate the sheet
+Emit standard DTOs
+
+No product-specific behaviour in here.
+
+Terrorism Orchestrator
+TerrorismOrchestrator : MultiplePropertiesBaseOrchestrator
+Overrides:
+
+ProcessLimits() — injects Blast Zone capacity
+ApplyLimitBasis() — sets First Loss vs TIV rules
+PerformBlastZoneCheck()
+ApplyTerrorismSpecificMappings()
+
+
+Life Sciences Orchestrator
+LifeSciencesOrchestrator : MultiplePropertiesBaseOrchestrator
+Overrides:
+
+ProcessLimits() — Life Sciences floating-value logic
+ApplyLimitBasis() — Life Sciences limit behaviour
+ApplyLifeSciencesSpecificMappings()
+
+Importantly:
+❌ No BlastZoneHttpService
+❌ No first-loss enforcement logic unless LS requires it
+❌ No capacity reservation logic
