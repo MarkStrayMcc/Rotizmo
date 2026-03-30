@@ -1,519 +1,147 @@
-using System.Text.RegularExpressions;
-using Aspose.Cells;
-using FluentValidation;
-using Hero.Integration.CoreApi;
-using Hero.Integration.CoreApi.Interfaces;
-using Hero.Integration.Extensions;
-using Hero.Integration.Geolocation;
-using Hero.Integration.PriorSubmit;
-using Hero.Models;
-using Hero.Models.Enums;
-using Hero.Models.Validation;
-using WebApiDto.Enum;
-using ClientLocationProperties = Hero.Models.ClientLocationProperties;
-using PropertyLimit = Hero.Models.PropertyLimit;
-using PropertyLimitFloatingValues = WebApiDto.Dto.PropertyLimitFloatingValues;
-using TemplateConfig = Hero.Integration.Aspose.MultipleProperties.Terrorism.TemplateConfiguration;
+Big picture
 
-namespace Hero.Integration.Aspose.MultipleProperties.Terrorism;
+After introducing BaseMultiplePropertyOrchestrator<TContext>, the split should be:
 
-internal sealed partial class TerrorismOrchestrator : BaseMultiplePropertyOrchestrator<TerrorismUploadContext>
+✅ Base orchestrator handles (generic / reusable):
+
+Stuff that is the same across any property product:
+
+Template validation flow (existence, worksheet checks, etc.)
+Extracting rows from Excel
+Orchestration pipeline:
+Extract rows
+Build domain objects
+Run validation
+Run geolocation
+Call prior submit
+Common geolocation workflow:
+Call geolocation service
+Populate lat/lng
+Handle overridden coordinates logic
+Calling APIs:
+Country API
+Location API
+Returning TemplateUploadResult
+
+👉 Think: “framework” / pipeline
+
+🔥 What TerrorismOrchestrator handles (product-specific)
+
+Everything here is specific to the terrorism insurance product rules and template structure.
+
+1. 📄 Template structure (3 sheets)
+
+Terrorism has a unique Excel shape:
+
+Sheet 1 → Locations
+Sheet 2 → Floating values
+Sheet 3 → First loss limit
+TemplateConfig.GetFloatingValuesColumnConfiguration()
+TemplateConfig.GetFirstLossLimitColumnConfiguration()
+
+👉 This is NOT generic — other products may:
+
+Have different sheets
+No floating values
+Different layouts
+2. 💰 Financial rules (TIV logic)
+_maximumLocationTivValue = 300000000;
+
+Rules like:
+
+Max £300M per location
+Combine:
+TIV (Total Insured Value)
+Floating values
+First loss limit logic
+if ((propertyLimit.TotalInsuredValue + propertyTotalFloatingValues) > _maximumLocationTivValue ...)
+
+👉 This is pure business logic specific to terrorism underwriting
+
+3. 🏙️ Zone A postcode validation (VERY domain-specific)
+IsZoneAAddress(...)
+UK-only logic
+London Zone A postcode detection
+Rooftop precision requirement
+if (isZoneA && isNotRooftopPrecision && !hasSpreadsheetSuppliedLatitudeAndLongitude)
+
+👉 This is:
+
+Geography-specific
+Product-specific
+Regulatory/underwriting-driven
+
+No other product will reuse this.
+
+4. 🏢 Building use validation
+BuildingUseTypes
+Valid enum values
+Case-insensitive handling
+Throws if invalid
+
+👉 This is tied to:
+
+Terrorism risk modelling
+Not a generic location concept
+5. 📊 Floating values logic
+FloatingValuesHasCover(...)
+SetExtractedPropertyFloatingValues(...)
+Contents
+Loss of rent
+ICOW
+Alternative accommodation
+
+👉 This structure is:
+
+Specific to terrorism product pricing
+Not universal across products
+6. 🧾 “No cover” validation
+"No cover has been provided for this location"
+
+Triggered when:
+
+No floating values
+TIV == 0
+
+👉 Again: product rule, not platform rule
+
+7. 🔁 Duplicate address logic
+IdentifyDuplicateAddressKeys(...)
+Address1 + Postcode uniqueness rule
+
+👉 This could be generic, but:
+
+Currently tied to terrorism behaviour
+Might differ per product
+8. 🧩 How PropertyLimit is built
+new PropertyLimit
 {
-    private const string BuildingUseTag = "BuildingUse";
-    private const int Uk = 1;
-    private const int _maximumLocationTivValue = 300000000;
-
-    private readonly ILogger<TerrorismOrchestrator> _logger;
-    private readonly IValidator<FloatingValueValidationRequest> _floatingValueValidator;
-    private readonly Regex _zoneAOutCodeRegex = new(@"[A-Z]+\d+");
-    private readonly IReadOnlyDictionary<int, ExtractorColumnConfiguration> _columnConfigurations;
-
-    public TerrorismOrchestrator(
-        ILogger<TerrorismOrchestrator> logger,
-        ILocationApi locationApi,
-        IAsposeRowExtractor asposeRowExtractor,
-        IAsposeRowInserter asposeRowInserter,
-        IGeolocationService geolocationService,
-        IValidator<LocationValidationRequest> locationValidator,
-        IValidator<FloatingValueValidationRequest> floatingValueValidator,
-        IListOfCountries countries,
-        IReadOnlyDictionary<int, ExtractorColumnConfiguration> columnConfigurations,
-        ITemplateColumnValidator templateColumnValidator,
-        IPriorSubmitApprovalService priorSubmitApprovalService)
-        : base(
-            logger,
-            locationApi,
-            asposeRowExtractor,
-            asposeRowInserter,
-            geolocationService,
-            locationValidator,
-            countries,
-            templateColumnValidator,
-            priorSubmitApprovalService)
-    {
-        _logger = logger;
-        _floatingValueValidator = floatingValueValidator;
-        _columnConfigurations = columnConfigurations;
-    }
-
-    protected override List<ExtractedRow> ExtractLocationRows(Workbook workbook, int wordingVersionId)
-    {
-        return AsposeRowExtractor.ExtractRows(workbook, _columnConfigurations[wordingVersionId]);
-    }
-
-    protected override async Task<TerrorismUploadContext> ExtractContextAsync(
-        Workbook workbook,
-        List<ValidationResult> validationResults)
-    {
-        var floatingValueRows = AsposeRowExtractor.ExtractRows(
-            workbook,
-            TemplateConfig.GetFloatingValuesColumnConfiguration(),
-            1,
-            false);
-
-        var firstLossRows = AsposeRowExtractor.ExtractRows(
-            workbook,
-            TemplateConfig.GetFirstLossLimitColumnConfiguration(),
-            2,
-            false);
-
-        var floatingValues = await SetExtractedPropertyFloatingValues(floatingValueRows, validationResults);
-        var firstLossLimit = SetExtractFirstLossLimit(firstLossRows);
-
-        return new TerrorismUploadContext
-        {
-            FloatingValues = floatingValues,
-            FirstLossLimit = firstLossLimit,
-            HasFloatingValues = FloatingValuesHasCover(floatingValues)
-        };
-    }
-
-    protected override async Task<List<PropertyLimit>> BuildPropertyLimitsAsync(
-        List<ExtractedRow> firstSheetExtractedRows,
-        TerrorismUploadContext context,
-        List<ValidationResult> validationResults)
-    {
-        var propertyLimits = new List<PropertyLimit>();
-        var duplicateAddressKeys = IdentifyDuplicateAddressKeys(firstSheetExtractedRows, CreateLocationRequestFrom);
-
-        foreach (var firstSheetExtractedRow in firstSheetExtractedRows)
-        {
-            var location = CreateLocationRequestFrom(firstSheetExtractedRow);
-
-            if (HasDuplicateAddress(validationResults, location, duplicateAddressKeys, firstSheetExtractedRow))
-                continue;
-
-            if (await HasInvalidLocationValidationAsync(validationResults, location, firstSheetExtractedRow))
-                continue;
-
-            var country = await Countries.GetCountryByName(location.CountryName);
-            CountryNames.TryAdd(country.CountryId, location.CountryName);
-
-            var propertyLimit = new PropertyLimit
-            {
-                InsuredAddress = await CreateClientLocationFrom(
-                    location,
-                    country,
-                    GetStateProvinceCode,
-                    l => new[] { AddNewLocationAttributeFor(l.BuildingUse, BuildingUseTag) }),
-
-                PropertyDamageLimit = firstSheetExtractedRow[TemplateConfig.PropertyDamageLimit]?.IntegerValue ?? 0,
-                ContentsDamageLimit = firstSheetExtractedRow[TemplateConfig.ContentsDamageLimit]?.IntegerValue ?? 0,
-                ActualLossSustainedLimit = firstSheetExtractedRow[TemplateConfig.ActualLossSustainedLimit]?.IntegerValue ?? 0,
-                IncreasedCostOfWorkingLimit = firstSheetExtractedRow[TemplateConfig.IncreasedCostOfWorkingLimit]?.IntegerValue ?? 0,
-                LossOfRentLimit = firstSheetExtractedRow[TemplateConfig.LossOfRentLimit]?.IntegerValue ?? 0,
-                AlternativeAccommodationLimit = firstSheetExtractedRow[TemplateConfig.AlternativeAccommodationLimit]?.IntegerValue ?? 0,
-                StockDamageLimit = 0,
-                RowNumber = firstSheetExtractedRow.RowNumber
-            };
-
-            var propertyTotalFloatingValues = context.HasFloatingValues && context.FloatingValues is not null
-                ? context.FloatingValues.ContentsDamageLimit.GetValueOrDefault()
-                  + context.FloatingValues.ActualLossSustainedLimit.GetValueOrDefault()
-                  + context.FloatingValues.IncreasedCostOfWorkingLimit.GetValueOrDefault()
-                  + context.FloatingValues.LossOfRentLimit.GetValueOrDefault()
-                  + context.FloatingValues.AlternativeAccommodationLimit.GetValueOrDefault()
-                : 0;
-
-            if ((propertyLimit.TotalInsuredValue + propertyTotalFloatingValues) > _maximumLocationTivValue
-                && (context.FirstLossLimit == 0 || context.FirstLossLimit > _maximumLocationTivValue))
-            {
-                validationResults.Add(new ValidationResult
-                {
-                    LocationIdentifier = "Row " + firstSheetExtractedRow.RowNumber,
-                    ValidationAddress = location.ToValidationAddress(),
-                    Errors = new List<FluentValidation.Results.ValidationFailure>
-                    {
-                        new() { ErrorMessage = $"Location maximum limit of £{_maximumLocationTivValue:N0} has been exceeded" }
-                    }
-                });
-                continue;
-            }
-
-            if (!context.HasFloatingValues && propertyLimit.TotalInsuredValue == 0)
-            {
-                validationResults.Add(new ValidationResult
-                {
-                    LocationIdentifier = "Row " + firstSheetExtractedRow.RowNumber,
-                    ValidationAddress = location.ToValidationAddress(),
-                    Errors = new List<FluentValidation.Results.ValidationFailure>
-                    {
-                        new() { ErrorMessage = "No cover has been provided for this location" }
-                    }
-                });
-                continue;
-            }
-
-            propertyLimits.Add(propertyLimit);
-        }
-
-        return propertyLimits;
-    }
-
-    protected override TemplateUploadResult BuildUploadResult(
-        List<PropertyLimit> propertyLimits,
-        TerrorismUploadContext context,
-        List<ValidationResult> validationResults)
-    {
-        return new TemplateUploadResult
-        {
-            PropertyLimits = propertyLimits,
-            ValidationResults = validationResults,
-            PropertyLimitFloatingValues = context.FloatingValues,
-            FirstLossLimitValue = context.FirstLossLimit
-        };
-    }
-
-    protected override (bool isValid, string error) ValidateTemplateColumns(Workbook workbook, int wordingVersionId)
-    {
-        if (!_columnConfigurations.TryGetValue(wordingVersionId, out ExtractorColumnConfiguration? expectedConfig))
-        {
-            LogTemplateConfigNotFound(_logger, wordingVersionId, workbook.FileName);
-            return (false, "Template configuration not found for selected wording version");
-        }
-
-        if (workbook.Worksheets.Count == 0)
-        {
-            LogTemplateHasNoWorksheets(_logger, workbook.FileName);
-            return (false, "Template does not contain any worksheets");
-        }
-
-        return TemplateColumnValidator.Validate(workbook.Worksheets[0], expectedConfig);
-    }
-
-    protected override void ApplyProductSpecificGeolocationRules(
-        WebApiDto.Dto.ClientLocation clientLocation,
-        GeolocationResult geolocationResult,
-        bool hasSpreadsheetSuppliedLatitudeAndLongitude)
-    {
-        var isZoneA = IsZoneAAddress(clientLocation);
-        var isNotRooftopPrecision = geolocationResult.Precision is not "ROOFTOP";
-
-        if (isZoneA && isNotRooftopPrecision && !hasSpreadsheetSuppliedLatitudeAndLongitude)
-        {
-            geolocationResult.ErrorMessage = "Geolocated Zone A address returned does not provide rooftop-level precision";
-            geolocationResult.Success = false;
-        }
-    }
-
-    public override async Task<Workbook> InsertPropertyLimitsIntoWorkbook(
-        Workbook workbook,
-        IEnumerable<WebApiDto.Dto.PropertyLimit> propertyLimits,
-        PropertyLimitFloatingValues propertyLimitFloatingValues,
-        int? firstLossLimit,
-        int wordingVersionId)
-    {
-        var locationExtractorColumnConfiguration = _columnConfigurations[wordingVersionId];
-        var floatingValuesExtractorColumnConfiguration = TemplateConfig.GetFloatingValuesColumnConfiguration();
-        var firstLossLimitExtractorColumnConfiguration = TemplateConfig.GetFirstLossLimitColumnConfiguration();
-
-        List<ExtractedRow> locationRows = new();
-        foreach (var propertyLimit in propertyLimits)
-        {
-            var locationRow = new ExtractedRow();
-            for (int i = 0; i < locationExtractorColumnConfiguration.Columns.Count; i++)
-            {
-                ExtractorColumn column = locationExtractorColumnConfiguration.Columns[i];
-                ExtractedCellValue? extractedCellValue = await GetLocationCellValue(propertyLimit, column);
-                if (extractedCellValue is null)
-                    continue;
-
-                extractedCellValue.ColumnIndex = column.ColumnIndex ?? i;
-                locationRow.CellValues.Add(extractedCellValue);
-            }
-
-            locationRows.Add(locationRow);
-        }
-
-        List<ExtractedRow> floatingValueRows = new();
-        var floatingValueRow = new ExtractedRow();
-        for (int i = 0; i < floatingValuesExtractorColumnConfiguration.Columns.Count; i++)
-        {
-            ExtractorColumn column = floatingValuesExtractorColumnConfiguration.Columns[i];
-            ExtractedCellValue? extractedCellValue = GetFloatingValueCellValue(propertyLimitFloatingValues, column);
-            if (extractedCellValue is null)
-                continue;
-
-            extractedCellValue.ColumnIndex = column.ColumnIndex ?? i;
-            floatingValueRow.CellValues.Add(extractedCellValue);
-        }
-
-        floatingValueRows.Add(floatingValueRow);
-
-        List<ExtractedRow> firstLossValueRows = new();
-        var firstLossValueRow = new ExtractedRow();
-        for (int i = 0; i < firstLossLimitExtractorColumnConfiguration.Columns.Count; i++)
-        {
-            ExtractorColumn column = firstLossLimitExtractorColumnConfiguration.Columns[i];
-            ExtractedCellValue? extractedCellValue = GetFirstLossLimitCellValue(firstLossLimit, column);
-            if (extractedCellValue is null)
-                continue;
-
-            extractedCellValue.ColumnIndex = column.ColumnIndex ?? i;
-            firstLossValueRow.CellValues.Add(extractedCellValue);
-        }
-
-        firstLossValueRows.Add(firstLossValueRow);
-
-        AsposeRowInserter.InsertRows(workbook, locationRows, locationExtractorColumnConfiguration, 0);
-        AsposeRowInserter.InsertRows(workbook, floatingValueRows, floatingValuesExtractorColumnConfiguration, 1);
-        AsposeRowInserter.InsertRows(workbook, firstLossValueRows, firstLossLimitExtractorColumnConfiguration, 2);
-
-        return workbook;
-    }
-
-    private static bool FloatingValuesHasCover(PropertyLimitFloatingValues? floatingValues) =>
-        floatingValues != null && (floatingValues.ActualLossSustainedLimit > 0 ||
-            floatingValues.ContentsDamageLimit > 0 ||
-            floatingValues.IncreasedCostOfWorkingLimit > 0 ||
-            floatingValues.LossOfRentLimit > 0 ||
-            floatingValues.AlternativeAccommodationLimit > 0);
-
-    private static int SetExtractFirstLossLimit(List<ExtractedRow> thirdSheetExtractedRows)
-    {
-        if (thirdSheetExtractedRows?.Count == 0)
-            return 0;
-
-        return thirdSheetExtractedRows.FirstOrDefault()?[TemplateConfig.FirstLossLimit].IntegerValue ?? 0;
-    }
-
-    private async Task<PropertyLimitFloatingValues?> SetExtractedPropertyFloatingValues(
-        List<ExtractedRow> secondSheetExtractedRows,
-        List<ValidationResult> validationResults)
-    {
-        if (secondSheetExtractedRows.Count == 0)
-            return null;
-
-        var secondSheetExtractedRow = secondSheetExtractedRows.FirstOrDefault();
-        var validationResult = await _floatingValueValidator.ValidateAsync(
-            new FloatingValueValidationRequest { ExtractedFloatingValueRow = secondSheetExtractedRow });
-
-        if (!validationResult.IsValid)
-        {
-            validationResults.Add(new ValidationResult
-            {
-                LocationIdentifier = "Floating Values",
-                ValidationAddress = "",
-                Errors = validationResult.Errors
-            });
-        }
-
-        var propertyFloatingValues = new PropertyLimitFloatingValues
-        {
-            ContentsDamageLimit = secondSheetExtractedRow[TemplateConfig.ContentsDamageLimit].IntegerValue ?? 0,
-            ActualLossSustainedLimit = secondSheetExtractedRow[TemplateConfig.ActualLossSustainedLimit].IntegerValue ?? 0,
-            IncreasedCostOfWorkingLimit = secondSheetExtractedRow[TemplateConfig.IncreasedCostOfWorkingLimit].IntegerValue ?? 0,
-            LossOfRentLimit = secondSheetExtractedRow[TemplateConfig.LossOfRentLimit].IntegerValue ?? 0,
-            AlternativeAccommodationLimit = secondSheetExtractedRow[TemplateConfig.AlternativeAccommodationLimit].IntegerValue ?? 0,
-        };
-
-        return propertyFloatingValues;
-    }
-
-    private static LocationValidationRequest CreateLocationRequestFrom(ExtractedRow extractedRow)
-    {
-        var row = extractedRow;
-
-        return new LocationValidationRequest
-        {
-            CountryName = row[TemplateConfig.Country].StringValue,
-            Address1 = row[TemplateConfig.AddressLine1].StringValue,
-            Address2 = row[TemplateConfig.AddressLine2].StringValue,
-            Address3 = null,
-            City = row[TemplateConfig.TownOrCity].StringValue,
-            County = row[TemplateConfig.County].StringValue,
-            StateProvince = row[TemplateConfig.StateOrProvince].StringValue,
-            Postcode = row[TemplateConfig.PostCode].StringValue,
-            Latitude = row[TemplateConfig.Latitude].DoubleValue,
-            Longitude = row[TemplateConfig.Longitude].DoubleValue,
-            BuildingUse = row[TemplateConfig.BuildingUse].StringValue
-        };
-    }
-
-    private static ClientLocationProperties? AddNewLocationAttributeFor(string locationAttributeValue, string tag)
-    {
-        if (string.IsNullOrEmpty(locationAttributeValue))
-            return null;
-
-        var buildingUse = locationAttributeValue.Trim().ToUpperInvariant();
-        if (Enum.IsDefined(typeof(BuildingUseTypes), buildingUse))
-        {
-            return new ClientLocationProperties
-            {
-                Tag = tag,
-                Value = buildingUse
-            };
-        }
-
-        throw new InvalidBuildingUseException(
-            $"{buildingUse} is invalid. Please use a value from {nameof(BuildingUseTypes)}");
-    }
-
-    private async Task<ExtractedCellValue?> GetLocationCellValue(WebApiDto.Dto.PropertyLimit propertyLimit, ExtractorColumn column)
-    {
-        ExtractedCellValue cellValue = new();
-        cellValue.ColumnName = column.ColumnName;
-
-        switch (column.ColumnName)
-        {
-            case TemplateConfig.ContentsDamageLimit:
-                cellValue.IntegerValue = propertyLimit.ContentsDamageLimit;
-                break;
-            case TemplateConfig.PropertyDamageLimit:
-                cellValue.IntegerValue = propertyLimit.PropertyDamageLimit;
-                break;
-            case TemplateConfig.LossOfRentLimit:
-                cellValue.IntegerValue = propertyLimit.LossOfRentLimit;
-                break;
-            case TemplateConfig.ActualLossSustainedLimit:
-                cellValue.IntegerValue = propertyLimit.ActualLossSustainedLimit;
-                break;
-            case TemplateConfig.IncreasedCostOfWorkingLimit:
-                cellValue.IntegerValue = propertyLimit.IncreasedCostOfWorkingLimit;
-                break;
-            case TemplateConfig.AlternativeAccommodationLimit:
-                cellValue.IntegerValue = propertyLimit.AlternativeAccommodationLimit;
-                break;
-            case TemplateConfig.Latitude:
-                cellValue.DoubleValue = propertyLimit.InsuredAddress.OverriddenLatitude ?? propertyLimit.InsuredAddress.Latitude;
-                break;
-            case TemplateConfig.Longitude:
-                cellValue.DoubleValue = propertyLimit.InsuredAddress.OverriddenLongitude ?? propertyLimit.InsuredAddress.Longitude;
-                break;
-            case TemplateConfig.Country:
-                cellValue.StringValue = propertyLimit.InsuredAddress.Country.Name;
-                break;
-            case TemplateConfig.County:
-                cellValue.StringValue = propertyLimit.InsuredAddress.County;
-                break;
-            case TemplateConfig.TownOrCity:
-                cellValue.StringValue = propertyLimit.InsuredAddress.City;
-                break;
-            case TemplateConfig.AddressLine1:
-                cellValue.StringValue = propertyLimit.InsuredAddress.Address1;
-                break;
-            case TemplateConfig.AddressLine2:
-                cellValue.StringValue = propertyLimit.InsuredAddress.Address2;
-                break;
-            case TemplateConfig.BuildingUse:
-                cellValue.StringValue = propertyLimit.InsuredAddress.ClientLocationProperties
-                    .FirstOrDefault(property => property.Tag == BuildingUseTag)?.Value;
-                break;
-            case TemplateConfig.PostCode:
-                cellValue.StringValue = propertyLimit.InsuredAddress.Postcode;
-                break;
-            case TemplateConfig.StateOrProvince:
-                var stateProvinceName = await GetStateProvinceName(
-                    propertyLimit.InsuredAddress.StateProvinceCode,
-                    propertyLimit.InsuredAddress.Country.IsoCode);
-                cellValue.StringValue = stateProvinceName;
-                break;
-            default:
-                return null;
-        }
-
-        return cellValue;
-    }
-
-    private static ExtractedCellValue? GetFloatingValueCellValue(
-        PropertyLimitFloatingValues propertyLimitFloatingValues,
-        ExtractorColumn column)
-    {
-        ExtractedCellValue cellValue = new();
-        cellValue.ColumnName = column.ColumnName;
-
-        switch (column.ColumnName)
-        {
-            case TemplateConfig.ContentsDamageLimit:
-                cellValue.IntegerValue = propertyLimitFloatingValues.ContentsDamageLimit;
-                break;
-            case TemplateConfig.LossOfRentLimit:
-                cellValue.IntegerValue = propertyLimitFloatingValues.LossOfRentLimit;
-                break;
-            case TemplateConfig.ActualLossSustainedLimit:
-                cellValue.IntegerValue = propertyLimitFloatingValues.ActualLossSustainedLimit;
-                break;
-            case TemplateConfig.IncreasedCostOfWorkingLimit:
-                cellValue.IntegerValue = propertyLimitFloatingValues.IncreasedCostOfWorkingLimit;
-                break;
-            case TemplateConfig.AlternativeAccommodationLimit:
-                cellValue.IntegerValue = propertyLimitFloatingValues.AlternativeAccommodationLimit;
-                break;
-            default:
-                return null;
-        }
-
-        return cellValue;
-    }
-
-    private static ExtractedCellValue? GetFirstLossLimitCellValue(int? firstLossLimit, ExtractorColumn column)
-    {
-        ExtractedCellValue cellValue = new();
-        cellValue.ColumnName = column.ColumnName;
-
-        switch (column.ColumnName)
-        {
-            case TemplateConfig.FirstLossLimit:
-                cellValue.IntegerValue = firstLossLimit;
-                break;
-            default:
-                return null;
-        }
-
-        return cellValue;
-    }
-
-    private bool IsZoneAAddress(WebApiDto.Dto.ClientLocation clientLocation)
-    {
-        if (clientLocation.CountryId != Uk)
-        {
-            return false;
-        }
-
-        var whitespaceRemovedPostcode = clientLocation.Postcode.RemoveWhitespace().ToUpperInvariant();
-        var ukInCodeLength = 3;
-        var ukPostCodeLength = 5;
-        var outCode = whitespaceRemovedPostcode.Length >= ukPostCodeLength
-            ? whitespaceRemovedPostcode[..^ukInCodeLength]
-            : whitespaceRemovedPostcode;
-
-        var outCodeTrailingAlphabeticalCharacterRemoved =
-            _zoneAOutCodeRegex.IsMatch(outCode)
-                ? _zoneAOutCodeRegex.Matches(outCode).Single().Value
-                : string.Empty;
-
-        return LondonZoneAPostCodes.PostCodes.Contains(outCodeTrailingAlphabeticalCharacterRemoved);
-    }
-
-    [LoggerMessage(
-        EventId = 0,
-        Level = LogLevel.Error,
-        Message = "Template column configuration not found for wording version {WordingVersionId}; filename: {TemplateFilename}")]
-    static partial void LogTemplateConfigNotFound(ILogger logger, int wordingVersionId, string templateFilename);
-
-    [LoggerMessage(
-        EventId = 1,
-        Level = LogLevel.Error,
-        Message = "Template does not contain any worksheets; filename: {TemplateFilename}")]
-    static partial void LogTemplateHasNoWorksheets(ILogger logger, string templateFilename);
+    PropertyDamageLimit = ...
+    ContentsDamageLimit = ...
+    ...
 }
+
+👉 Mapping from spreadsheet → domain model is:
+
+Template-specific
+Product-specific
+🧠 The clean mental model
+Base class = “HOW”
+
+How do we process a spreadsheet?
+
+Extract
+Validate
+Geolocate
+Return result
+Terrorism orchestrator = “WHAT”
+
+What does terrorism actually mean?
+
+What columns exist
+What rules apply
+What validations matter
+What constitutes an error
+💬 One-liner you can use in standup/review
+
+“The base orchestrator now handles the generic pipeline — extraction, validation, geolocation — while the TerrorismOrchestrator focuses purely on terrorism-specific rules like Zone A validation, TIV limits, and the multi-sheet template structure.”
