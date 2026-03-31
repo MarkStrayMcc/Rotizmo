@@ -1,48 +1,28 @@
-when i debug i get 
-System.NullReferenceException
-  HResult=0x80004003
-  Message=Object reference not set to an instance of an object.
-  Source=Hero
-  StackTrace:
-   at Hero.Integration.Aspose.MultipleProperties.BaseMultiplePropertyOrchestrator`1.<>c__DisplayClass26_0.<ProcessGeolocationForAddresses>b__0(PropertyLimit limit) in C:\Users\mmccormick\source\repos\hero\Hero\Integration\Aspose\MultipleProperties\BaseMultiplePropertyOrchestrator.cs:line 238
-
 using Aspose.Cells;
 using FluentValidation;
 using Hero.Integration.Aspose;
+using Hero.Integration.Aspose.MultipleProperties;
 using Hero.Integration.CoreApi;
 using Hero.Integration.CoreApi.Interfaces;
 using Hero.Integration.Geolocation;
 using Hero.Integration.PriorSubmit;
 using Hero.Models;
-using Hero.Models.Extensions;
-using Hero.Models.Geolocation;
 using Hero.Models.Validation;
-using WebApiDto.Dto;
+using Microsoft.Extensions.Logging;
+using ValidationResult = Hero.Models.Validation.ValidationResult;
 using PropertyLimit = Hero.Models.PropertyLimit;
-using ClientLocation = WebApiDto.Dto.ClientLocation;
-using ClientLocationProperties = WebApiDto.Dto.ClientLocationProperties;
-using Country = WebApiDto.Dto.Country;
+using PropertyLimitFloatingValues = WebApiDto.Dto.PropertyLimitFloatingValues;
 
-namespace Hero.Integration.Aspose.MultipleProperties;
+namespace Hero.Tests.PropertyTemplate;
 
-internal abstract class BaseMultiplePropertyOrchestrator<TContext> : IMultiplePropertyOrchestrator
+internal sealed class TestMultiplePropertyOrchestrator : BaseMultiplePropertyOrchestrator<TestUploadContext>
 {
-    protected const string FormattedAddressTag = "FormattedAddress";
-    protected const double Tolerance = 0.00001; // ~1.1m accuracy
+    public (bool isValid, string error) TemplateValidationResult { get; set; } = (true, string.Empty);
+    public List<ExtractedRow> LocationRows { get; set; } = new();
+    public TestUploadContext ContextToReturn { get; set; } = new();
+    public List<PropertyLimit> PropertyLimitsToReturn { get; set; } = new();
 
-    protected readonly ILogger Logger;
-    protected readonly ILocationApi LocationApi;
-    protected readonly IAsposeRowExtractor AsposeRowExtractor;
-    protected readonly IAsposeRowInserter AsposeRowInserter;
-    protected readonly IGeolocationService GeolocationService;
-    protected readonly IValidator<LocationValidationRequest> LocationValidator;
-    protected readonly IListOfCountries Countries;
-    protected readonly ITemplateColumnValidator TemplateColumnValidator;
-    protected readonly IPriorSubmitApprovalService PriorSubmitApprovalService;
-
-    protected Dictionary<int, string> CountryNames = new();
-
-    protected BaseMultiplePropertyOrchestrator(
+    internal TestMultiplePropertyOrchestrator(
         ILogger logger,
         ILocationApi locationApi,
         IAsposeRowExtractor asposeRowExtractor,
@@ -52,371 +32,410 @@ internal abstract class BaseMultiplePropertyOrchestrator<TContext> : IMultiplePr
         IListOfCountries countries,
         ITemplateColumnValidator templateColumnValidator,
         IPriorSubmitApprovalService priorSubmitApprovalService)
+        : base(
+            logger,
+            locationApi,
+            asposeRowExtractor,
+            asposeRowInserter,
+            geolocationService,
+            locationValidator,
+            countries,
+            templateColumnValidator,
+            priorSubmitApprovalService)
     {
-        Logger = logger;
-        LocationApi = locationApi;
-        AsposeRowExtractor = asposeRowExtractor;
-        AsposeRowInserter = asposeRowInserter;
-        GeolocationService = geolocationService;
-        LocationValidator = locationValidator;
-        Countries = countries;
-        TemplateColumnValidator = templateColumnValidator;
-        PriorSubmitApprovalService = priorSubmitApprovalService;
     }
 
-    public async Task<TemplateUploadResult> GetPropertyLimitsAsync(Workbook workbook, int clientId, int wordingVersionId)
+    protected override (bool isValid, string error) ValidateTemplateColumns(Workbook workbook, int wordingVersionId)
+        => TemplateValidationResult;
+
+    protected override List<ExtractedRow> ExtractLocationRows(Workbook workbook, int wordingVersionId)
+        => LocationRows;
+
+    protected override Task<TestUploadContext> ExtractContextAsync(
+        Workbook workbook,
+        List<ValidationResult> validationResults)
+        => Task.FromResult(ContextToReturn);
+
+    protected override Task<List<PropertyLimit>> BuildPropertyLimitsAsync(
+        List<ExtractedRow> locationRows,
+        TestUploadContext context,
+        List<ValidationResult> validationResults)
+        => Task.FromResult(PropertyLimitsToReturn);
+
+    protected override TemplateUploadResult BuildUploadResult(
+        List<PropertyLimit> propertyLimits,
+        TestUploadContext context,
+        List<ValidationResult> validationResults)
     {
-        var (isValid, error) = ValidateTemplateColumns(workbook, wordingVersionId);
-        if (!isValid)
+        return new TemplateUploadResult
         {
-            return new TemplateUploadResult
-            {
-                TemplateValidationError = error
-            };
-        }
-
-        CountryNames = new Dictionary<int, string>();
-        var validationResults = new List<ValidationResult>();
-
-        var locationRows = ExtractLocationRows(workbook, wordingVersionId);
-        var context = await ExtractContextAsync(workbook, validationResults);
-        var propertyLimits = await BuildPropertyLimitsAsync(locationRows, context, validationResults);
-
-        await ProcessGeolocationForAddresses(propertyLimits, clientId, validationResults);
-        await PriorSubmitApprovalService.EvaluateLocationsAsync(propertyLimits);
-
-        return BuildUploadResult(propertyLimits, context, validationResults);
+            PropertyLimits = propertyLimits,
+            ValidationResults = validationResults
+        };
     }
 
-    public abstract Task<Workbook> InsertPropertyLimitsIntoWorkbook(
+    public override Task<Workbook> InsertPropertyLimitsIntoWorkbook(
         Workbook workbook,
         IEnumerable<WebApiDto.Dto.PropertyLimit> propertyLimits,
         PropertyLimitFloatingValues propertyLimitFloatingValues,
         int? firstLossLimit,
-        int wordingVersionId);
+        int wordingVersionId)
+    {
+        return Task.FromResult(workbook);
+    }
 
-    protected abstract (bool isValid, string error) ValidateTemplateColumns(Workbook workbook, int wordingVersionId);
-
-    protected abstract List<ExtractedRow> ExtractLocationRows(Workbook workbook, int wordingVersionId);
-
-    protected abstract Task<TContext> ExtractContextAsync(Workbook workbook, List<ValidationResult> validationResults);
-
-    protected abstract Task<List<PropertyLimit>> BuildPropertyLimitsAsync(
-        List<ExtractedRow> locationRows,
-        TContext context,
-        List<ValidationResult> validationResults);
-
-    protected abstract TemplateUploadResult BuildUploadResult(
-        List<PropertyLimit> propertyLimits,
-        TContext context,
-        List<ValidationResult> validationResults);
-
-    protected async Task<bool> HasInvalidLocationValidationAsync(
+    public Task<bool> CallHasInvalidLocationValidationAsync(
         List<ValidationResult> validationResults,
         LocationValidationRequest location,
         ExtractedRow row)
-    {
-        var validationResult = await LocationValidator.ValidateAsync(location);
+        => HasInvalidLocationValidationAsync(validationResults, location, row);
 
-        if (validationResult.IsValid)
-            return false;
+    public static HashSet<string> CallIdentifyDuplicateAddressKeys(List<ExtractedRow> rows)
+        => IdentifyDuplicateAddressKeys(rows, CreateLocationRequestFrom);
 
-        validationResults.Add(new ValidationResult
-        {
-            LocationIdentifier = "Row " + row.RowNumber,
-            ValidationAddress = location.ToValidationAddress(),
-            Errors = validationResult.Errors
-        });
-
-        return true;
-    }
-
-    protected static HashSet<string> IdentifyDuplicateAddressKeys(
-        List<ExtractedRow> rows,
-        Func<ExtractedRow, LocationValidationRequest> createLocationRequest)
-    {
-        var addressKeyToRows = new Dictionary<string, List<ExtractedRow>>(StringComparer.OrdinalIgnoreCase);
-
-        foreach (var row in rows)
-        {
-            var location = createLocationRequest(row);
-            var addressKey = $"{location.Address1?.Trim().ToUpperInvariant()}|{location.Postcode?.Trim().ToUpperInvariant()}";
-
-            if (!addressKeyToRows.ContainsKey(addressKey))
-            {
-                addressKeyToRows[addressKey] = new List<ExtractedRow>();
-            }
-
-            addressKeyToRows[addressKey].Add(row);
-        }
-
-        return addressKeyToRows
-            .Where(x => x.Value.Count > 1)
-            .Select(x => x.Key)
-            .ToHashSet(StringComparer.OrdinalIgnoreCase);
-    }
-
-    protected static bool HasDuplicateAddress(
+    public static bool CallHasDuplicateAddress(
         List<ValidationResult> validationResults,
         LocationValidationRequest location,
-        HashSet<string> duplicateAddressKeys,
+        HashSet<string> duplicateKeys,
         ExtractedRow row)
+        => HasDuplicateAddress(validationResults, location, duplicateKeys, row);
+
+    private static LocationValidationRequest CreateLocationRequestFrom(ExtractedRow row)
     {
-        var addressKey = $"{location.Address1?.Trim().ToUpperInvariant()}|{location.Postcode?.Trim().ToUpperInvariant()}";
-
-        if (!duplicateAddressKeys.Contains(addressKey))
-            return false;
-
-        validationResults.Add(new ValidationResult
+        return new LocationValidationRequest
         {
-            LocationIdentifier = "Row " + row.RowNumber,
-            ValidationAddress = location.ToValidationAddress(),
-            Errors = new List<FluentValidation.Results.ValidationFailure>
-            {
-                new() { ErrorMessage = $"Duplicate address found for {location.Address1}, {location.Postcode}" }
-            }
-        });
-
-        return true;
-    }
-
-    protected async Task<ClientLocation> CreateClientLocationFrom(
-        LocationValidationRequest location,
-        Country country,
-        Func<string?, string, Task<string?>> getStateProvinceCode,
-        Func<LocationValidationRequest, IEnumerable<ClientLocationProperties?>> getLocationProperties)
-    {
-        var stateProvinceCode = await getStateProvinceCode(location.StateProvince, country.IsoCode);
-
-        var insuredAddress = new Hero.Models.ClientLocation
-        {
-            StateProvinceCode = stateProvinceCode,
-            CountryId = country.CountryId,
-            Address1 = location.Address1,
-            Address2 = location.Address2,
-            City = location.City,
-            County = location.County,
-            Postcode = location.Postcode,
-            ClientLocationProperties = getLocationProperties(location)
-                .Where(x => x is not null)
-                .Cast<ClientLocationProperties>()
-                .ToList()
+            Address1 = row["AddressLine1"]?.StringValue,
+            Postcode = row["PostCode"]?.StringValue,
+            City = row["TownOrCity"]?.StringValue,
+            CountryName = row["Country"]?.StringValue
         };
+    }
 
-        if (location.Latitude != null && location.Longitude != null)
+    public static ExtractedRow CreateRow(string address1, string postcode, int rowNumber)
+    {
+        return new ExtractedRow
         {
-            insuredAddress.OverriddenLatitude = location.Latitude;
-            insuredAddress.OverriddenLongitude = location.Longitude;
-        }
-
-        return insuredAddress;
-    }
-
-    protected async Task<string?> GetStateProvinceCode(string? stateProvinceName, string countryCode)
-    {
-        if (string.IsNullOrEmpty(stateProvinceName))
-            return null;
-
-        var stateProvinceList = await LocationApi.GetCountryStates(countryCode);
-        return stateProvinceList.First(sp => sp.Description == stateProvinceName).StateProvinceCode;
-    }
-
-    protected async Task<string?> GetStateProvinceName(string? stateProvinceCode, string countryCode)
-    {
-        if (string.IsNullOrEmpty(stateProvinceCode))
-            return null;
-
-        var stateProvinceList = await LocationApi.GetCountryStates(countryCode);
-        return stateProvinceList.First(sp => sp.StateProvinceCode == stateProvinceCode).Description;
-    }
-
-    protected async Task ProcessGeolocationForAddresses(
-        IReadOnlyCollection<PropertyLimit> propertyLimits,
-        int clientId,
-        List<ValidationResult> validationResults)
-    {
-        if (propertyLimits.Count == 0)
-            return;
-
-        var clientLocations = await GetLatestDistinctClientLocations(clientId);
-        var geolocatedClientLocations = await GeolocateClientLocations(clientLocations);
-
-        var propertyLimitGeolocationResults = await Task.WhenAll(
-            propertyLimits.Select(limit =>
-                GeolocateClientLocation(
-                    limit.InsuredAddress,
-                    isNewAddress: true,
-                    validationAddress: ClientLocationExtensions.ToValidationAddress(
-                        limit.InsuredAddress.Address1,
-                        limit.InsuredAddress.City,
-                        limit.InsuredAddress.StateProvinceCode,
-                        limit.InsuredAddress.Postcode,
-                        string.Empty),
-                    rowNumber: limit.RowNumber,
-                    validationResults: validationResults)));
-
-        UpdatePropertyLimitsWithGeolocationResults(propertyLimits, propertyLimitGeolocationResults);
-
-        if (geolocatedClientLocations.Count > 0)
-        {
-            UpdatePropertyLimitsWithClientLocationData(
-                propertyLimits,
-                propertyLimitGeolocationResults,
-                geolocatedClientLocations);
-        }
-    }
-
-    protected virtual void ApplyProductSpecificGeolocationRules(
-        ClientLocation clientLocation,
-        GeolocationResult geolocationResult,
-        bool hasSpreadsheetSuppliedLatitudeAndLongitude)
-    {
-    }
-
-    private async Task<List<ClientLocation>> GetLatestDistinctClientLocations(int clientId)
-    {
-        var clientLocations = await LocationApi.GetAsync(clientId);
-
-        return clientLocations
-            .OrderByDescending(x => x.ClientLocationId)
-            .DistinctBy(x => x.ToFullAddress(CountryNames))
-            .ToList();
-    }
-
-    private async Task<Dictionary<GeolocationResult, ClientLocation>> GeolocateClientLocations(List<ClientLocation> clientLocations)
-    {
-        if (clientLocations.Count == 0)
-            return new Dictionary<GeolocationResult, ClientLocation>();
-
-        var clientLocationGeoLocationResults = await Task.WhenAll(
-            clientLocations.Select(location => GeolocateClientLocation(location, isNewAddress: false)));
-
-        return clientLocations.ToDictionary(
-            clientLocation => clientLocationGeoLocationResults.First(r => r.QueriedAddress == clientLocation.ToFullAddress(CountryNames)),
-            clientLocation => clientLocation);
-    }
-
-    private async Task<GeolocationResult> GeolocateClientLocation(
-        ClientLocation clientLocation,
-        bool isNewAddress,
-        string? validationAddress = null,
-        int rowNumber = 0,
-        List<ValidationResult>? validationResults = null)
-    {
-        var clientLocationAddress = clientLocation.ToFullAddress(CountryNames);
-        var geolocationResult = await GeolocationService.GetAsync(clientLocationAddress);
-
-        var hasSpreadsheetSuppliedLatitudeAndLongitude =
-            clientLocation.OverriddenLatitude.HasValue &&
-            clientLocation.OverriddenLongitude.HasValue;
-
-        ApplyProductSpecificGeolocationRules(
-            clientLocation,
-            geolocationResult,
-            hasSpreadsheetSuppliedLatitudeAndLongitude);
-
-        if (isNewAddress &&
-            !hasSpreadsheetSuppliedLatitudeAndLongitude &&
-            !string.IsNullOrWhiteSpace(geolocationResult.ErrorMessage) &&
-            validationResults is not null)
-        {
-            validationResults.Add(new ValidationResult
+            RowNumber = rowNumber,
+            CellValues = new List<ExtractedCellValue>
             {
-                LocationIdentifier = "Row " + rowNumber,
-                ValidationAddress = validationAddress ?? string.Empty,
-                Errors = new List<FluentValidation.Results.ValidationFailure>
-                {
-                    new() { ErrorMessage = geolocationResult.ErrorMessage }
-                }
-            });
-        }
-
-        geolocationResult.AddressLine1 = clientLocation.Address1;
-
-        return geolocationResult;
-    }
-
-    private void UpdatePropertyLimitsWithGeolocationResults(
-        IReadOnlyCollection<PropertyLimit> propertyLimits,
-        IEnumerable<GeolocationResult> geolocationResults)
-    {
-        foreach (var result in geolocationResults.Where(r => r.Success))
-        {
-            var matchedPropertyLimits = propertyLimits.Where(pl =>
-                pl.InsuredAddress.ToFullAddress(CountryNames) == result.QueriedAddress);
-
-            foreach (var propertyLimit in matchedPropertyLimits)
-            {
-                propertyLimit.InsuredAddress.Latitude = result.Latitude;
-                propertyLimit.InsuredAddress.Longitude = result.Longitude;
-                propertyLimit.InsuredAddress.Precision = result.Precision;
-
-                ClearOverriddenCoordinatesIfTheyMatchGoogleApiGeolocation(propertyLimit.InsuredAddress, result);
-
-                if (!string.IsNullOrWhiteSpace(result.FormattedAddress))
-                {
-                    var properties = propertyLimit.InsuredAddress.ClientLocationProperties.ToList();
-                    properties.Add(new ClientLocationProperties
-                    {
-                        Tag = FormattedAddressTag,
-                        Value = result.FormattedAddress
-                    });
-
-                    propertyLimit.InsuredAddress.ClientLocationProperties = properties;
-                }
+                new() { ColumnName = "AddressLine1", StringValue = address1 },
+                new() { ColumnName = "PostCode", StringValue = postcode },
+                new() { ColumnName = "TownOrCity", StringValue = "London" },
+                new() { ColumnName = "Country", StringValue = "UK" }
             }
-        }
-    }
-
-    private void UpdatePropertyLimitsWithClientLocationData(
-        IReadOnlyCollection<PropertyLimit> propertyLimits,
-        IEnumerable<GeolocationResult> geolocationResults,
-        Dictionary<GeolocationResult, ClientLocation> geolocatedClientLocations)
-    {
-        foreach (var geolocationResult in geolocationResults)
-        {
-            var matchedExistingLocation = geolocatedClientLocations.FirstOrDefault(x =>
-                x.Key.FormattedAddress == geolocationResult.FormattedAddress &&
-                x.Value.Address1 == geolocationResult.AddressLine1);
-
-            if (matchedExistingLocation.Value is null)
-                continue;
-
-            var propertyLimit = propertyLimits.First(pl =>
-                pl.InsuredAddress.ToFullAddress(CountryNames) == geolocationResult.QueriedAddress);
-
-            if (IsGeolocationConflict(matchedExistingLocation.Value, propertyLimit))
-                continue;
-
-            propertyLimit.InsuredAddress.ClientLocationId = matchedExistingLocation.Value.ClientLocationId;
-        }
-    }
-
-    private static bool IsGeolocationConflict(ClientLocation existingLocation, PropertyLimit propertyLimit)
-    {
-        if (existingLocation.Latitude is null && existingLocation.Longitude is null)
-            return false;
-
-        return existingLocation.Latitude != propertyLimit.InsuredAddress.Latitude ||
-               existingLocation.Longitude != propertyLimit.InsuredAddress.Longitude;
-    }
-
-    private static void ClearOverriddenCoordinatesIfTheyMatchGoogleApiGeolocation(
-        ClientLocation insuredAddress,
-        GeolocationResult result)
-    {
-        if (insuredAddress.OverriddenLatitude.HasValue &&
-            insuredAddress.OverriddenLongitude.HasValue &&
-            CoordinatesAreEqual(insuredAddress.OverriddenLatitude.Value, result.Latitude) &&
-            CoordinatesAreEqual(insuredAddress.OverriddenLongitude.Value, result.Longitude))
-        {
-            insuredAddress.OverriddenLatitude = null;
-            insuredAddress.OverriddenLongitude = null;
-        }
-    }
-
-    private static bool CoordinatesAreEqual(double coordinate1, double coordinate2)
-    {
-        return Math.Abs(coordinate1 - coordinate2) < Tolerance;
+        };
     }
 }
+
+internal sealed class TestUploadContext
+{
+}
+
+using Aspose.Cells;
+using FluentAssertions;
+using FluentValidation;
+using FluentValidation.Results;
+using Hero.Integration.Aspose;
+using Hero.Integration.Aspose.MultipleProperties;
+using Hero.Integration.CoreApi;
+using Hero.Integration.CoreApi.Interfaces;
+using Hero.Integration.Geolocation;
+using Hero.Integration.PriorSubmit;
+using Hero.Models;
+using Hero.Models.Validation;
+using Microsoft.Extensions.Logging;
+using NSubstitute;
+using NUnit.Framework;
+using WebApiDto.Dto;
+using ValidationResult = Hero.Models.Validation.ValidationResult;
+using PropertyLimit = Hero.Models.PropertyLimit;
+
+namespace Hero.Tests.PropertyTemplate;
+
+[TestFixture]
+public class BaseMultiplePropertyOrchestratorTests
+{
+    private ILogger _logger;
+    private ILocationApi _locationApi;
+    private IAsposeRowExtractor _rowExtractor;
+    private IAsposeRowInserter _rowInserter;
+    private IGeolocationService _geolocationService;
+    private IValidator<LocationValidationRequest> _locationValidator;
+    private IListOfCountries _countries;
+    private ITemplateColumnValidator _templateColumnValidator;
+    private IPriorSubmitApprovalService _priorSubmitApprovalService;
+
+    private TestMultiplePropertyOrchestrator _subject;
+    private Workbook _workbook;
+
+    [SetUp]
+    public void SetUp()
+    {
+        _logger = Substitute.For<ILogger>();
+        _locationApi = Substitute.For<ILocationApi>();
+        _rowExtractor = Substitute.For<IAsposeRowExtractor>();
+        _rowInserter = Substitute.For<IAsposeRowInserter>();
+        _geolocationService = Substitute.For<IGeolocationService>();
+        _locationValidator = Substitute.For<IValidator<LocationValidationRequest>>();
+        _countries = Substitute.For<IListOfCountries>();
+        _templateColumnValidator = Substitute.For<ITemplateColumnValidator>();
+        _priorSubmitApprovalService = Substitute.For<IPriorSubmitApprovalService>();
+
+        _workbook = new Workbook();
+
+        _subject = new TestMultiplePropertyOrchestrator(
+            _logger,
+            _locationApi,
+            _rowExtractor,
+            _rowInserter,
+            _geolocationService,
+            _locationValidator,
+            _countries,
+            _templateColumnValidator,
+            _priorSubmitApprovalService);
+
+        _locationValidator
+            .ValidateAsync(Arg.Any<LocationValidationRequest>())
+            .Returns(new FluentValidation.Results.ValidationResult());
+
+        _priorSubmitApprovalService
+            .EvaluateLocationsAsync(Arg.Any<IList<PropertyLimit>>())
+            .Returns(Task.CompletedTask);
+
+        _locationApi.GetAsync(Arg.Any<int>())
+            .Returns(Task.FromResult(new List<WebApiDto.Dto.ClientLocation>()));
+    }
+
+    [TearDown]
+    public void TearDown()
+    {
+        _workbook.Dispose();
+    }
+
+    [Test]
+    public async Task GivenTemplateValidationFails_WhenIGetPropertyLimits_ThenTemplateValidationErrorIsReturned()
+    {
+        // Arrange
+        _subject.TemplateValidationResult = (false, "Bad template");
+
+        // Act
+        var result = await _subject.GetPropertyLimitsAsync(_workbook, 123, 1);
+
+        // Assert
+        result.TemplateValidationError.Should().Be("Bad template");
+        result.PropertyLimits.Should().BeNull();
+        result.ValidationResults.Should().BeNull();
+
+        _rowExtractor.DidNotReceive()
+            .ExtractRows(Arg.Any<Workbook>(), Arg.Any<ExtractorColumnConfiguration>(), Arg.Any<int>(), Arg.Any<bool>());
+
+        await _priorSubmitApprovalService.DidNotReceive()
+            .EvaluateLocationsAsync(Arg.Any<IList<PropertyLimit>>());
+    }
+
+    [Test]
+    public async Task GivenTemplateValidationSucceeds_WhenIGetPropertyLimits_ThenReturnsBuiltUploadResult()
+    {
+        // Arrange
+        _subject.TemplateValidationResult = (true, string.Empty);
+        _subject.LocationRows = new List<ExtractedRow>
+        {
+            TestMultiplePropertyOrchestrator.CreateRow("10 High Street", "SW1A 1AA", 2)
+        };
+        _subject.ContextToReturn = new TestUploadContext();
+        _subject.PropertyLimitsToReturn = new List<PropertyLimit>
+        {
+            new() { RowNumber = 2 }
+        };
+
+        // Act
+        var result = await _subject.GetPropertyLimitsAsync(_workbook, 123, 1);
+
+        // Assert
+        result.TemplateValidationError.Should().BeNull();
+        result.PropertyLimits.Should().HaveCount(1);
+        result.ValidationResults.Should().NotBeNull();
+    }
+
+    [Test]
+    public async Task GivenTemplateValidationSucceeds_WhenIGetPropertyLimits_ThenPriorSubmitIsCalledWithBuiltPropertyLimits()
+    {
+        // Arrange
+        _subject.TemplateValidationResult = (true, string.Empty);
+        _subject.LocationRows = new List<ExtractedRow>
+        {
+            TestMultiplePropertyOrchestrator.CreateRow("10 High Street", "SW1A 1AA", 2)
+        };
+        _subject.PropertyLimitsToReturn = new List<PropertyLimit>
+        {
+            new() { RowNumber = 2 }
+        };
+
+        // Act
+        await _subject.GetPropertyLimitsAsync(_workbook, 123, 1);
+
+        // Assert
+        await _priorSubmitApprovalService.Received(1)
+            .EvaluateLocationsAsync(Arg.Is<IList<PropertyLimit>>(x => x.Count == 1 && x[0].RowNumber == 2));
+    }
+
+    [Test]
+    public async Task GivenLocationValidationFails_WhenHasInvalidLocationValidationAsyncIsCalled_ThenValidationResultIsAdded()
+    {
+        // Arrange
+        var location = new LocationValidationRequest
+        {
+            Address1 = "1 Test Street",
+            City = "London",
+            CountryName = "UK",
+            Postcode = "SW1A 1AA"
+        };
+        var row = new ExtractedRow { RowNumber = 9 };
+        var validationResults = new List<ValidationResult>();
+
+        _locationValidator
+            .ValidateAsync(location)
+            .Returns(new FluentValidation.Results.ValidationResult(new[]
+            {
+                new ValidationFailure("Address1", "Address is invalid")
+            }));
+
+        // Act
+        var invalid = await _subject.CallHasInvalidLocationValidationAsync(validationResults, location, row);
+
+        // Assert
+        invalid.Should().BeTrue();
+        validationResults.Should().ContainSingle();
+        validationResults[0].LocationIdentifier.Should().Be("Row 9");
+        validationResults[0].Errors.Should().ContainSingle();
+        validationResults[0].Errors[0].ErrorMessage.Should().Be("Address is invalid");
+    }
+
+    [Test]
+    public async Task GivenLocationValidationPasses_WhenHasInvalidLocationValidationAsyncIsCalled_ThenNoValidationResultIsAdded()
+    {
+        // Arrange
+        var location = new LocationValidationRequest
+        {
+            Address1 = "1 Test Street",
+            City = "London",
+            CountryName = "UK",
+            Postcode = "SW1A 1AA"
+        };
+        var row = new ExtractedRow { RowNumber = 9 };
+        var validationResults = new List<ValidationResult>();
+
+        _locationValidator
+            .ValidateAsync(location)
+            .Returns(new FluentValidation.Results.ValidationResult());
+
+        // Act
+        var invalid = await _subject.CallHasInvalidLocationValidationAsync(validationResults, location, row);
+
+        // Assert
+        invalid.Should().BeFalse();
+        validationResults.Should().BeEmpty();
+    }
+
+    [Test]
+    public void GivenDuplicateAddresses_WhenIdentifyDuplicateAddressKeysIsCalled_ThenDuplicateKeyIsReturned()
+    {
+        // Arrange
+        var rows = new List<ExtractedRow>
+        {
+            TestMultiplePropertyOrchestrator.CreateRow("10 High Street", "SW1A 1AA", 2),
+            TestMultiplePropertyOrchestrator.CreateRow("10 High Street", "SW1A 1AA", 3),
+            TestMultiplePropertyOrchestrator.CreateRow("20 Main Road", "M1 1AA", 4)
+        };
+
+        // Act
+        var result = TestMultiplePropertyOrchestrator.CallIdentifyDuplicateAddressKeys(rows);
+
+        // Assert
+        result.Should().ContainSingle();
+        result.Should().Contain("10 HIGH STREET|SW1A 1AA");
+    }
+
+    [Test]
+    public void GivenNonDuplicateAddresses_WhenIdentifyDuplicateAddressKeysIsCalled_ThenEmptySetIsReturned()
+    {
+        // Arrange
+        var rows = new List<ExtractedRow>
+        {
+            TestMultiplePropertyOrchestrator.CreateRow("10 High Street", "SW1A 1AA", 2),
+            TestMultiplePropertyOrchestrator.CreateRow("20 Main Road", "M1 1AA", 3)
+        };
+
+        // Act
+        var result = TestMultiplePropertyOrchestrator.CallIdentifyDuplicateAddressKeys(rows);
+
+        // Assert
+        result.Should().BeEmpty();
+    }
+
+    [Test]
+    public void GivenAddressIsDuplicate_WhenHasDuplicateAddressIsCalled_ThenValidationResultIsAdded()
+    {
+        // Arrange
+        var duplicateKeys = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            "10 HIGH STREET|SW1A 1AA"
+        };
+
+        var validationResults = new List<ValidationResult>();
+        var location = new LocationValidationRequest
+        {
+            Address1 = "10 High Street",
+            Postcode = "SW1A 1AA",
+            City = "London",
+            CountryName = "UK"
+        };
+        var row = new ExtractedRow { RowNumber = 4 };
+
+        // Act
+        var isDuplicate = TestMultiplePropertyOrchestrator.CallHasDuplicateAddress(
+            validationResults,
+            location,
+            duplicateKeys,
+            row);
+
+        // Assert
+        isDuplicate.Should().BeTrue();
+        validationResults.Should().ContainSingle();
+        validationResults[0].LocationIdentifier.Should().Be("Row 4");
+        validationResults[0].Errors[0].ErrorMessage.Should().Contain("Duplicate address found");
+    }
+
+    [Test]
+    public void GivenAddressIsNotDuplicate_WhenHasDuplicateAddressIsCalled_ThenNoValidationResultIsAdded()
+    {
+        // Arrange
+        var duplicateKeys = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            "10 HIGH STREET|SW1A 1AA"
+        };
+
+        var validationResults = new List<ValidationResult>();
+        var location = new LocationValidationRequest
+        {
+            Address1 = "20 Main Road",
+            Postcode = "M1 1AA",
+            City = "Manchester",
+            CountryName = "UK"
+        };
+        var row = new ExtractedRow { RowNumber = 4 };
+
+        // Act
+        var isDuplicate = TestMultiplePropertyOrchestrator.CallHasDuplicateAddress(
+            validationResults,
+            location,
+            duplicateKeys,
+            row);
+
+        // Assert
+        isDuplicate.Should().BeFalse();
+        validationResults.Should().BeEmpty();
+    }
+}
+
+what do i need to change?
