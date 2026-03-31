@@ -1,147 +1,301 @@
-Big picture
+using Aspose.Cells;
+using FluentAssertions;
+using FluentValidation;
+using FluentValidation.Results;
+using Hero.Integration.Aspose;
+using Hero.Integration.Aspose.MultipleProperties;
+using Hero.Integration.CoreApi;
+using Hero.Integration.CoreApi.Interfaces;
+using Hero.Integration.Geolocation;
+using Hero.Integration.PriorSubmit;
+using Hero.Models;
+using Hero.Models.Validation;
+using Microsoft.Extensions.Logging;
+using Moq;
+using WebApiDto.Dto;
+using Xunit;
 
-After introducing BaseMultiplePropertyOrchestrator<TContext>, the split should be:
+namespace Hero.Integration.Tests.Aspose.MultipleProperties;
 
-✅ Base orchestrator handles (generic / reusable):
-
-Stuff that is the same across any property product:
-
-Template validation flow (existence, worksheet checks, etc.)
-Extracting rows from Excel
-Orchestration pipeline:
-Extract rows
-Build domain objects
-Run validation
-Run geolocation
-Call prior submit
-Common geolocation workflow:
-Call geolocation service
-Populate lat/lng
-Handle overridden coordinates logic
-Calling APIs:
-Country API
-Location API
-Returning TemplateUploadResult
-
-👉 Think: “framework” / pipeline
-
-🔥 What TerrorismOrchestrator handles (product-specific)
-
-Everything here is specific to the terrorism insurance product rules and template structure.
-
-1. 📄 Template structure (3 sheets)
-
-Terrorism has a unique Excel shape:
-
-Sheet 1 → Locations
-Sheet 2 → Floating values
-Sheet 3 → First loss limit
-TemplateConfig.GetFloatingValuesColumnConfiguration()
-TemplateConfig.GetFirstLossLimitColumnConfiguration()
-
-👉 This is NOT generic — other products may:
-
-Have different sheets
-No floating values
-Different layouts
-2. 💰 Financial rules (TIV logic)
-_maximumLocationTivValue = 300000000;
-
-Rules like:
-
-Max £300M per location
-Combine:
-TIV (Total Insured Value)
-Floating values
-First loss limit logic
-if ((propertyLimit.TotalInsuredValue + propertyTotalFloatingValues) > _maximumLocationTivValue ...)
-
-👉 This is pure business logic specific to terrorism underwriting
-
-3. 🏙️ Zone A postcode validation (VERY domain-specific)
-IsZoneAAddress(...)
-UK-only logic
-London Zone A postcode detection
-Rooftop precision requirement
-if (isZoneA && isNotRooftopPrecision && !hasSpreadsheetSuppliedLatitudeAndLongitude)
-
-👉 This is:
-
-Geography-specific
-Product-specific
-Regulatory/underwriting-driven
-
-No other product will reuse this.
-
-4. 🏢 Building use validation
-BuildingUseTypes
-Valid enum values
-Case-insensitive handling
-Throws if invalid
-
-👉 This is tied to:
-
-Terrorism risk modelling
-Not a generic location concept
-5. 📊 Floating values logic
-FloatingValuesHasCover(...)
-SetExtractedPropertyFloatingValues(...)
-Contents
-Loss of rent
-ICOW
-Alternative accommodation
-
-👉 This structure is:
-
-Specific to terrorism product pricing
-Not universal across products
-6. 🧾 “No cover” validation
-"No cover has been provided for this location"
-
-Triggered when:
-
-No floating values
-TIV == 0
-
-👉 Again: product rule, not platform rule
-
-7. 🔁 Duplicate address logic
-IdentifyDuplicateAddressKeys(...)
-Address1 + Postcode uniqueness rule
-
-👉 This could be generic, but:
-
-Currently tied to terrorism behaviour
-Might differ per product
-8. 🧩 How PropertyLimit is built
-new PropertyLimit
+public class BaseMultiplePropertyOrchestratorTests
 {
-    PropertyDamageLimit = ...
-    ContentsDamageLimit = ...
-    ...
+    private readonly Mock<ILogger<TestMultiplePropertyOrchestrator>> _logger = new();
+    private readonly Mock<ILocationApi> _locationApi = new();
+    private readonly Mock<IAsposeRowExtractor> _rowExtractor = new();
+    private readonly Mock<IAsposeRowInserter> _rowInserter = new();
+    private readonly Mock<IGeolocationService> _geolocationService = new();
+    private readonly Mock<IValidator<LocationValidationRequest>> _locationValidator = new();
+    private readonly Mock<IListOfCountries> _countries = new();
+    private readonly Mock<ITemplateColumnValidator> _templateColumnValidator = new();
+    private readonly Mock<IPriorSubmitApprovalService> _priorSubmitApprovalService = new();
+
+    private TestMultiplePropertyOrchestrator CreateSut()
+    {
+        return new TestMultiplePropertyOrchestrator(
+            _logger.Object,
+            _locationApi.Object,
+            _rowExtractor.Object,
+            _rowInserter.Object,
+            _geolocationService.Object,
+            _locationValidator.Object,
+            _countries.Object,
+            _templateColumnValidator.Object,
+            _priorSubmitApprovalService.Object);
+    }
+
+    [Fact]
+    public async Task GetPropertyLimitsAsync_WhenTemplateIsInvalid_ReturnsTemplateValidationError()
+    {
+        var sut = CreateSut();
+        var workbook = new Workbook();
+
+        sut.TemplateValidationResult = (false, "Invalid template");
+
+        var result = await sut.GetPropertyLimitsAsync(workbook, clientId: 123, wordingVersionId: 1);
+
+        result.TemplateValidationError.Should().Be("Invalid template");
+        result.PropertyLimits.Should().BeNull();
+        result.ValidationResults.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task GetPropertyLimitsAsync_WhenTemplateIsValid_InvokesPriorSubmit()
+    {
+        var sut = CreateSut();
+        var workbook = new Workbook();
+
+        sut.TemplateValidationResult = (true, string.Empty);
+        sut.LocationRows = new List<ExtractedRow>
+        {
+            new() { RowNumber = 2 }
+        };
+        sut.PropertyLimitsToReturn = new List<PropertyLimit>
+        {
+            new() { RowNumber = 2 }
+        };
+
+        var result = await sut.GetPropertyLimitsAsync(workbook, clientId: 123, wordingVersionId: 1);
+
+        result.PropertyLimits.Should().HaveCount(1);
+
+        _priorSubmitApprovalService.Verify(
+            x => x.EvaluateLocationsAsync(It.Is<IReadOnlyCollection<PropertyLimit>>(p => p.Count == 1)),
+            Times.Once);
+    }
+
+    [Fact]
+    public async Task HasInvalidLocationValidationAsync_WhenValidatorFails_AddsValidationResult()
+    {
+        var sut = CreateSut();
+
+        var location = new LocationValidationRequest
+        {
+            Address1 = "1 Test Street",
+            City = "London",
+            CountryName = "United Kingdom",
+            Postcode = "SW1A 1AA"
+        };
+
+        var row = new ExtractedRow { RowNumber = 9 };
+        var validationResults = new List<ValidationResult>();
+
+        _locationValidator
+            .Setup(x => x.ValidateAsync(location, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new FluentValidation.Results.ValidationResult(new[]
+            {
+                new ValidationFailure("Address1", "Address is invalid")
+            }));
+
+        var invalid = await sut.CallHasInvalidLocationValidationAsync(validationResults, location, row);
+
+        invalid.Should().BeTrue();
+        validationResults.Should().ContainSingle();
+        validationResults[0].LocationIdentifier.Should().Be("Row 9");
+    }
+
+    [Fact]
+    public void IdentifyDuplicateAddressKeys_WhenDuplicateAddressesExist_ReturnsKey()
+    {
+        var rows = new List<ExtractedRow>
+        {
+            TestMultiplePropertyOrchestrator.CreateRow("10 High Street", "SW1A 1AA"),
+            TestMultiplePropertyOrchestrator.CreateRow("10 High Street", "SW1A 1AA"),
+            TestMultiplePropertyOrchestrator.CreateRow("20 Main Road", "M1 1AA")
+        };
+
+        var result = TestMultiplePropertyOrchestrator.CallIdentifyDuplicateAddressKeys(rows);
+
+        result.Should().ContainSingle();
+        result.Should().Contain("10 HIGH STREET|SW1A 1AA");
+    }
+
+    [Fact]
+    public void HasDuplicateAddress_WhenAddressIsDuplicate_AddsValidationResult()
+    {
+        var duplicateKeys = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            "10 HIGH STREET|SW1A 1AA"
+        };
+
+        var validationResults = new List<ValidationResult>();
+        var location = new LocationValidationRequest
+        {
+            Address1 = "10 High Street",
+            Postcode = "SW1A 1AA",
+            City = "London",
+            CountryName = "United Kingdom"
+        };
+        var row = new ExtractedRow { RowNumber = 4 };
+
+        var isDuplicate = TestMultiplePropertyOrchestrator.CallHasDuplicateAddress(
+            validationResults,
+            location,
+            duplicateKeys,
+            row);
+
+        isDuplicate.Should().BeTrue();
+        validationResults.Should().ContainSingle();
+        validationResults[0].LocationIdentifier.Should().Be("Row 4");
+        validationResults[0].Errors[0].ErrorMessage.Should().Contain("Duplicate address found");
+    }
 }
 
-👉 Mapping from spreadsheet → domain model is:
+using Aspose.Cells;
+using FluentValidation;
+using Hero.Integration.Aspose;
+using Hero.Integration.Aspose.MultipleProperties;
+using Hero.Integration.CoreApi;
+using Hero.Integration.CoreApi.Interfaces;
+using Hero.Integration.Geolocation;
+using Hero.Integration.PriorSubmit;
+using Hero.Models;
+using Hero.Models.Validation;
+using Microsoft.Extensions.Logging;
+using WebApiDto.Dto;
 
-Template-specific
-Product-specific
-🧠 The clean mental model
-Base class = “HOW”
+namespace Hero.Integration.Tests.Aspose.MultipleProperties;
 
-How do we process a spreadsheet?
+internal sealed class TestMultiplePropertyOrchestrator
+    : BaseMultiplePropertyOrchestrator<TestUploadContext>
+{
+    public (bool isValid, string error) TemplateValidationResult { get; set; } = (true, string.Empty);
+    public List<ExtractedRow> LocationRows { get; set; } = new();
+    public TestUploadContext UploadContext { get; set; } = new();
+    public List<PropertyLimit> PropertyLimitsToReturn { get; set; } = new();
 
-Extract
-Validate
-Geolocate
-Return result
-Terrorism orchestrator = “WHAT”
+    public TestMultiplePropertyOrchestrator(
+        ILogger<TestMultiplePropertyOrchestrator> logger,
+        ILocationApi locationApi,
+        IAsposeRowExtractor asposeRowExtractor,
+        IAsposeRowInserter asposeRowInserter,
+        IGeolocationService geolocationService,
+        IValidator<LocationValidationRequest> locationValidator,
+        IListOfCountries countries,
+        ITemplateColumnValidator templateColumnValidator,
+        IPriorSubmitApprovalService priorSubmitApprovalService)
+        : base(
+            logger,
+            locationApi,
+            asposeRowExtractor,
+            asposeRowInserter,
+            geolocationService,
+            locationValidator,
+            countries,
+            templateColumnValidator,
+            priorSubmitApprovalService)
+    {
+    }
 
-What does terrorism actually mean?
+    protected override (bool isValid, string error) ValidateTemplateColumns(Workbook workbook, int wordingVersionId)
+        => TemplateValidationResult;
 
-What columns exist
-What rules apply
-What validations matter
-What constitutes an error
-💬 One-liner you can use in standup/review
+    protected override List<ExtractedRow> ExtractLocationRows(Workbook workbook, int wordingVersionId)
+        => LocationRows;
 
-“The base orchestrator now handles the generic pipeline — extraction, validation, geolocation — while the TerrorismOrchestrator focuses purely on terrorism-specific rules like Zone A validation, TIV limits, and the multi-sheet template structure.”
+    protected override Task<TestUploadContext> ExtractProductContextAsync(
+        Workbook workbook,
+        List<ValidationResult> validationResults)
+        => Task.FromResult(UploadContext);
+
+    protected override Task<List<PropertyLimit>> BuildPropertyLimitsAsync(
+        List<ExtractedRow> locationRows,
+        TestUploadContext productContext,
+        List<ValidationResult> validationResults)
+        => Task.FromResult(PropertyLimitsToReturn);
+
+    protected override Task<TemplateUploadResult> BuildUploadResultAsync(
+        List<PropertyLimit> propertyLimits,
+        TestUploadContext productContext,
+        List<ValidationResult> validationResults)
+    {
+        return Task.FromResult(new TemplateUploadResult
+        {
+            PropertyLimits = propertyLimits,
+            ValidationResults = validationResults
+        });
+    }
+
+    public override Task<Workbook> InsertPropertyLimitsIntoWorkbook(
+        Workbook workbook,
+        IEnumerable<WebApiDto.Dto.PropertyLimit> propertyLimits,
+        PropertyLimitFloatingValues propertyLimitFloatingValues,
+        int? firstLossLimit,
+        int wordingVersionId)
+    {
+        return Task.FromResult(workbook);
+    }
+
+    protected override Task ProcessGeolocationForAddresses(
+        IReadOnlyCollection<PropertyLimit> propertyLimits,
+        int clientId,
+        List<ValidationResult> validationResults)
+    {
+        return Task.CompletedTask;
+    }
+
+    public Task<bool> CallHasInvalidLocationValidationAsync(
+        List<ValidationResult> validationResults,
+        LocationValidationRequest location,
+        ExtractedRow row)
+        => HasInvalidLocationValidationAsync(validationResults, location, row);
+
+    public static HashSet<string> CallIdentifyDuplicateAddressKeys(List<ExtractedRow> rows)
+        => IdentifyDuplicateAddressKeys(rows);
+
+    public static bool CallHasDuplicateAddress(
+        List<ValidationResult> validationResults,
+        LocationValidationRequest location,
+        HashSet<string> duplicateKeys,
+        ExtractedRow row)
+        => HasDuplicateAddress(validationResults, location, duplicateKeys, row);
+
+    protected override LocationValidationRequest CreateLocationRequestFromRow(ExtractedRow row)
+    {
+        return new LocationValidationRequest
+        {
+            Address1 = row["AddressLine1"]?.StringValue,
+            Postcode = row["PostCode"]?.StringValue,
+            City = row["TownOrCity"]?.StringValue,
+            CountryName = row["Country"]?.StringValue
+        };
+    }
+
+    public static ExtractedRow CreateRow(string address1, string postcode)
+    {
+        return new ExtractedRow
+        {
+            CellValues = new List<ExtractedCellValue>
+            {
+                new() { ColumnName = "AddressLine1", StringValue = address1 },
+                new() { ColumnName = "PostCode", StringValue = postcode },
+                new() { ColumnName = "TownOrCity", StringValue = "London" },
+                new() { ColumnName = "Country", StringValue = "United Kingdom" }
+            }
+        };
+    }
+}
+
+internal sealed class TestUploadContext
+{
+}
+
