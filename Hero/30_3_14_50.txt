@@ -1,25 +1,22 @@
- GivenAddressIsDuplicate_WhenHasDuplicateAddressIsCalled_ThenValidationResultIsAdded
-   Source: BaseMultiplePropertyOrchestratorTests.cs line 241
-   Duration: 93 ms
+ GivenTemplateValidationSucceeds_WhenIGetPropertyLimits_ThenPriorSubmitIsCalledWithBuiltPropertyLimits
+   Source: BaseMultiplePropertyOrchestratorTests.cs line 125
+   Duration: 81 ms
 
   Message: 
-System.ArgumentException : Can not create proxy for type Microsoft.Extensions.Logging.ILogger`1[[Hero.Tests.PropertyTemplate.TestMultiplePropertyOrchestrator, Hero.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]] because type Hero.Tests.PropertyTemplate.TestMultiplePropertyOrchestrator is not accessible. Make it public, or internal and mark your assembly with [assembly: InternalsVisibleTo("DynamicProxyGenAssembly2, PublicKey=0024000004800000940000000602000000240000525341310004000001000100c547cac37abd99c8db225ef2f6c8a3602f3b3606cc9891605d02baa56104f4cfc0734aa39b93bf7852f7d9266654753cc297e7d2edfe0bac1cdcf9f717241550e0a7b191195b7667bb4f64bcb8e2121380fd1d9d46ad2d92d2d15605093924cceaf74c4861eff62abf69b9291ed0a340e113be11e6a7d3113e92484cf7045cc7")] attribute, because assembly Microsoft.Extensions.Logging.Abstractions is strong-named. (Parameter 'additionalInterfacesToProxy')
-TearDown : System.NullReferenceException : Object reference not set to an instance of an object.
+System.ArgumentNullException : Value cannot be null. (Parameter 'source')
 
   Stack Trace: 
-DefaultProxyBuilder.AssertValidTypeForTarget(Type type, Type target, String paramName)
-DefaultProxyBuilder.AssertValidTypeForTarget(Type type, Type target, String paramName)
-DefaultProxyBuilder.AssertValidTypes(IEnumerable`1 targetTypes, String paramName)
-DefaultProxyBuilder.CreateClassProxyType(Type classToProxy, Type[] additionalInterfacesToProxy, ProxyGenerationOptions options)
-ProxyGenerator.CreateClassProxyType(Type classToProxy, Type[] additionalInterfacesToProxy, ProxyGenerationOptions options)
-ProxyGenerator.CreateClassProxy(Type classToProxy, Type[] additionalInterfacesToProxy, ProxyGenerationOptions options, Object[] constructorArguments, IInterceptor[] interceptors)
-CastleDynamicProxyFactory.CreateProxyUsingCastleProxyGenerator(Type typeToProxy, Type[] additionalInterfaces, Object[] constructorArguments, IInterceptor[] interceptors, ProxyGenerationOptions proxyGenerationOptions, Boolean isPartial)
-CastleDynamicProxyFactory.GenerateTypeProxy(ICallRouter callRouter, Type typeToProxy, Type[] additionalInterfaces, Boolean isPartial, Object[] constructorArguments)
-CastleDynamicProxyFactory.GenerateProxy(ICallRouter callRouter, Type typeToProxy, Type[] additionalInterfaces, Boolean isPartial, Object[] constructorArguments)
-SubstituteFactory.Create(Type[] typesToProxy, Object[] constructorArguments, Boolean callBaseByDefault, Boolean isPartial)
-SubstituteFactory.Create(Type[] typesToProxy, Object[] constructorArguments)
-Substitute.For(Type[] typesToProxy, Object[] constructorArguments)
-Substitute.For[T](Object[] constructorArguments)
-BaseMultiplePropertyOrchestratorTests.SetUp() line 41
---TearDown
-BaseMultiplePropertyOrchestratorTests.TearDown() line 76
+ThrowHelper.ThrowArgumentNullException(ExceptionArgument argument)
+OrderedEnumerable`2.ctor(IEnumerable`1 source, Func`2 keySelector, IComparer`1 comparer, Boolean descending, OrderedEnumerable`1 parent)
+Enumerable.OrderByDescending[TSource,TKey](IEnumerable`1 source, Func`2 keySelector)
+BaseMultiplePropertyOrchestrator`1.GetLatestDistinctClientLocations(Int32 clientId) line 272
+BaseMultiplePropertyOrchestrator`1.ProcessGeolocationForAddresses(IReadOnlyCollection`1 propertyLimits, Int32 clientId, List`1 validationResults) line 233
+BaseMultiplePropertyOrchestrator`1.GetPropertyLimitsAsync(Workbook workbook, Int32 clientId, Int32 wordingVersionId) line 77
+BaseMultiplePropertyOrchestratorTests.GivenTemplateValidationSucceeds_WhenIGetPropertyLimits_ThenPriorSubmitIsCalledWithBuiltPropertyLimits() line 139
+GenericAdapter`1.GetResult()
+AsyncToSyncAdapter.Await[TResult](Func`1 invoke)
+AsyncToSyncAdapter.Await(Func`1 invoke)
+TestMethodCommand.RunTestMethod(TestExecutionContext context)
+TestMethodCommand.Execute(TestExecutionContext context)
+<>c__DisplayClass1_0.<Execute>b__0()
+DelegatingTestCommand.RunTestMethodInThreadAbortSafeZone(TestExecutionContext context, Action action)
