@@ -1,21 +1,10 @@
-now getting this
-
-GivenTemplateValidationSucceeds_WhenIGetPropertyLimits_ThenPriorSubmitIsCalledWithBuiltPropertyLimits
-   Source: BaseMultiplePropertyOrchestratorTests.cs line 128
-   Duration: 62 ms
-
-  Message: 
-    System.NullReferenceException : Object reference not set to an instance of an object.
-
-  Stack Trace: 
-    BaseMultiplePropertyOrchestrator`1.GeolocateClientLocation(ClientLocation clientLocation, Boolean isNewAddress, String validationAddress, Int32 rowNumber, List`1 validationResults) line 310
-    BaseMultiplePropertyOrchestrator`1.ProcessGeolocationForAddresses(IReadOnlyCollection`1 propertyLimits, Int32 clientId, List`1 validationResults) line 236
-    BaseMultiplePropertyOrchestrator`1.GetPropertyLimitsAsync(Workbook workbook, Int32 clientId, Int32 wordingVersionId) line 77
-    BaseMultiplePropertyOrchestratorTests.GivenTemplateValidationSucceeds_WhenIGetPropertyLimits_ThenPriorSubmitIsCalledWithBuiltPropertyLimits() line 142
-    GenericAdapter`1.GetResult()
-    AsyncToSyncAdapter.Await[TResult](Func`1 invoke)
-    AsyncToSyncAdapter.Await(Func`1 invoke)
-    TestMethodCommand.RunTestMethod(TestExecutionContext context)
-    TestMethodCommand.Execute(TestExecutionContext context)
-    <>c__DisplayClass1_0.<Execute>b__0()
-    DelegatingTestCommand.RunTestMethodInThreadAbortSafeZone(TestExecutionContext context, Action action)
+_geolocationService.GetAsync(Arg.Any<string>())
+    .Returns(callInfo => new GeolocationResult
+    {
+        Success = true,
+        QueriedAddress = callInfo.Arg<string>(),
+        FormattedAddress = callInfo.Arg<string>(),
+        Latitude = 51.5074,
+        Longitude = -0.1278,
+        Precision = "ROOFTOP"
+    });
