@@ -1,18 +1,17 @@
  GivenTemplateValidationSucceeds_WhenIGetPropertyLimits_ThenPriorSubmitIsCalledWithBuiltPropertyLimits
-   Source: BaseMultiplePropertyOrchestratorTests.cs line 125
-   Duration: 81 ms
+   Source: BaseMultiplePropertyOrchestratorTests.cs line 128
+   Duration: 55 ms
 
   Message: 
-System.ArgumentNullException : Value cannot be null. (Parameter 'source')
+System.NullReferenceException : Object reference not set to an instance of an object.
 
   Stack Trace: 
-ThrowHelper.ThrowArgumentNullException(ExceptionArgument argument)
-OrderedEnumerable`2.ctor(IEnumerable`1 source, Func`2 keySelector, IComparer`1 comparer, Boolean descending, OrderedEnumerable`1 parent)
-Enumerable.OrderByDescending[TSource,TKey](IEnumerable`1 source, Func`2 keySelector)
-BaseMultiplePropertyOrchestrator`1.GetLatestDistinctClientLocations(Int32 clientId) line 272
-BaseMultiplePropertyOrchestrator`1.ProcessGeolocationForAddresses(IReadOnlyCollection`1 propertyLimits, Int32 clientId, List`1 validationResults) line 233
+<>c__DisplayClass26_0.<ProcessGeolocationForAddresses>b__0(PropertyLimit limit) line 238
+SelectListIterator`2.MoveNext()
+Task.WhenAll[TResult](IEnumerable`1 tasks)
+BaseMultiplePropertyOrchestrator`1.ProcessGeolocationForAddresses(IReadOnlyCollection`1 propertyLimits, Int32 clientId, List`1 validationResults) line 236
 BaseMultiplePropertyOrchestrator`1.GetPropertyLimitsAsync(Workbook workbook, Int32 clientId, Int32 wordingVersionId) line 77
-BaseMultiplePropertyOrchestratorTests.GivenTemplateValidationSucceeds_WhenIGetPropertyLimits_ThenPriorSubmitIsCalledWithBuiltPropertyLimits() line 139
+BaseMultiplePropertyOrchestratorTests.GivenTemplateValidationSucceeds_WhenIGetPropertyLimits_ThenPriorSubmitIsCalledWithBuiltPropertyLimits() line 142
 GenericAdapter`1.GetResult()
 AsyncToSyncAdapter.Await[TResult](Func`1 invoke)
 AsyncToSyncAdapter.Await(Func`1 invoke)
