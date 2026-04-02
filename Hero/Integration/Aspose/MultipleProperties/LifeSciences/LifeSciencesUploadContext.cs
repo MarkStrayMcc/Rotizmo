@@ -1,5 +1,10 @@
-﻿namespace Hero.Integration.Aspose.MultipleProperties.LifeSciences;
+using WebApiDto.Dto;
 
-public class LifeSciencesUploadContext
+namespace Hero.Integration.Aspose.MultipleProperties.LifeSciences;
+
+internal sealed class LifeSciencesUploadContext
 {
+    public PropertyLimitFloatingValues? FloatingValues { get; init; }
+    public int? FirstLossLimit { get; init; }
+    public bool HasFloatingValues { get; init; }
 }
