@@ -1,0 +1,43 @@
+HERO / Connect – Policy Document Showing Incorrect Premium for Extended Period
+
+Escalation Criteria
+Definition
+Title
+HERO/Connect – Policy Document Showing Incorrect Premium for Extended Bound Period
+Summary/Description
+Broker bound a policy online for a extended period (08 Feb 2026 – 01 Apr 2027) even though the underwriter originally set the quote for 12 months
+
+HERO UI shows the 12‑month premium and dates.
+policy document displayed the correct 14+ month period,
+but incorrectly showed the 12‑month premium instead of the prorated 14‑month premium.
+Workaround
+Reversed the original transactions,
+Manually updated the premium values for the 14‑month duration,
+Regenerated policy documents.
+System information/Environment
+HERO /  Connect 
+Replication steps
+Quote for 12 months.
+Bind Policy on Connect for 14+ months .
+HERO displays the original 12‑month premium.
+When the policy document is generated:
+Term duration updates correctly
+Premium does not update to prorated 14‑month premium
+HERO displays the original 12‑month premium on UI
+We attempted to replicate the premium error on the policy document, but were unable to reproduce it. However, the broker was able to trigger the issue on their end.
+Expected vs Actual result
+Expected
+HERO UI and Policy documents should show the correct prorated premium for the 14‑month term.
+Actual
+Policy documents showed the 14+ month period, But showed the 12‑month premium, creating a mismatch.
+HERO UI shows 12 month period and 12 month premium
+Affected user(s)
+Currently: One broker / single policy
+Potentially: Any broker adjusting bound periods
+Scope: Unknown if systemic or isolated
+Business Impact Analysis
+ • Financial loss
+ • Reputational risk
+Priority
+ • Medium: Negatively affects user experience
+                   Incorrect premium amounts may result in undercharging 
