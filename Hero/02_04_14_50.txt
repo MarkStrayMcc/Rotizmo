@@ -1,0 +1,662 @@
+AI-generated content may be incorrect
+
+Shruti Puranik started transcription
+
+Shruti Puranik
+0 minutes 3 seconds0:03
+Shruti Puranik 0 minutes 3 seconds
+If the background to Chris and Erica's like similar to terrorism, we are going to onboard life science as well for the multi-property, but only difference is we are we are we don't have the blast zone and prior submit cheques for.
+Shruti Puranik 0 minutes 24 seconds
+those two steps for life science. Yeah, so the design which I have thought of and definitely with all your inputs, it might have some changes. I will just share something.
+Shruti Puranik 0 minutes 44 seconds
+So the first thing after speaking to Mark on a very high level, couple of minutes, a base class, I have created similar multi-property upload model base class from the existing one, which will now share the
+Shruti Puranik 1 minute 3 seconds
+Common feature. Now, this best class is responsible for creating a specific instance of the strategy strategy, which I thought is creating a factory, creating a module.
+Shruti Puranik 1 minute 23 seconds
+that implements some factory function and that is then responsible for to implement whether to have the step one, step two, or step three, or just simply step one if it is the life science.
+Shruti Puranik 1 minute 43 seconds
+So a model, so this is the base class and the multiple property component is going to be extended.
+Shruti Puranik 1 minute 55 seconds
+it will extend this base class. So all the validations, all the opening of the model of that pop-up or closing the model is going to be present in base class. And the existing component which we have for multiple property will extend at base class.
+Shruti Puranik 2 minutes 14 seconds
+This is the first part. Then second part, I thought either we can do based on the product, we can hide the whatever multiple property component UI, like hide completely in step one, step, sorry, step 2 and step.
+Shruti Puranik 2 minutes 33 seconds
+three if the product is life science. On thinking on that further, I thought what if again another product comes and we keep adding and removing or hiding the UI element. It will get.
+Shruti Puranik 2 minutes 53 seconds
+quite messy and not maintainable. So for that.
+Benjamin Glymin 10 minutes 52 seconds
+you can just override that one specific implementation. So I think there's pros and cons to both. This one assumes that you've got this set kind of template and you're either going to want to do or not do certain bits of that set template, but it doesn't easily give you the ability to, you know, do something different in a certain scenario, whereas I guess...
+
+Shruti Puranik
+10 minutes 57 seconds10:57
+Shruti Puranik 10 minutes 57 seconds
+Mm.
+
+Benjamin Glymin
+11 minutes 17 seconds11:17
+Benjamin Glymin 11 minutes 17 seconds
+Yeah, Cristina, I know you got your hand up, sorry.
+
+Speaker 1
+11 minutes 20 seconds11:20
+@1 11 minutes 20 seconds
+Sorry, yeah, so maybe in between these two, we can have like a configuration file as something, a configuration I mean, where you specify for each product what to show which
+@1 11 minutes 40 seconds
+Top to show in the process, yeah, so if a new tab will add, then you add just there, so you don't need to add the entire class, and...
+
+Benjamin Glymin
+11 minutes 53 seconds11:53
+Benjamin Glymin 11 minutes 53 seconds
+I think you still need a class, some kind of underline class that will interpret that configuration, yeah.
+
+Speaker 1
+11 minutes 57 seconds11:57
+@1 11 minutes 57 seconds
+Yeah, yeah, so it is just a configuration kind of class.
+@1 12 minutes 4 seconds
+where, yeah, or file where you load that configuration or up to you how you keep it. But I think it's in between this, yeah, it's having this over engineering and because at the end it's the same tabs, it's not new ones.
+@1 12 minutes 25 seconds
+right now and in the future if you need it, maybe you can easily extend it to this. I'm just saying another in between, have coded in the template and have that configuration.
+
+Shruti Puranik
+12 minutes 42 seconds12:42
+Shruti Puranik 12 minutes 42 seconds
+Mmh.
+
+Benjamin Glymin
+12 minutes 43 seconds12:43
+Benjamin Glymin 12 minutes 43 seconds
+Yeah.
+
+Shruti Puranik
+23 minutes 57 seconds23:57
+Shruti Puranik 23 minutes 57 seconds
+Okay, I think that's what I have. I have simplified that existing HTML by adding another template. But you know what I'm doing? I'm adding in the base class. Okay, let me go. But in summary, I now got what what.
+
+Speaker 1
+24 minutes24:00
+@1 24 minutes
+I'm.
+
+Shruti Puranik
+24 minutes 17 seconds24:17
+Shruti Puranik 24 minutes 17 seconds
+Are we going to change on the UI? No, all this factory thingy, just a base class and just true or false based on the.
+MM
+Mark McCormick
+24 minutes 28 seconds24:28
+Mark McCormick 24 minutes 28 seconds
+Sorry, Shruti, did you say let me go?
+
+Shruti Puranik
+24 minutes 31 seconds24:31
+Shruti Puranik 24 minutes 31 seconds
+No, never.
+MM
+Mark McCormick
+24 minutes 32 seconds24:32
+Mark McCormick 24 minutes 32 seconds
+Ohh, sorry, sorry, I thought I missed that, sorry.
+
+Shruti Puranik
+24 minutes 35 seconds24:35
+Shruti Puranik 24 minutes 35 seconds
+No, I didn't. So, leave these factory, create a base component, and then HT need.
+Shruti Puranik 24 minutes 51 seconds
+Okay.
+MM
+Mark McCormick
+24 minutes 51 seconds24:51
+Mark McCormick 24 minutes 51 seconds
+Yeah, maybe I can run through the bass orchestration with you later today or something. And you can just see like what the idea is.
+
+Shruti Puranik
+24 minutes 55 seconds24:55
+Shruti Puranik 24 minutes 55 seconds
+Yes, yeah.
+
+Benjamin Glymin
+24 minutes 59 seconds24:59
+Benjamin Glymin 24 minutes 59 seconds
+I think it would be good for the two, yeah, it would be good for the two to align, so that depending on, so the front-end journey will align with the back-end process, and you kind of know, look.
+
+Shruti Puranik
+24 minutes 59 seconds24:59
+Shruti Puranik 24 minutes 59 seconds
+Mm.
+MM
+Mark McCormick
+25 minutes 3 seconds25:03
+Mark McCormick 25 minutes 3 seconds
+Yeah, because it's...
+
+Shruti Puranik
+25 minutes 11 seconds25:11
+Shruti Puranik 25 minutes 11 seconds
+Mm.
+
+Benjamin Glymin
+25 minutes 11 seconds25:11
+Benjamin Glymin 25 minutes 11 seconds
+For this, these products.
+Benjamin Glymin 25 minutes 14 seconds
+Yeah.
+
+Shruti Puranik
+25 minutes 16 seconds25:16
+Shruti Puranik 25 minutes 16 seconds
+You.
+MM
+Mark McCormick
+25 minutes 16 seconds25:16
+Mark McCormick 25 minutes 16 seconds
+I mean, at least you can see it because, but there's no life science orchestration yet. It just doesn't exist, right? It's just the next step, but you'll be able to see from the base roughly what.
+
+Shruti Puranik
+25 minutes 27 seconds25:27
+Shruti Puranik 25 minutes 27 seconds
+Yeah, yeah, I think we will pair more on for ticket, yes, yeah, yeah, yeah, yes, yes, yeah, yeah, yeah, yeah.
+MM
+Mark McCormick
+25 minutes 32 seconds25:32
+Mark McCormick 25 minutes 32 seconds
+Yeah, and we could pick up later, yeah, but I have to actually create it first, or at least harden it, yeah.
+
+Benjamin Glymin
+25 minutes 40 seconds25:40
+Benjamin Glymin 25 minutes 40 seconds
+I do think Cristina was on to something around. That's kind of what I was trying to allude to. There is definitely a way of with NG template of having shared kind of.
+Benjamin Glymin 25 minutes 51 seconds
+sub templates that you that you can inject in. So you can like you can have steps that you plug in and so you could have, you know, like a life sciences template and a terrorism template or somehow like a base template and then extended templates that just, you know, include the various.
+
+Shruti Puranik
+26 minutes 5 seconds26:05
+Shruti Puranik 26 minutes 5 seconds
+Okay.
+MM
+Mark McCormick
+26 minutes 7 seconds26:07
+Mark McCormick 26 minutes 7 seconds
+The the the base the base template will will have a method to grab all the different steps, I think, and and yeah, unplug them in, and that method will be overridden by the terrorism or life sciences. Well, maybe not life sciences, but yeah.
+
+Benjamin Glymin
+26 minutes 16 seconds26:16
+Benjamin Glymin 26 minutes 16 seconds
+Yeah.
+Benjamin Glymin 26 minutes 23 seconds
+Precisely.
+MM
+Mark McCormick
+26 minutes 24 seconds26:24
+Mark McCormick 26 minutes 24 seconds
+So, you'll get you'll get back an array of templates, I think, but yeah, I it's been a while since I've looked deeply into Angular, but...
+
+Shruti Puranik
+26 minutes 31 seconds26:31
+Shruti Puranik 26 minutes 31 seconds
+Yeah, same here, but yeah, going to be challenging task for me, but yeah, happy, happy.
+MM
+Mark McCormick
+26 minutes 36 seconds26:36
+Mark McCormick 26 minutes 36 seconds
+Copilot it.
+
+Benjamin Glymin
+26 minutes 37 seconds26:37
+Benjamin Glymin 26 minutes 37 seconds
+Feel free to cheque back in, you know, like if you kind of maybe in the group chat, if you, you know, maybe obviously go away, spend some time, have a look at the options. If you want to ping some questions into the group chat or some suggestions, we can continue to discuss in there.
+
+Shruti Puranik
+26 minutes 40 seconds26:40
+Shruti Puranik 26 minutes 40 seconds
+Yeah.
+Shruti Puranik 26 minutes 44 seconds
+Thank you.
+Shruti Puranik 26 minutes 48 seconds
+Binks.
+Shruti Puranik 26 minutes 51 seconds
+Yes, yeah, yes, yeah, yeah, yeah, sure, sure.
+Shruti Puranik 26 minutes 57 seconds
+Thank you everyone. I appreciate it's not as much productive as I thought, but yeah. Thank you.
+MM
+Mark McCormick
+27 minutes 2 seconds27:02
+Mark McCormick 27 minutes 2 seconds
+I'll ping you later, Shruti, yeah, and we could just run through it, or I'll set up a meeting or something, yeah.
+
+Shruti Puranik
+27 minutes 5 seconds27:05
+Shruti Puranik 27 minutes 5 seconds
+Yeah.
+Shruti Puranik 27 minutes 7 seconds
+Yeah, sure. Thank you. Yes, bye.
+
+Sam Jenkins
+27 minutes 9 seconds27:09
+Sam Jenkins 27 minutes 9 seconds
+Cheers, cheers for organising this as well, Shruti. Thanks, good idea to get us all aligned.
+
+Elisabeta-Veronica Slave
+27 minutes 11 seconds27:11
+Elisabeta-Veronica Slave 27 minutes 11 seconds
+Just question.
+
+Shruti Puranik
+27 minutes 12 seconds27:12
+Shruti Puranik 27 minutes 12 seconds
+Thank you.
+
+Benjamin Glymin
+27 minutes 13 seconds27:13
+Benjamin Glymin 27 minutes 13 seconds
+Yeah, thanks, Shruti.
+
+Shruti Puranik
+27 minutes 15 seconds27:15
+Shruti Puranik 27 minutes 15 seconds
+Yeah.
+
+Sam Jenkins
+27 minutes 16 seconds27:16
+Sam Jenkins 27 minutes 16 seconds
+Just.
+EB
+Erikas Banys
+27 minutes 17 seconds27:17
+Erikas Banys 27 minutes 17 seconds
+Thank you.
+
+Elisabeta-Veronica Slave
+27 minutes 17 seconds27:17
+Elisabeta-Veronica Slave 27 minutes 17 seconds
+Sam.
+
+Shruti Puranik stopped transcription
+
+
+Sam Jenkins started transcription
+
+12.04
+0 minutes 3 seconds0:03
+12.04 0 minutes 3 seconds
+A ticket, so I think it's just, I don't know, facilitating. I can, I can do it, you want me to do it?
+12.04 0 minutes 8 seconds
+Poulton.
+12.04 0 minutes 13 seconds
+Cool, starting.
+12.04 0 minutes 16 seconds
+Oh, give it.
+12.04 0 minutes 18 seconds
+Thank you.
+12.04 0 minutes 24 seconds
+But.
+12.04 0 minutes 57 seconds
+Um...
+12.04 0 minutes 59 seconds
+Everybody at home, say my screen.
+12.04 1 minute 5 seconds
+Yep, cool. So this story is again to do with life sciences and just to remove the blast zone cheque and UI for life sciences because we don't need to do any blast zone.
+12.04 1 minute 25 seconds
+OK.
+
+Speaker 1
+17 minutes 7 seconds17:07
+@1 17 minutes 7 seconds
+don't do work now. So for now is no point for documents API yet because the story for document did not start it yet. So you can use the other environments and...
+12.04
+17 minutes 17 seconds17:17
+12.04 17 minutes 17 seconds
+Yes.
+
+Speaker 1
+17 minutes 22 seconds17:22
+@1 17 minutes 22 seconds
+Work on hero and correct API or whatever, but...
+12.04
+17 minutes 27 seconds17:27
+12.04 17 minutes 27 seconds
+Listen.
+
+Speaker 1
+17 minutes 27 seconds17:27
+@1 17 minutes 27 seconds
+I mean, all we will try to do to not break test, yes, for you.
+12.04
+17 minutes 33 seconds17:33
+12.04 17 minutes 33 seconds
+Good.
+
+Speaker 1
+17 minutes 34 seconds17:34
+@1 17 minutes 34 seconds
+Does it make sense what I'm saying or?
+12.04
+17 minutes 37 seconds17:37
+12.04 17 minutes 37 seconds
+Yeah.
+
+Shruti Puranik
+17 minutes 39 seconds17:39
+Shruti Puranik 17 minutes 39 seconds
+Tom, one question. Do we have prior submit feature for life sciences as well? That's it. No. Okay.
+12.04
+17 minutes 41 seconds17:41
+12.04 17 minutes 41 seconds
+Yeah.
+12.04 17 minutes 46 seconds
+No.
+
+Speaker 1
+17 minutes 47 seconds17:47
+@1 17 minutes 47 seconds
+Yeah.
+12.04
+17 minutes 49 seconds17:49
+12.04 17 minutes 49 seconds
+Good question. Was that the one that they had to do for terrorism? Yeah. The approved by carrier stuff. Gotcha. Cool. And then is the para testing correct behind it? It's its own standalone repo. OK, cool. Bloody hell.
+12.04 18 minutes 8 seconds
+Did you want to?
+12.04 18 minutes 10 seconds
+estimate this one.
+12.04 18 minutes 13 seconds
+Yeah, yeah, um...
+12.04 18 minutes 16 seconds
+Yeah, yeah, we're getting that in the in the chat.
+12.04 18 minutes 20 seconds
+Okay.
+
+Shruti Puranik
+18 minutes 23 seconds18:23
+Shruti Puranik 18 minutes 23 seconds
+I'm okay with five or eight. It is just when we worked on the, it takes time. Sometimes it fails just because it's too fast sometimes on the server or on the local. And in summary, it is time consuming rather than complex, I would say.
+12.04
+18 minutes 25 seconds18:25
+12.04 18 minutes 25 seconds
+Ohh.
+
+Shruti Puranik
+18 minutes 43 seconds18:43
+Shruti Puranik 18 minutes 43 seconds
+Because it is mostly the popping from the existing test, but yeah, happy with five as well, but just a heads up.
+
+Speaker 1
+18 minutes 53 seconds18:53
+@1 18 minutes 53 seconds
+And do you mean have the test? There is a tester for this team? Did they?
+12.04
+19 minutes19:00
+12.04 19 minutes
+Uh, Lieu.
+
+Shruti Puranik
+19 minutes 1 second19:01
+Shruti Puranik 19 minutes 1 second
+Lahiru.
+
+Speaker 1
+19 minutes 2 seconds19:02
+@1 19 minutes 2 seconds
+Yeah.
+12.04
+19 minutes 3 seconds19:03
+12.04 19 minutes 3 seconds
+Yeah, so I forgot to add him to this. I don't know, I mean he's calling him anyway. Ohh, is he is he in where he based? Cool.
+
+Speaker 1
+19 minutes 4 seconds19:04
+@1 19 minutes 4 seconds
+Kee.
+@1 19 minutes 12 seconds
+Did he work on this test scenario? No, I see.
+
+Shruti Puranik
+19 minutes 15 seconds19:15
+Shruti Puranik 19 minutes 15 seconds
+No. The reason I don't know, but on each of the stories, he was having the test and he used to test those tickets.
+
+Speaker 1
+19 minutes 31 seconds19:31
+@1 19 minutes 31 seconds
+I think.
+12.04
+19 minutes 36 seconds19:36
+12.04 19 minutes 36 seconds
+Mm.
+12.04 19 minutes 43 seconds
+I think, um...
+12.04 19 minutes 46 seconds
+That is.
+12.04 19 minutes 49 seconds
+OK, or assignment today.
+12.04 19 minutes 53 seconds
+Um...
+12.04 19 minutes 56 seconds
+Yeah, that's it.
+
+Ross Forder
+19 minutes 57 seconds19:57
+Ross Forder 19 minutes 57 seconds
+Please remember folks, we are in feature squad Stacey Scrum 2 at 10am tomorrow.
+Ross Forder 20 minutes 3 seconds
+Paul from Cristina.
+12.04
+20 minutes 3 seconds20:03
+12.04 20 minutes 3 seconds
+Google.
+12.04 20 minutes 5 seconds
+Yes, Simran.
+
+Shruti Puranik
+20 minutes 6 seconds20:06
+Shruti Puranik 20 minutes 6 seconds
+Yeah.
+12.04
+20 minutes 8 seconds20:08
+12.04 20 minutes 8 seconds
+Awesome. See you all then.
+
+Ross Forder
+20 minutes 11 seconds20:11
+Ross Forder 20 minutes 11 seconds
+Tomorrow morning.
+
+Shruti Puranik
+20 minutes 12 seconds20:12
+Shruti Puranik 20 minutes 12 seconds
+See you. Thank you. Bye.
+12.04
+20 minutes 12 seconds20:12
+12.04 20 minutes 12 seconds
+Thank you, guys. Cheers, guys.
+MM
+Mark McCormick
+20 minutes 14 seconds20:14
+Mark McCormick 20 minutes 14 seconds
+Sam, bye guys.
+12.04
+20 minutes 17 seconds20:17
+12.04 20 minutes 17 seconds
+And.
+12.04 20 minutes 21 seconds
+da.
+
+Sam Jenkins stopped transcription
+
+
+Sam Jenkins started transcription
+
+12.07
+0 minutes 4 seconds0:04
+12.07 0 minutes 4 seconds
+Perfect. Show my screen.
+12.07 0 minutes 8 seconds
+And I think we could go.
+12.07 0 minutes 11 seconds
+I think the first one we could go through, we had an article with Mark yesterday, and I think that was right that I think the first step is to extract the base orchestrator. So we just had to look around, specking out this ticket just to just to run through it. So as a hero engineering team, I want to refactor the existing terrorism
+12.07 0 minutes 33 seconds
+Multilocation orchestration into a reasonable base orchestrator. Actually, we don't need that second part, because we're just essentially just refactoring it to...
+12.07 0 minutes 44 seconds
+into the space class and implementing the terrorism, ensuring that still works and it will pay, it will set the foundation for us to then do our life sciences orchestrator.
+12.07 0 minutes 58 seconds
+So, if I go through the definition of ready clarity, is everybody clear on this? Please say if not.
+12.07 1 minute 9 seconds
+Awesome.
+12.07 1 minute 11 seconds
+Cool, so is it cool, and we'll then go down on to the scope in the scope around it. This is, it's just...
+12.07 1 minute 20 seconds
+Refactoring within the orchestrations to extract into a bass one. Again, just please shout out if you're not.
+12.07 1 minute 29 seconds
+If you have any questions or comments as I'm going through these, because otherwise I'll take silence as golden. Awesome. So for the acceptance criteria, we have the scenario of the terrorism orchestration continues to function after refactor. So given a terrorism product is selected when the terrorism multi-location upload journey is executed,
+
+Speaker 1
+26 minutes 48 seconds26:48
+@1 26 minutes 48 seconds
+Thank you.
+@1 26 minutes 51 seconds
+I have a question. Yeah. So to start this story, yes, we need to have the configuration, not only the wording version, but the configuration. Yes.
+12.07
+27 minutes 1 second27:01
+12.07 27 minutes 1 second
+Mm.
+12.07 27 minutes 5 seconds
+Yeah.
+
+Speaker 1
+27 minutes 6 seconds27:06
+@1 27 minutes 6 seconds
+Okay.
+12.07
+27 minutes 6 seconds27:06
+12.07 27 minutes 6 seconds
+Yes, to put it on to it, yeah.
+
+Speaker 1
+27 minutes 9 seconds27:09
+@1 27 minutes 9 seconds
+I mean a configuration not of the uploader, a configuration of the coverage is because otherwise it will not work. You can't bypass. At that point, if he's told that we can, so for UK one, I see Zoe already have the wording, we can mock one. Tom, if we get to this story, we can mock something for UK.
+12.07
+27 minutes 12 seconds27:12
+12.07 27 minutes 12 seconds
+Yeah, I know.
+12.07 27 minutes 15 seconds
+Ohh, right.
+12.07 27 minutes 18 seconds
+Yeah, yeah.
+12.07 27 minutes 31 seconds
+Yeah.
+
+Speaker 1
+27 minutes 33 seconds27:33
+@1 27 minutes 33 seconds
+But I'm not sure this story means to have for.
+12.07
+27 minutes 33 seconds27:33
+12.07 27 minutes 33 seconds
+The structure, the structures are already all there.
+
+Speaker 1
+27 minutes 40 seconds27:40
+@1 27 minutes 40 seconds
+Sorry?
+12.07
+27 minutes 43 seconds27:43
+12.07 27 minutes 43 seconds
+The.
+
+Speaker 1
+27 minutes 44 seconds27:44
+@1 27 minutes 44 seconds
+Sorry, Tom, I couldn't hear you.
+12.07
+27 minutes 46 seconds27:46
+12.07 27 minutes 46 seconds
+The structure for the wordings are finalized, but just the changes that need to make them.
+
+Speaker 1
+27 minutes 50 seconds27:50
+@1 27 minutes 50 seconds
+Okay.
+12.07
+27 minutes 56 seconds27:56
+12.07 27 minutes 56 seconds
+Ohh.
+
+Speaker 1
+27 minutes 56 seconds27:56
+@1 27 minutes 56 seconds
+Okay, okay. So if we have the structure, one second, if we have the structure, we can mock up our set the configuration. Is that okay, Tom? If we get to this story and we don't have it, okay.
+12.07
+27 minutes 58 seconds27:58
+12.07 27 minutes 58 seconds
+All right.
+12.07 28 minutes 7 seconds
+Yeah, yeah, yeah, yeah.
+12.07 28 minutes 11 seconds
+Can we wrap this up and put another refinement in the afternoon then? Yep, for the remaining tickets. I'll just go for these ones, take notes, updated. Yep, we've removed the UI. And the other parts, monitoring, I don't think is going to be applicable. Point of contact can be probably the same as
+12.07 28 minutes 28 seconds
+The last one with the, I'll update that one.
+12.07 28 minutes 33 seconds
+And yeah, anybody think this doesn't mean invest? Excellent. Cool. Right. In that case, let me mark that as separation already. Yeah, got it in there. Perfect. I will put something in the afternoon. So the dynamic one, but I think that one.
+12.07 28 minutes 52 seconds
+Possibly if we can be parked because is that the one that we're I'm not. Yeah, we'll find it time to refine that one. We've done this one. Playwright test, again, that could that could come later. That's more of a that'll be at the end. And removing the blast zone. So this is the UI one. We just got to remove blast zone for now and then.
+12.07 29 minutes 11 seconds
+Very much. Maybe this and the playwright, hopefully, for those 2 1/2 an hour. Yeah. Yeah, cool. I'll cheque on this. Really, we would want everything to be pointed out so that, you know, anyone who comes in and looks at, okay, how long does it going to take you has an idea. And then there's a few more that I need to do for the schedule, which hasn't been fine.
+
+Speaker 1
+29 minutes 25 seconds29:25
+@1 29 minutes 25 seconds
+Okay.
+12.07
+29 minutes 31 seconds29:31
+12.07 29 minutes 31 seconds
+Yeah, well, that's one with summing limits.
+
+Speaker 1
+29 minutes 32 seconds29:32
+@1 29 minutes 32 seconds
+Okay.
+12.07
+29 minutes 34 seconds29:34
+12.07 29 minutes 34 seconds
+Just later, yeah. Thank you, guys. Bye. Ohh, yeah.
+
+Speaker 1
+29 minutes 34 seconds29:34
+@1 29 minutes 34 seconds
+Okay.
+@1 29 minutes 36 seconds
+One second, one second, so just to make clear, so this sprint I will be in small changes, yes?
+
+Shruti Puranik
+29 minutes 36 seconds29:36
+Shruti Puranik 29 minutes 36 seconds
+Sam.
+12.07
+29 minutes 41 seconds29:41
+12.07 29 minutes 41 seconds
+Yes, please. I will announce now. Yes, please.
+
+Speaker 1
+29 minutes 43 seconds29:43
+@1 29 minutes 43 seconds
+Yes, no worries. And if you need me with something, with mocking something, you let me know, yes?
+12.07
+29 minutes 51 seconds29:51
+12.07 29 minutes 51 seconds
+Yeah, thank you very much.
+
+Speaker 1
+29 minutes 54 seconds29:54
+@1 29 minutes 54 seconds
+Thank you.
+12.07
+29 minutes 55 seconds29:55
+12.07 29 minutes 55 seconds
+Thank you. Bye.
+
+Speaker 1
+29 minutes 56 seconds29:56
+@1 29 minutes 56 seconds
+Mm.
+
+Sam Jenkins stopped transcription
