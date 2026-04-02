@@ -1,4 +1,4 @@
-namespace Hero.Integration.Aspose.MultipleProperties.Terrorism;
+namespace Hero.Integration.Aspose.MultipleProperties.LifeSciences;
 
 internal static class TemplateConfiguration
 {
