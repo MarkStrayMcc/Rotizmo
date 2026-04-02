@@ -1669,6 +1669,198 @@ public class TerrorismOrchestratorTests
                 e.ErrorMessage.Contains("12345")));
     }
 
+    [Test]
+    public async Task GivenTemplateValidationFails_WhenIGetPropertyLimits_ThenNoRowsAreExtractedAndPriorSubmitIsNotCalled()
+    {
+        // Arrange
+        _templateColumnValidator.Validate(Arg.Any<Worksheet>(), Arg.Any<ExtractorColumnConfiguration>())
+            .Returns((false, "Template mismatch"));
+
+        // Act
+        var result = await _subject.GetPropertyLimitsAsync(_workbook, _clientId, WordingVersionId);
+
+        // Assert
+        result.TemplateValidationError.Should().Be("Template mismatch");
+
+        _mockAsposeRowExtractor.DidNotReceive()
+            .ExtractRows(Arg.Any<Workbook>(), Arg.Any<ExtractorColumnConfiguration>(), Arg.Any<int>(), Arg.Any<bool>());
+
+        await _mockPriorSubmitApprovalService.DidNotReceive()
+            .EvaluateLocationsAsync(Arg.Any<IList<Models.PropertyLimit>>());
+
+        await _mockGeolocationService.DidNotReceive()
+            .GetAsync(Arg.Any<string>());
+    }
+
+    [Test]
+    public async Task GivenAWorkbook_WhenDuplicateAddressAndPostcodeExist_ThenBothRowsReceiveDuplicateValidationErrorsAndNoPropertyLimitsAreReturned()
+    {
+        // Arrange
+        var extractedRows = new List<ExtractedRow>
+    {
+        TestFixtures.CreateExtractedRow(
+            postCode: "EC3V 0AA",
+            addressLine1: "85 Gracechurch St",
+            buildingUse: "COMMERCIAL"),
+        TestFixtures.CreateExtractedRow(
+            postCode: "EC3V 0AA",
+            addressLine1: "85 Gracechurch St",
+            buildingUse: "RESIDENTIAL")
+    };
+
+        SetUpMockAsposeRowExtractor(extractedRows, new List<ExtractedRow>(), new List<ExtractedRow>());
+
+        // Act
+        var result = await _subject.GetPropertyLimitsAsync(_workbook, _clientId, WordingVersionId);
+
+        // Assert
+        result.PropertyLimits.Should().BeEmpty();
+        result.ValidationResults.Should().HaveCount(2);
+
+        result.ValidationResults.Should().AllSatisfy(v =>
+        {
+            v.Errors.Should().ContainSingle();
+            v.Errors[0].ErrorMessage.Should().Contain("Duplicate address found");
+            v.Errors[0].ErrorMessage.Should().Contain("85 Gracechurch St");
+            v.Errors[0].ErrorMessage.Should().Contain("EC3V 0AA");
+        });
+    }
+
+    [Test]
+    public async Task GivenAWorkbook_WhenOneRowFailsLocationValidation_ThenThatRowIsExcludedAndValidationErrorIsReturned()
+    {
+        // Arrange
+        var validRow = TestFixtures.CreateExtractedRow(
+            postCode: "37188",
+            addressLine1: "1600 Pennsylvania Avenue",
+            country: "US",
+            buildingUse: "COMMERCIAL");
+
+        var invalidRow = TestFixtures.CreateExtractedRow(
+            postCode: "",
+            addressLine1: "",
+            country: "US",
+            buildingUse: "COMMERCIAL");
+
+        SetUpMockAsposeRowExtractor(
+            new List<ExtractedRow> { validRow, invalidRow },
+            new List<ExtractedRow>(),
+            new List<ExtractedRow>());
+
+        _mockGeolocationService.GetAsync(Arg.Any<string>()).Returns(callInfo => new GeolocationResult
+        {
+            Success = true,
+            Latitude = 1.23,
+            Longitude = 4.56,
+            Precision = "ROOFTOP",
+            QueriedAddress = callInfo.Arg<string>(),
+            FormattedAddress = callInfo.Arg<string>()
+        });
+
+        // Act
+        var result = await _subject.GetPropertyLimitsAsync(_workbook, _clientId, WordingVersionId);
+
+        // Assert
+        result.PropertyLimits.Should().HaveCount(1);
+        result.ValidationResults.Should().HaveCount(1);
+        result.ValidationResults[0].LocationIdentifier.Should().Be("Row " + invalidRow.RowNumber);
+    }
+
+    [Test]
+    public async Task GivenAWorkbook_WhenIGetPropertyLimits_ThenPriorSubmitReceivesGeolocatedPropertyLimits()
+    {
+        // Arrange
+        SetUpMockAsposeRowExtractor(TestFixtures.StubListOfExtractedRows(), new List<ExtractedRow>(), new List<ExtractedRow>());
+
+        _mockGeolocationService.GetAsync(Arg.Any<string>()).Returns(callInfo => new GeolocationResult
+        {
+            Success = true,
+            Latitude = 51.5074,
+            Longitude = -0.1278,
+            Precision = "ROOFTOP",
+            QueriedAddress = callInfo.Arg<string>(),
+            FormattedAddress = callInfo.Arg<string>()
+        });
+
+        IList<Models.PropertyLimit>? capturedLimits = null;
+
+        _mockPriorSubmitApprovalService
+            .EvaluateLocationsAsync(Arg.Do<IList<Models.PropertyLimit>>(limits => capturedLimits = limits))
+            .Returns(Task.CompletedTask);
+
+        // Act
+        await _subject.GetPropertyLimitsAsync(_workbook, _clientId, WordingVersionId);
+
+        // Assert
+        capturedLimits.Should().NotBeNull();
+        capturedLimits.Should().NotBeEmpty();
+        capturedLimits!.Should().OnlyContain(x =>
+            x.InsuredAddress.Latitude.HasValue &&
+            x.InsuredAddress.Longitude.HasValue);
+    }
+
+    [Test]
+    public async Task GivenExistingClientLocations_WhenIGetPropertyLimits_ThenExistingLocationsAreGeolocatedBeforeMatching()
+    {
+        // Arrange
+        var extractedRows = TestFixtures.StubListOfExtractedRows();
+        SetUpMockAsposeRowExtractor(extractedRows, new List<ExtractedRow>(), new List<ExtractedRow>());
+
+        _mockLocationApi.GetAsync(Arg.Any<int>()).Returns(new List<ClientLocation>
+    {
+        new ClientLocation
+        {
+            Address1 = "85 Gracechurch St",
+            Address2 = "Central",
+            City = "London",
+            County = "London",
+            Postcode = "EC3V 0AA",
+            ClientLocationId = 10,
+            CountryId = 1
+        }
+    });
+
+        _mockGeolocationService.GetAsync(Arg.Any<string>()).Returns(callInfo => new GeolocationResult
+        {
+            Success = true,
+            Latitude = 51.5074,
+            Longitude = -0.1278,
+            Precision = "ROOFTOP",
+            QueriedAddress = callInfo.Arg<string>(),
+            FormattedAddress = callInfo.Arg<string>()
+        });
+
+        // Act
+        await _subject.GetPropertyLimitsAsync(_workbook, _clientId, WordingVersionId);
+
+        // Assert
+        // 3 spreadsheet rows + 1 existing client location
+        await _mockGeolocationService.Received(4).GetAsync(Arg.Any<string>());
+    }
+
+    [Test]
+    public async Task GivenWorkbookHasNoWorksheets_WhenIGetPropertyLimits_ThenPipelineShortCircuits()
+    {
+        // Arrange
+        using var workbook = new Workbook();
+        workbook.Worksheets.Clear();
+
+        // Act
+        var result = await _subject.GetPropertyLimitsAsync(workbook, _clientId, WordingVersionId);
+
+        // Assert
+        result.TemplateValidationError.Should().Be("Template does not contain any worksheets");
+
+        _mockAsposeRowExtractor.DidNotReceive()
+            .ExtractRows(Arg.Any<Workbook>(), Arg.Any<ExtractorColumnConfiguration>(), Arg.Any<int>(), Arg.Any<bool>());
+
+        await _mockPriorSubmitApprovalService.DidNotReceive()
+            .EvaluateLocationsAsync(Arg.Any<IList<Models.PropertyLimit>>());
+
+        await _mockGeolocationService.DidNotReceive()
+            .GetAsync(Arg.Any<string>());
+    }
+
     [TearDown]
     public void TearDown()
     {
